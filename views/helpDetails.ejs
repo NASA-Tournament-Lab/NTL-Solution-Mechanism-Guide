@@ -1,0 +1,106 @@
+
+<% include common/header.ejs %>
+
+<% locals.breadcrumb = [{text: "Home", url: "/home"}, "Help Topics"]%>
+
+<% include common/breadcrumb.ejs %>
+
+<div id="body">
+    <div class="wrapper js-help-details">
+
+        <div class="bar-title">
+            <h1 class="left special" data-bind="html: (topic() ? topic().name : '')"></h1>
+            <div class="right-part right">
+                <a href="#" class="btn-orange-big btn-print">
+							<span class="btn-right">
+								<span class="btn-middle orange-shadow">
+									<span class="btn-icon icon-print">Print</span>
+								</span>
+							</span>
+                </a>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <!--End .bar-title-->
+
+        <div class="command top-command">
+            <a href="/help" class="btn-orange-big btn-back">
+							<span class="btn-right">
+								<span class="btn-middle orange-shadow">
+									<span class="btn-icon icon-back">Back</span>
+								</span>
+							</span>
+            </a>
+        </div>
+        <!--End .command-->
+
+        <div id="help-article" class="clearfix ajax-pre-loader-wrapper ajax-pre-loader-new">
+            <div class="preloader" data-bind="loader: loading"></div>
+            <div class="artical-left ajax-content" data-bind="css: { show: !loading(), 'is-loading': loading() }">
+                <div class="img-wrapper right">
+                    <img alt="" data-bind="attr: { src: topic() ? '/api/helpTopic/' + topic().image_id  + '/download': '' }" width="202" height="202"/>
+                </div>
+                <div data-bind="html: (topic() ? topic().description : '')">
+                </div>
+            </div>
+
+            <div class="artical-sidebar ajax-content" data-bind="css: { show: !loading() }">
+                <div class="related-topics box no-margin-top">
+                    <div class="box-header">
+                        <h3>Related Topics</h3>
+                    </div>
+                    <div class="box-body" data-bind="foreach: related">
+                        <div class="section" data-bind="css:{ first: $index() == 0}">
+                            <h3 data-bind="text: name"></h3>
+                            <div class="img-wrapper">
+                                <img alt="" data-bind="attr: { src: '/api/helpTopic/' + image_id + '/download'}" width="72" height="72"/>
+                            </div>
+                            <div class="topic-content">
+                                <p data-bind="truncate: description, truncateOptions: {extractText: true, height: 60}"></p>
+                                <a class="btn-orange-mini" data-bind="attr: {href: '/help/' + id}">
+											<span class="btn-right">
+												<span class="btn-middle orange-shadow">
+													<span class="btn-icon icon-print">Learn More</span>
+												</span>
+											</span>
+                                </a>
+                            </div>
+                        </div><!-- .section -->
+                    </div>
+                </div>
+                <!-- end .related-topics-->
+
+                <div class="examples-box box">
+                    <div class="box-header">
+                        <h3>Examples</h3>
+                    </div>
+                    <div class="box-body clearfix" data-bind="foreach: examples">
+                        <div class="box-ceil">
+                            <div class="img-wrapper">
+                                <img src="/img/img-placeholder-3.png" alt="">
+                            </div>
+                            <p><a  data-bind="text: name, attr: {href: '/example/' + smg_id + '/' + id}"></a></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- end .examples-box-->
+
+            </div>
+        </div>
+        <!--End #help-article-->
+
+        <div class="command bottom-command">
+            <a href="/help" class="btn-orange-big btn-back">
+							<span class="btn-right">
+								<span class="btn-middle orange-shadow">
+									<span class="btn-icon icon-back">Back</span>
+								</span>
+							</span>
+            </a>
+        </div>
+        <!--End .command-->
+
+    </div>
+</div>
+
+<% include common/footer.ejs %>

@@ -1,0 +1,185 @@
+
+<% include ../common/header.ejs %>
+
+<% locals.breadcrumb = [{text: "Manage Search Parameters", url: "/admin/forms"}, locals.name == "createForm" ? "New Filter Form" : 'Filter Form Details']%>
+
+<% include ../common/breadcrumb.ejs %>
+<% include ../common/koTemplates.ejs %>
+
+<div id="body" class="js-admin-filter">
+    <div class="wrapper height-adjust">
+        <div class="row1">
+            <h1 class="left page-head"><%= locals.name == "createForm" ? "New Filter Form" : 'Filter Form Details'%></h1>
+            <div class="clear"></div>
+        </div>
+        <div class="border-line border-nobtn-adjust left"></div>
+        <!--Begin ProductTable-->
+        <div id="table-container">
+            <div class="wrapper clearfix">
+                <!--Begin Searchsolution form-->
+                <!-- ko if: !edit() -->
+                <div id="filter-form" >
+                    <div class="wrapper">
+                        <div class="form-container filter-form-name">
+                            <div class="field-container">
+                                <label>Filter Form Name</label>
+                                <br>
+                                <input class="filter" type="text" data-bind="value: name">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /ko -->
+                <!-- ko if: edit() -->
+                <div class="table-show-options more-padding left jqtransformdone" >
+                    <h2 ><span data-bind="text: name"></span></h2>
+                </div>
+                <!-- /ko -->
+                <!--End Searchsolution form-->
+                <div class="table-wrapper left ajax-pre-loader-wrapper reloading" data-bind="css: {'is-loading': loading}">
+                    <div class="search">Search Parameter</div>
+                    <table class="filter-view-form ajax-content" data-bind="css: {'ajax-content': loading}">
+                        <colgroup>
+                            <col width="35%">
+                            <col width="18%">
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th class="td1 align-center">Characteristic Name</th>
+                            <th class="td2 align-center">Content</th>
+                            <th class="td3">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody data-bind="foreach: fieldsSorted">
+                        <tr>
+                            <td class="td1" data-bind="text: characteristic().name"></td>
+                            <td class="td2">
+
+                                <!-- ko foreach: displayValues -->
+                                <span data-bind="text: $data"></span>
+                                <br/>
+                                <!-- /ko -->
+                            </td>
+                            <td class="td3">
+                                <a href="javascript:;" class="orange-small-btn  left move-up" data-bind="css: { disable: !canMoveUp() }, click: moveUp">
+                                    <span class="orange-small-left left"></span>
+												<span class="orange-small-middle left orange-shadow">
+													<span class="disable-up-icon left"></span>Move Up</span>
+                                    <span class="orange-small-right left"></span>
+                                </a>
+                                <a href="javascript:;" class="orange-small-btn disable left move-down" data-bind="css: { disable: !canMoveDown() }, click: moveDown">
+                                    <span class="orange-small-left left"></span>
+												<span class="orange-small-middle left orange-shadow">
+													<span class="disable-down-icon left"></span>Move Down</span>
+                                    <span class="orange-small-right left"></span>
+                                </a>
+                                <a href="javascript:" class="orange-small-btn edit-search left" data-bind="click: $root.startEdit.bind($root, $data)">
+                                    <span class="orange-small-left left"></span>
+												<span class="orange-small-middle edit left orange-shadow">
+													<span class="edit-icon left"></span>Edit</span>
+                                    <span class="orange-small-right left"></span>
+                                </a>
+                                <a href="javascript:" class="orange-small-btn delete-btn left" data-bind="click: $root.remove.bind($root, $data)">
+                                    <span class="orange-small-left left"></span>
+												<span class="orange-small-middle left orange-shadow">
+													<span class="delete-icon left"></span>Delete</span>
+                                    <span class="orange-small-right left"></span>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="preloader adjust-less" data-bind="visible: loading"></div>
+                </div>
+
+                <div class="table-show-options left">
+                    <a href="javascript:" class="orange-big-btn add-search left" data-bind="click: showAddNewPopup">
+                        <span class="orange-big-left left"></span>
+								<span class="orange-big-middle left orange-shadow">
+									<span class="add-icon left"></span>Add Search Parameter</span>
+                        <span class="orange-big-right left"></span>
+                    </a>
+                    <div class="right">
+                        <a href="/admin/forms" class="orange-big-btn cancel left">
+                            <span class="orange-big-left left"></span>
+									<span class="orange-big-middle left orange-shadow">
+										<span class="cancel-icon left"></span>Cancel</span>
+                            <span class="orange-big-right left"></span>
+                        </a>
+                        <a class="orange-big-btn left" data-bind="click: save">
+                            <span class="orange-big-left left"></span>
+									<span class="orange-big-middle left orange-shadow">
+										<span class="save-icon left" ></span>Save</span>
+                            <span class="orange-big-right left"></span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!--End ProductTable-->
+    </div>
+</div>
+
+
+<!--Begin Addsearch Popup-->
+<div id="add-search-popup" class="modal-window-wrapper hide">
+    <div class="popup-wrapper">
+        <div class="popup-header">
+            <h4 class="left">Add New Search Parameter</h4>
+            <a href="javascript:" class="right tooltip-close"></a>
+        </div>
+        <div class="popup-form left jqtransform">
+            <div class="field-container clearfix">
+                <label class="left">Characteristic</label>
+                <select data-bind="options: characteristics,
+                               jqSelect: true,
+                               optionsText: 'name',
+                               value: newField.characteristic">
+                </select>
+            </div>
+
+            <!-- ko if: newField.characteristic -->
+                <div class="field-container clearfix content-values"
+                        data-bind="if: [chTypes.radio, chTypes.picklist].indexOf(newField.characteristic().type_id) != -1">
+                    <label class="left">Content</label>
+                    <div class="level left">
+
+                        <div class="wrapper">
+                            <p>Available Values</p>
+                            <div class="options" data-bind="foreach: newField.characteristic().values">
+                                <label class="adjust">
+                                    <input type="checkbox" data-bind="value: $data.id, iCheck: $root.newField.values">
+                                    <span data-bind="text: name"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            <!-- /ko -->
+        </div>
+
+        <div class="form-buttons right">
+            <a href="javascript:" class="orange-big-btn cancel align left">
+                <span class="orange-big-left left"></span>
+                        <span class="orange-big-middle left orange-shadow">
+                            <span class="cancel-icon left"></span>Cancel</span>
+                <span class="orange-big-right left"></span>
+            </a>
+            <a href="javascript:" class="orange-big-btn save align left" data-bind="click: addNew">
+                <span class="orange-big-left left"></span>
+                        <span class="orange-big-middle left orange-shadow">
+                            <span class="save-icon btn-icon left"></span>Save</span>
+                <span class="orange-big-right left"></span>
+            </a>
+        </div>
+    </div>
+</div>
+<!--End Add Search popup-->
+
+
+
+
+<% include ../common/footer.ejs %>

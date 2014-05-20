@@ -1,0 +1,1 @@
+ALTER TABLE searchFormField ADD CONSTRAINT UC_sff_sort UNIQUE (sort, form_id)

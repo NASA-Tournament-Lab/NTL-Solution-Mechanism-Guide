@@ -1,0 +1,150 @@
+
+<% include ../common/header.ejs %>
+
+<% include ../common/koTemplates.ejs %>
+
+<!-- .page -->
+<div class="page page-new-help form-required js-add-edit-help">
+    <% var title = locals.name == "adminAddHelp" ? "New Help Topic" : "Edit Help Topic" %>
+    <% locals.breadcrumb = [{text: "Manage Help", url: "/admin/help"},  title]%>
+    <% include ../common/breadcrumb.ejs %>
+
+    <div class="page-inner">
+        <div class="bar-title clearfix">
+            <h1 class="left"><%= title%></h1>
+        </div>
+        <!-- End .bar-title -->
+        <div class="page-content">
+            <div class="form-wrapper">
+                <div class="field-container clearfix">
+                    <label class="left">Help Topic Title</label>
+                    <div class="help-wrapper left">
+                        <a class="help-icon left" href="javascript:"></a>
+                        <div class="tool-tip hide">
+                            <span class="tooltip-left left"></span>
+                            <div class="tooltip-middle left">
+                                <div class="tooltip-head">
+                                    <div class="tooltip-head-content left">
+                                        <h2 class="left">Helps</h2>
+                                        <a href="javascript:" class="right tooltip-close"></a>
+                                    </div>
+                                    <div class="clear"></div>
+                                    <p>KMLs represent distinct stages of maturity or development of a problem, project, or task.
+                                        <br>Gather : Early stage; immature, undefined
+                                        <br>Synthesize: Analyze; define requirements and ops concept
+                                        <br>Validate: Evaluate and validate; produce deliverable
+                                        <br>Apply: Integrate; augment; standardize deliverable</p>
+                                    <a href="javascript:">learn more...</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="left text-field required-field">
+                        <input class="required required-max" type="text"  data-bind="value: name">
+                    </div>
+                </div><!-- end .field-container-->
+                <div class="field-container clearfix">
+                    <label class="left">Image</label>
+                    <div class="help-wrapper left">
+                        <a class="help-icon left" href="javascript:"></a>
+                        <div class="tool-tip hide">
+                            <span class="tooltip-left left"></span>
+                            <div class="tooltip-middle left">
+                                <div class="tooltip-head">
+                                    <div class="tooltip-head-content left">
+                                        <h2 class="left">Helps</h2>
+                                        <a href="javascript:" class="right tooltip-close"></a>
+                                    </div>
+                                    <div class="clear"></div>
+                                    <p>KMLs represent distinct stages of maturity or development of a problem, project, or task.
+                                        <br>Gather : Early stage; immature, undefined
+                                        <br>Synthesize: Analyze; define requirements and ops concept
+                                        <br>Validate: Evaluate and validate; produce deliverable
+                                        <br>Apply: Integrate; augment; standardize deliverable</p>
+                                    <a href="javascript:">learn more...</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="left file-field required-field">
+                        <form enctype="multipart/form-data" method="post" action="/api/helpTopic/upload" id="ImageForm">
+                            <input type="text" readonly class="required required-size" data-bind="value: imageName">
+                            <input type="file" name="file"  id="FileUpload">
+                        </form>
+                    </div>
+                    <a href="javascript:" class="orange-big-btn js-action-browse align left">
+                        <span class="orange-big-left left"></span>
+                        <span class="orange-big-middle left orange-shadow">Browse</span>
+                        <span class="orange-big-right left"></span>
+                    </a>
+                </div><!-- end .field-container-->
+                <div class="field-container clearfix">
+                    <label class="left">Content</label>
+                    <div class="help-wrapper left">
+                        <a class="help-icon left" href="javascript:"></a>
+                        <div class="tool-tip hide">
+                            <span class="tooltip-left left"></span>
+                            <div class="tooltip-middle left">
+                                <div class="tooltip-head">
+                                    <div class="tooltip-head-content left">
+                                        <h2 class="left">Helps</h2>
+                                        <a href="javascript:" class="right tooltip-close"></a>
+                                    </div>
+                                    <div class="clear"></div>
+                                    <p>KMLs represent distinct stages of maturity or development of a problem, project, or task.
+                                        <br>Gather : Early stage; immature, undefined
+                                        <br>Synthesize: Analyze; define requirements and ops concept
+                                        <br>Validate: Evaluate and validate; produce deliverable
+                                        <br>Apply: Integrate; augment; standardize deliverable</p>
+                                    <a href="javascript:">learn more...</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ckeditor-field" data-bind="css: {'is-error': !description.isValid() && description.isModified() }">
+                        <textarea name="content" id="redactor-1"
+                                  rows="4" cols="50" class="ckeditor-target" data-bind="ckEditor: description"></textarea>
+                    </div>
+                    <!-- end CKEditor-field-->
+                </div>
+                <!-- end .field-container-->
+                <div class=" form-command clearfix">
+                    <a href="javascript:" class="orange-big-btn right" data-bind="click: preview">
+                        <span class="orange-big-left left"></span>
+                        <span class="orange-big-middle left orange-shadow">Preview</span>
+                        <span class="orange-big-right left"></span>
+                    </a>
+                </div><!-- end .form-command-->
+
+                <div class="preview-panel">
+                    <h3 data-bind="text: previewName"></h3>
+                    <img alt="" data-bind="attr:{src: previewImg() }" width="204" height="204" >
+                    <div data-bind="html: previewDescription">
+
+                    </div>
+
+                </div>
+                <!-- end .preview-panel-->
+            </div>
+            <!-- end .form-wrapper-->
+            <div class="page-command clearfix">
+                <a href="javascript:" class="orange-big-btn align right" data-bind="click: save">
+                    <span class="orange-big-left left"></span>
+							<span class="orange-big-middle left orange-shadow">
+								<span class="add-icon left"></span><span data-bind="text: editing ? 'Save' :'Add'"></span></span>
+                    <span class="orange-big-right left"></span>
+                </a>
+                <a href="/admin/help#topics" class="orange-big-btn align right">
+                    <span class="orange-big-left left"></span>
+							<span class="orange-big-middle left orange-shadow">
+								<span class="cancel-icon left"></span>Cancel</span>
+                    <span class="orange-big-right left"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End .page -->
+
+
+<% include ../common/footer.ejs %>

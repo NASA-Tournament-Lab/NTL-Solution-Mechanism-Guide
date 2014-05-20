@@ -1,0 +1,176 @@
+
+#poster .poster-right .choose .level-icon{
+    background-image: url("../img/level-guide-icon.png");
+    background-repeat: no-repeat;
+    background-position: 0 0px;
+
+}
+#poster .poster-right .study .level-icon {
+    background-image: url("../img/level-guide-icon.png");
+    background-repeat: no-repeat;
+    background-position: 0 -133px;
+}
+#poster .poster-right .decision .level-icon {
+    background-image: url("../img/level-guide-icon.png");
+    background-repeat: no-repeat;
+    background-position: 0 -266px;
+
+}
+.ash-left {
+	background-image: url("../img/ash_btn.png");
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background: url("../img/ash_btn.png")no-repeat 0 0;
+}
+.ash-right {
+	background-image: url("../img/ash_btn.png");
+    background-repeat: no-repeat;
+    background-position: 0 -79px;
+}
+.ash-middle {
+	background-image: url("../img/ash_btn.png");
+    background-repeat: repeat-x;
+    background-position: 0 -39px;
+}
+.ash-right .go-icon {
+	background-image: url("../img/home_post_icon.png");
+    background-repeat: no-repeat;
+}
+.orange-big-left {
+	background-image: url("../img/orange_btn_34px.png");
+    background-repeat: no-repeat;
+    background-position: 0 0;
+}
+.orange-big-right {
+	background-image: url("../img/orange_btn_34px.png");
+    background-repeat: no-repeat;
+    background-position: 0 -72px;
+    background: url("../img/orange_btn_34px.png")no-repeat 0 -72px;
+}
+.orange-big-middle {
+	background-image: url("../img/orange_btn_34px.png");
+    background-repeat: repeat-x;
+    background-position: 0 -36px;
+}
+.orange-small-btn .orange-small-left {
+	background-image: url("../img/orange_btn_25px.png");
+    background-repeat: no-repeat;
+    background-position: 0 1px;
+}
+.orange-small-btn .orange-small-right {
+	background-image: url("../img/orange_btn_25px.png");
+    background-repeat: no-repeat;
+    background-position: 0 -52px;
+ }
+.orange-small-btn .orange-small-middle {
+	background-image: url("../img/orange_btn_25px.png");
+    background-repeat: repeat-x;
+    background-position: 0 -25px;
+}
+.orange-big-middle .search-icon {
+    background-image: url("../img/help_search_icon.png");
+    background-repeat: no-repeat;
+    background-position: 0 -41px;
+}
+#body #left-panel .questions ul li .questions-wrapper .help-icon {
+    background-image: url("../img/help_search_icon.png");
+    background-repeat: no-repeat;
+    background-position: 0 0;
+}
+#identify-search-wrapper .identify-left .identify-questions .help-icon {
+    background-image: url("../img/help_search_icon.png");
+    background-repeat: no-repeat;
+    background-position: 0 0;
+}
+#identify-search-wrapper .identify-right .left-arrow{
+    background-image: url("../img/ash_box_side.png");
+    background-repeat: no-repeat;
+}
+#poster .poster-right .arrow {
+    background-image: url("../img/home_post_icon.png");
+    background-repeat: no-repeat;
+    background-position: 0 -38px;
+}
+#identify-search-wrapper .identify-left {
+    background-image: url("../img/left_shadow.png");
+    background-repeat: repeat-y;
+    background-position: top right;
+    background-color: #fff;
+}
+#table-container .table-show-options .options .backward {
+    background-image: url("../img/amin_manage_icons.png");
+    background-repeat: no-repeat;
+    background-position: 0 -47px;
+}
+#table-container .table-show-options .options .forward {
+    background-image: url("../img/amin_manage_icons.png");
+    background-repeat: no-repeat;
+    background-position: 0 -71px;
+}
+.add-icon {
+    background-image: url("../img/amin_manage_icons.png");
+    background-repeat: no-repeat;
+    background-position: 0 0px;
+}
+/*begin disable btn style*/
+.orange-small-btn.disable .orange-small-left {
+    background-image: url("../img/disable-up-down.png");
+    background-repeat: no-repeat;
+    background-position: 0 0;
+}
+.orange-small-btn.disable .orange-small-right {
+    background-image: url("../img/disable-up-down.png");
+    background-repeat: no-repeat;
+    background-position: 0 -53px;
+}
+.orange-small-btn.disable .orange-small-middle {
+   background-image: url("../img/disable-up-down.png");
+   background-repeat: repeat-x;
+   background-position: 0 -27px;
+}
+.tooltip-close {
+    background-image: url("../img/tool-tip-close-icon.png");
+   background-repeat: repeat-x;
+   background-position: 0 0;
+}
+.tooltip-left {
+    background-image: url("../img/help_tool_tip.png");
+    background-repeat: no-repeat;
+   background-position: 0 0;
+}
+.tooltip-right {
+    background-image: url("../img/help_tool_tip.png");
+    background-repeat: no-repeat;
+   background-position: 0 -408px;
+}
+.tooltip-middle {
+    background-image: url("../img/help_tool_tip.png");
+    background-repeat: repeat-x;
+   background-position: 0 -203px;
+}
+#add-forms .form-container .form-wrapper .field-container .help-icon {
+    background-image: url("../img/help_search_icon.png");
+    background-repeat: no-repeat;
+   background-position: 0 0;
+}
+.block-ui {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+}
+.process {
+	background:url(../img/bg-progress.png) repeat;
+}
+.process {
+    z-index: 10000;
+    position: fixed;
+    top: 0;
+    left: 0;
+	bottom:0;
+	right:0;
+	background-color:rgba(255,255,255,0.5);
+}
+#add-forms .form-container .form-wrapper .field-container input[type="text"] {
+    width: 725px;
+}
+#add-forms .form-container .form-wrapper .field-container.graphic input[type="text"]{
+    width: 592px;
+}

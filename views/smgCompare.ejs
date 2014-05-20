@@ -1,0 +1,73 @@
+
+<% include common/header.ejs %>
+
+<% locals.breadcrumb = [{text: "Home", url: "/home"}, {text: "Identify Solution", url: "/smg"}, "Compare Solutions"]%>
+
+<% include common/breadcrumb.ejs %>
+<% include common/koTemplates.ejs %>
+
+<div id="body" class="js-smg-compare">
+    <div class="wrapper">
+        <div class="row1 compare">
+            <h2 class="left page-head">Compare Solutions</h2>
+            <a href="javascript:" id="print" class="orange-big-btn right">
+                <span class="orange-big-left left"></span>
+						<span class="orange-big-middle left orange-shadow">
+							<span class="print-icon left"></span>Print</span>
+                <span class="orange-big-right left"></span>
+            </a>
+            <div class="clear"></div>
+        </div>
+        <div class="border-line left"></div>
+        <a href="javascript:" class="back orange-big-btn left" onclick="javascript:history.back();return false;">
+            <span class="orange-big-left left"></span>
+					<span class="orange-big-middle left orange-shadow">
+						<span class="back-icon left"></span>Back</span>
+            <span class="orange-big-right left"></span>
+        </a>
+        <div class="clear"></div>
+        <div class="ajax-pre-loader-wrapper ajax-pre-loader-new init-load">
+            <table class="table1 compare-tbl clear" data-bind="css :{'ajax-content': loading()}">
+                <colgroup>
+                    <col width="22%" >
+                    <col >
+                    <col >
+                </colgroup>
+                <tbody data-bind="if: items().length == 2 ">
+                <tr>
+                    <th class="compare-head"></th>
+
+                    <!-- ko foreach: items-->
+                    <th class="compare-head">
+                        <span class="left"></span>
+                        <a data-bind="attr:{ href: '/smg/' + id}, text: name"></a>
+                    </th>
+                    <!-- /ko -->
+                </tr>
+                <!-- ko foreach: _.keys(items()[0].otherValues)-->
+
+                <tr>
+                    <td class="first first-bg" data-bind="text: $data">Details</td>
+
+                    <!-- ko foreach: $root.items-->
+                    <td data-bind="text: $data.otherValues[$parent]"></td>
+                    <!-- /ko -->
+                </tr>
+                <!-- /ko -->
+                </tbody>
+            </table>
+            <div class="preloader preloader2" data-bind="loader: loading"></div>
+        </div>
+        <a href="javascript:" class="back orange-big-btn left" onclick="javascript:history.back();return false;">
+            <span class="orange-big-left left"></span>
+					<span class="orange-big-middle left orange-shadow">
+						<span class="back-icon left"></span>Back</span>
+            <span class="orange-big-right left"></span>
+        </a>
+    </div>
+</div>
+<!--End Examples-->
+
+
+
+<% include common/footer.ejs %>

@@ -1,0 +1,79 @@
+
+<% include common/header.ejs %>
+
+<% locals.breadcrumb = [{text: "Home", url: "/home"}, "Examples"]%>
+
+<% include common/breadcrumb.ejs %>
+<div id="body">
+    <div class="wrapper js-example-details">
+
+        <div class="bar-title">
+            <h1 class="left special" data-bind="text: example() ? example().name : ''"></h1>
+            <div class="right-part right">
+                <a href="javascript:" class="btn-orange-big btn-print">
+							<span class="btn-right">
+								<span class="btn-middle orange-shadow">
+									<span class="btn-icon icon-print">Print</span>
+								</span>
+							</span>
+                </a>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <!--End .bar-title-->
+
+        <div class="command top-command">
+            <a href="/examples" class="btn-orange-big btn-back">
+							<span class="btn-right">
+								<span class="btn-middle orange-shadow">
+									<span class="btn-icon icon-back">Back</span>
+								</span>
+							</span>
+            </a>
+        </div>
+        <!--End .command-->
+        <div class="ajax-pre-loader-wrapper ajax-pre-loader-new">
+            <div class="preloader" data-bind="loader: loading"></div>
+            <div id="help-article" class="clearfix ajax-content" data-bind="css: {show: !loading(), 'is-loading': loading()}">
+                <div class="artical-left" data-bind="html: example() ? example().description : ''">
+                </div>
+
+                <div class="artical-sidebar" data-bind="visible: examples().length > 0">
+
+                    <div class="examples-box box no-margin-top">
+                        <div class="box-header">
+                            <h3>Examples</h3>
+                        </div>
+                        <div class="box-body clearfix" data-bind="foreach: examples">
+                            <div class="box-ceil">
+                                <div class="img-wrapper">
+                                    <img src="/img/img-placeholder-3.png" alt="">
+                                </div>
+                                <p><a href="example_details.html" data-bind="attr: { href: '/example/' + smg_id + '/' + id}, text: name"> </a></p>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <!-- end .examples-box-->
+
+                </div>
+            </div>
+        </div>
+        <!--End #help-article-->
+
+        <div class="command bottom-command">
+            <a href="/examples" class="btn-orange-big btn-back">
+							<span class="btn-right">
+								<span class="btn-middle orange-shadow">
+									<span class="btn-icon icon-back">Back</span>
+								</span>
+							</span>
+            </a>
+        </div>
+        <!--End .command-->
+
+    </div>
+</div>
+
+<% include common/footer.ejs %>

@@ -1,0 +1,50 @@
+<div class="admin-nav right">
+    <ul>
+        <li>
+            <span class="lileft left"></span>
+									<span class="licenter left">
+										<a class="left <%= locals.menu == "smg" ? "active" : "" %>" href="/admin/smg">
+                                            <span class="solution left"></span>
+											<span class="link left">Manage
+												<br>Solutions</span>
+                                        </a>
+									</span>
+            <span class="liright left"></span>
+        </li>
+
+        <li>
+            <span class="lileft left"></span>
+									<span class="licenter left">
+										<a class="<%= locals.menu == "characteristics" ? "active" : "" %>" href="/admin/characteristics">
+                                            <span class="char left"></span>
+											<span class="link left">Manage
+												<br>Characteristics</span>
+                                        </a>
+									</span>
+            <span class="liright left"></span>
+        </li>
+
+        <li>
+            <span class="lileft left"></span>
+									<span class="licenter left">
+										<a  class="<%= locals.menu == "forms" ? "active" : "" %>" href="/admin/forms">
+                                            <span class="parameters left"></span>
+											<span class="link left">Manage Search
+												<br>Parameters</span>
+                                        </a>
+									</span>
+            <span class="liright left"></span>
+        </li>
+        <li>
+            <span class="lileft left"></span>
+									<span class="licenter left">
+										<a  class="<%= locals.menu == "help" ? "active" : "" %>" href="/admin/help">
+                                            <span class="help left"></span>
+											<span class="link left">Manage
+												<br>Help</span>
+                                        </a>
+									</span>
+            <span class="liright left"></span>
+        </li>
+    </ul>
+</div>

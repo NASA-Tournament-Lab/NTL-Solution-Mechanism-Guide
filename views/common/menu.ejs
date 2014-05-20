@@ -1,0 +1,36 @@
+<div class="nav right">
+    <ul>
+        <li>
+            <span class="lileft left"></span>
+                                    <span class="licenter left">
+                                        <a class="left <%= locals.menu == 'home' ? 'active' : '' %> " href="/home">
+                                            <span class="home left"></span>
+                                            <span class="link left">Home</span>
+                                        </a>
+                                    </span>
+            <span class="liright left"></span>
+        </li>
+
+        <li>
+            <span class="lileft left"></span>
+                                    <span class="licenter left">
+                                        <a href="/help" class="<%= locals.menu == 'help' ? 'active' : '' %>">
+                                            <span class="topics left"></span>
+                                            <span class="link">Help Topics</span>
+                                        </a>
+                                    </span>
+            <span class="liright left"></span>
+        </li>
+
+        <li>
+            <span class="lileft left"></span>
+                                    <span class="licenter left">
+                                        <a href="/examples" class="<%= locals.menu == 'examples' ? 'active' : '' %>">
+                                            <span class="example left"></span>
+                                            <span class="link">Examples</span>
+                                        </a>
+                                    </span>
+            <span class="liright left"></span>
+        </li>
+    </ul>
+</div>

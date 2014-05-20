@@ -1,0 +1,176 @@
+
+<% include ../common/header.ejs %>
+<% include ../common/koTemplates.ejs %>
+
+
+<script type="text/html" id="header-template">
+
+    <a href="javascript:" class="orange-big-btn add-character left" data-bind="click: addNewCharacteristic">
+        <span class="orange-big-left left"></span>
+								<span class="orange-big-middle left orange-shadow">
+									<span class="add-icon left"></span>Add New Characteristic</span>
+        <span class="orange-big-right left"></span>
+    </a>
+    <div class="options right">
+        <span class="show left">show</span>
+        <div class="styled-select left">
+            <select class="left" data-bind="value: pageSize, foreach: availablePageSizes, jqSelect: true">
+                <option data-bind="text: $data, value: $data"></option>
+            </select>
+        </div>
+        <span class="left">per page</span>
+        <div class="border-right left"></div>
+        <span class="left" data-bind="text: paginatorText"></span>
+        <div class="border-right left"></div>
+        <a href="javascript:" class="backward left" data-bind="css: { disabled: !canPrevPage() }, click: prevPage"></a>
+        <div class="border-right left"></div>
+        <a href="javascript:" class="forward left" data-bind="css: { disabled: !canNextPage() }, click: nextPage"></a>
+    </div>
+</script>
+
+
+<div id="body" class="clearfix js-manage-characteristics">
+    <div class="wrapper">
+        <div class="row1">
+            <h1 class="left page-head more-padding">Manage Characteristics</h1>
+            <div class="clear"></div>
+        </div>
+        <div class="border-line border-nobtn-adjust left"></div>
+        <!--Begin ProductTable-->
+        <div id="table-container">
+            <div class="wrapper">
+                <div class="table-show-options less-padding left" data-bind="template: { name: 'header-template' }">
+                </div>
+
+                <div class="table-wrapper left ajax-pre-loader-wrapper reloading">
+                    <table class="characterstics-form" data-bind="css: {'ajax-content': loading}">
+                        <tr>
+                            <th class="th1">Characteristics Name</th>
+                            <th>Description</th>
+                            <th>Type</th>
+                            <th>Values</th>
+                            <th>Action</th>
+                        </tr>
+                        <tbody data-bind="foreach: pagedItems">
+                        <tr>
+                            <td class="td1" data-bind="text: name"></td>
+                            <td class="td2" data-bind="text: description"></td>
+                            <td class="td3" data-bind="text: type.name"></td>
+                            <td class="td4" data-bind="foreach: values">
+                                <div data-bind="text: name"></div>
+                            </td>
+                            <td class="td5">
+                                <a href="javascript:" class="orange-small-btn edit-character left" data-bind="click: $root.startEdit.bind($root, $data)">
+                                    <span class="orange-small-left left"></span>
+                                                <span class="orange-small-middle edit left orange-shadow">
+                                                    <span class="edit-icon left"></span>Edit</span>
+                                    <span class="orange-small-right left"></span>
+                                </a>
+                                <a href="javascript:" class="orange-small-btn delete-btn1 left" data-bind="click: $root.remove.bind($root, $data)">
+                                    <span class="orange-small-left left"></span>
+                                                <span class="orange-small-middle left orange-shadow">
+                                                    <span class="delete-icon left"></span>Delete</span>
+                                    <span class="orange-small-right left"></span>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="preloader" data-bind="loader: loading"></div>
+                </div>
+
+                <div class="table-show-options less-padding-bottom left"  data-bind="template: { name: 'header-template' }">
+                </div>
+            </div>
+        </div>
+        <!--End ProductTable-->
+    </div>
+</div>
+<!--End Examples-->
+
+
+<!--Begin Popup-->
+<div id="add-popup" class="modal-window-wrapper hide" data-bind="if: creatingOrEditing">
+    <div class="popup-wrapper" data-bind="with: newCharacteristic">
+        <div class="popup-header">
+            <h4 class="left" data-bind="text: $root.editingItem() ? 'Edit Characteristic' : 'Add New Characteristic'"></h4>
+            <a href="javascript:" class="right tooltip-close" data-bind="click: $root.closeAddPopup"></a>
+        </div>
+        <div class="popup-form jqtransform">
+            <div class="field-container left"  data-bind="">
+                <label class="left">Characteristic Name</label>
+                <a class="left" href="javascript:">
+                    <span class="help-icon"></span>
+                </a>
+                <input class="left" type="text" data-bind="{value: name }">
+                <div class="error-icon" data-bind="errorPopup: name">
+                </div>
+            </div>
+            <div class="field-container left adjust"  data-bind="">
+                <label class="left">Description</label>
+                <a class="left" href="javascript:">
+                    <span class="help-icon"></span>
+                </a>
+                <textarea class="left" rows="4" cols="50"  data-bind="{value: description}"></textarea>
+                <div class="error-icon" data-bind="errorPopup: description">
+                </div>
+            </div>
+            <div class="field-container left" data-bind="">
+                <label class="left">Tab</label>
+                <a class="left" href="javascript:">
+                    <span class="help-icon"></span>
+                </a>
+                <select class="left" data-bind="value: tab, foreach: chTabs, jqSelect: true">
+                    <option data-bind="value: $data, text: $data"></option>
+                </select>
+            </div>
+            <div class="field-container left" data-bind="">
+                <label class="left">Type</label>
+                <a class="left" href="javascript:">
+                    <span class="help-icon"></span>
+                </a>
+                <select class="left" data-bind="value: type, foreach: $root.types, jqSelect: true">
+                    <option data-bind="value: id, text: name"></option>
+                </select>
+            </div>
+            <div class="field-container text-align left" data-bind="if: [3, 4].indexOf(type()) !== -1 ">
+                <label class="left"></label>
+                <a class="left" href="javascript:">
+                    <span class="help-icon"></span>
+                </a>
+                <div class="level left adjust">
+                    <div class="wrapper">
+                        <p><span data-bind="text: type().name"></span>  Labels</p>
+                        <div data-bind="foreach: values">
+                            <div class="text-remove clearfix">
+                                <input type="text" data-bind="value: val">
+                                <a href="javascript:;" class="btn-delete" data-bind="click: $parent.removeValue.bind($data)"></a>
+                            </div>
+                        </div>
+                        <a href="javascript:" class="other" data-bind="click: addValue">Add another</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-buttons right">
+                <a href="javascript:" class="orange-big-btn align left cancel" data-bind="click: $root.closeAddPopup">
+                    <span class="orange-big-left left"></span>
+                            <span class="orange-big-middle left orange-shadow">
+                                <span class="cancel-icon left"></span>Cancel</span>
+                    <span class="orange-big-right left"></span>
+                </a>
+                <a href="javascript:" class="orange-big-btn align left hide" data-bind="click: $parent.createNewCharacteristic">
+                    <span class="orange-big-left left"></span>
+                            <span class="orange-big-middle left orange-shadow ">
+                                <span class="js-add-loader next-icon btn-icon left" data-bind="css: {'next-icon': !$root.submitting(), loading: $root.submitting()}"></span><span data-bind="text: $root.editingItem() ? 'Edit' : 'Add'"></span></span>
+                    <span class="orange-big-right left"></span>
+                </a>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<!--End popup-->
+
+
+<% include ../common/footer.ejs %>

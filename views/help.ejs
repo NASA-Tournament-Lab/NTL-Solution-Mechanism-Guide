@@ -1,0 +1,53 @@
+
+<% include common/header.ejs %>
+
+<% locals.breadcrumb = [{text: "Home", url: "/home"}, "Help Topics"]%>
+
+<% include common/breadcrumb.ejs %>
+<div id="body">
+    <div class="wrapper js-help-listing">
+
+        <div class="bar-title">
+            <h1 class="left special">Help Topics</h1>
+            <div class="right-part right">
+                <a href="#" class="btn-orange-big btn-print">
+							<span class="btn-right">
+								<span class="btn-middle orange-shadow">
+									<span class="btn-icon icon-print">Print</span>
+								</span>
+							</span>
+                </a>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <!--End .bar-title-->
+
+        <div class="ajax-pre-loader-wrapper ajax-pre-loader-new ">
+            <div class="preloader" data-bind="loader: loading"></div>
+            <div class="topics-list ajax-content" data-bind="css: { show: !loading(), 'is-loading': loading() }, foreach: items">
+                <div class="ceil" data-bind="css: {odd: $index() % 2 == 0, even: $index() % 2 == 1}">
+                    <div class="image-wrapper">
+                        <img alt="" data-bind="attr: { src: '/api/helpTopic/' + image_id + '/download'}" width="82" height="82">
+                    </div>
+                    <div class="ceil-body">
+                        <h3 data-bind="text: name"></h3>
+                        <p data-bind="truncate: description, truncateOptions: {height: 40, extractText: true}"></p>
+                        <a class="btn-orange-mini" data-bind="attr: {href: '/help/' + id}">
+									<span class="btn-right">
+										<span class="btn-middle orange-shadow">
+											<span class="btn-icon icon-print">Learn More</span>
+										</span>
+									</span>
+                        </a>
+                    </div>
+                </div>
+                <!-- ko if: $index() + 1 == $root.items().length -->
+                <div class="clear"></div>
+                <!-- /ko -->
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<% include common/footer.ejs %>

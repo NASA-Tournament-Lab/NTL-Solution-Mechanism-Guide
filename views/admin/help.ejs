@@ -1,0 +1,136 @@
+
+<% include ../common/header.ejs %>
+
+<!-- .page -->
+<div class="page page-help-dashboard js-manage-help">
+<div class="page-inner">
+<div class="bar-title clearfix">
+    <h1 class="left">Manage Help</h1>
+</div>
+<!-- End .bar-title -->
+
+<div class="page-content">
+<div class="tabs clearfix">
+    <ul>
+        <li>
+            <a href="javascript:" class="active" data-bind="click: showDashboard, css:{ active: tab() == 'dashboard' }">
+                <span class="tab-right">
+                    <span class="tab-left">Dashboard Details</span>
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="javascript:"  data-bind="click: showTopics, css:{ active: tab() == 'topics' }">
+                <span class="tab-right"><span class="tab-left">Help Topics</span></span>
+            </a>
+        </li>
+    </ul>
+    <a href="/admin/help/add" class="orange-big-btn btn-action-new-topic right" data-bind="visible: tab() == 'topics'">
+        <span class="orange-big-left left"></span>
+							<span class="orange-big-middle left orange-shadow">
+								<span class="add-icon left"></span>Add New Topic</span>
+        <span class="orange-big-right left"></span>
+    </a>
+</div>
+<!-- end .tabs -->
+<div class="tabs-content">
+    <div class="tab" id="dashboard-details"  data-bind="css: {active:  tab() == 'dashboard'}">
+    <div class="form-wrapper">
+        <div class="field-container clearfix">
+            <label class="left">Dashboard Graphic</label>
+            <div class="help-wrapper left">
+                <a class="help-icon left" href="javascript:"></a>
+                <div class="tool-tip hide">
+                    <span class="tooltip-left left"></span>
+                    <div class="tooltip-middle left">
+                        <div class="tooltip-head">
+                            <div class="tooltip-head-content left">
+                                <h2 class="left">Helps</h2>
+                                <a href="javascript:" class="right tooltip-close"></a>
+                            </div>
+                            <div class="clear"></div>
+                            <p>KMLs represent distinct stages of maturity or development of a problem, project, or task.
+                                <br>Gather : Early stage; immature, undefined
+                                <br>Synthesize: Analyze; define requirements and ops concept
+                                <br>Validate: Evaluate and validate; produce deliverable
+                                <br>Apply: Integrate; augment; standardize deliverable</p>
+                            <a href="javascript:">learn more...</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="file-field left">
+                <input type="text">
+                <input type="file">
+            </div>
+
+            <a href="javascript:" class="orange-big-btn align left js-action-browse">
+                <span class="orange-big-left left"></span>
+                <span class="orange-big-middle left orange-shadow">Browse</span>
+                <span class="orange-big-right left"></span>
+            </a>
+        </div>
+    </div>
+
+    <div class="ckeditor-field">
+        <textarea name="content" id="redactor-topic" rows="4" cols="50" data-bind="ckEditor: dashboardText, ckEditorOptions: {height: '214px'}"></textarea>
+    </div>
+    <!-- end CKEditor-field-->
+
+    <div class="tab-command clearfix">
+        <a href="javascript:" class="orange-big-btn align right" data-bind="click: saveDashboard">
+            <span class="orange-big-left left"></span>
+									<span class="orange-big-middle left orange-shadow">
+										<span class="save-icon left"></span>Save Changes</span>
+            <span class="orange-big-right left"></span>
+        </a>
+        <a href="javascript:" class="orange-big-btn align right" data-bind="click: revert">
+            <span class="orange-big-left left"></span>
+									<span class="orange-big-middle left orange-shadow">
+										<span class="cancel-icon left"></span>Discard Changes</span>
+            <span class="orange-big-right left"></span>
+        </a>
+    </div>
+    <!-- end .tab-command-->
+</div>
+
+    <div class="tab" id="help-topics" data-bind="css: {active:  tab() == 'topics'}">
+    <div class="help-topics-list ajax-pre-loader-wrapper">
+        <div class="preloader" data-bind="loader: loading"></div>
+        <div class="ajax-content" data-bind="css: {show: !loading()}, foreach: topics">
+            <div class="topic-box">
+                <h3 data-bind="text: name"></h3>
+                <div class="img-wrapper">
+                    <img alt="" data-bind="attr: { src: '/api/helpTopic/' + image_id + '/download'}" width="261" height="143" >
+                </div>
+                <div class="topic-command clearfix">
+                    <a class="orange-small-btn  left" data-bind="attr: {href: '/admin/help/edit/' + id}">
+                        <span class="orange-small-left left"></span>
+												<span class="orange-small-middle edit left orange-shadow">
+													<span class="edit-icon left"></span>Edit</span>
+                        <span class="orange-small-right left"></span>
+                    </a>
+                    <a href="javascript:" class="orange-small-btn delete-btn right" data-bind="click: $root.deleteTopic.bind($root, $data)">
+                        <span class="orange-small-left left"></span>
+												<span class="orange-small-middle delete left orange-shadow">
+													<span class="delete-icon left"></span>Delete</span>
+                        <span class="orange-small-right left"></span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- end .help-topics-list -->
+</div>
+</div>
+<!-- end .tabs-content -->
+</div>
+<!-- End .page-content -->
+</div><!-- End .page-inner -->
+</div>
+<!-- End .page -->
+
+
+
+<% include ../common/footer.ejs %>

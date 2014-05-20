@@ -1,0 +1,20 @@
+<div id="shownav">
+    <div class="wrapper">
+        <ul>
+            <% for(var i = 0; i < breadcrumb.length; i++) {%>
+
+                <% if (breadcrumb[i].text) {%>
+                    <li class="<%= i == 0 ? 'first' : ''%>">
+                        <a href="<%= breadcrumb[i].url %>" class="left">
+                            <%= breadcrumb[i].text %>
+                        </a>
+                        <span class="crumb-icon"></span>
+                    </li>
+                <% } else {%>
+                    <li><span class="current"><%= breadcrumb[i] %></span>
+                <% } %>
+
+            <% }%>
+        </ul>
+    </div>
+</div>

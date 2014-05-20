@@ -1,0 +1,110 @@
+
+<% include ../common/header.ejs %>
+
+<% locals.breadcrumb = [{text: "Manage Solution", url: "/admin/smg"}, 'Solution Details']%>
+
+<% include ../common/breadcrumb.ejs %>
+
+<div id="body"  class="js-smg-details">
+    <div class="wrapper" data-bind="with: smg">
+        <div class="row1">
+            <h1 class="left page-head" data-bind="text: name"></h1>
+            <div class="clear"></div>
+        </div>
+        <div class="border-line left border-adjust"></div>
+        <div class="solution-btn clearfix">
+            <a href="javascript:window.history.go(-1);" class="back orange-big-btn left">
+                <span class="orange-big-left left"></span>
+                            <span class="orange-big-middle left orange-shadow">
+                                <span class="back-icon left"></span>Back</span>
+                <span class="orange-big-right left"></span>
+            </a>
+            <div class="form-buttons right clearfix">
+                <a class="orange-big-btn align left" data-bind="attr: { href: '/admin/smg/edit/'  + id }">
+                    <span class="orange-big-left left"></span>
+                                <span class="orange-big-middle left orange-shadow">
+                                    <span class="edit-icon left"></span>Edit</span>
+                    <span class="orange-big-right left"></span>
+                </a>
+                <a href="javascript:" class="orange-big-btn align left last" data-bind="click: $root.deleteSmg">
+                    <span class="orange-big-left left"></span>
+                                <span class="orange-big-middle left orange-shadow">
+                                    <span class="delete-icon left"></span>Delete</span>
+                    <span class="orange-big-right left"></span>
+                </a>
+            </div>
+        </div>
+
+        <div class="ajax-pre-loader-new ajax-pre-loader-wrapper init-load">
+            <div class="smg-details-tb1 clear"  data-bind="css :{'ajax-content': $root.loading()}">
+                <h1 class="page-head">Learn More</h1>
+                <div class="smg-details-wrapper clearfix">
+                    <table class="table1 clear left" data-bind="foreach: tab1Items">
+                        <tr>
+                            <td class="first" data-bind="text: characteristic.name"></td>
+                            <td data-bind="text: displayValue">
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="graphics right"></div>
+                </div>
+            </div>
+            <div class="smg-details-tb2"  data-bind="css :{'ajax-content': $root.loading()}">
+                <h1 class="page-head">Examples within HH&amp;P</h1>
+                <table class="table2 clear">
+                    <colgroup>
+                        <col >
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>Content</th>
+                    </tr>
+                    </thead>
+                    <tbody data-bind="foreach: examples">
+                    <tr>
+                        <td data-bind="html: $data" class="align-left"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="smg-details-tb3" data-bind="css :{'ajax-content': $root.loading()}">
+                <h1 class="page-head">How to Start</h1>
+
+                <div class="tb-note">
+                    <span>Your first step will be to contact the POC listed; other pertinent information is provided below</span>
+                </div>
+                <table class="table3 adjust">
+                    <colgroup>
+                        <col width="19%" >
+                        <col >
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th class="special">SAA Non-Reimbursable</th>
+                    </tr>
+                    </thead>
+                    <tbody data-bind="foreach: tab3Items">
+                    <tr>
+                        <td class="first" data-bind="text: characteristic.name"></td>
+                        <td data-bind="text: displayValue">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="preloader preloader2" data-bind="loader: $root.loading"></div>
+        </div>
+        <a href="javascript:window.history.go(-1);" class="back orange-big-btn left">
+            <span class="orange-big-left left"></span>
+                        <span class="orange-big-middle left orange-shadow">
+                            <span class="back-icon left"></span>Back</span>
+            <span class="orange-big-right left"></span>
+        </a>
+    </div>
+</div>
+<!--End Examples-->
+
+
+<% include ../common/footer.ejs %>

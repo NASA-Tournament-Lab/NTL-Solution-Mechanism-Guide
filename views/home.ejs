@@ -1,0 +1,137 @@
+
+<% include common/header.ejs %>
+
+
+<% include common/koTemplates.ejs %>
+
+<div id="body">
+    <div class="wrapper js-home">
+    <div id="poster" data-bind="html: widgetHtml">
+
+
+    </div>
+    <div id="identify-search-wrapper" data-bind="visible: !loading()">
+        <div class="identify-left left">
+            <ul class="identify-questions" data-bind="foreach: fields">
+                <li class="clear">
+                    <div class="help-wrapper">
+                        <a class="help-icon left" href="javascript:"></a>
+                        <div class="tool-tip left hide">
+                            <span class="tooltip-left left"></span>
+                            <div class="tooltip-middle left">
+                                <div class="tooltip-head">
+                                    <div class="tooltip-head-content left">
+                                        <h2 class="left">Helps</h2>
+                                        <a href="javascript:" class="right tooltip-close"></a>
+                                    </div>
+                                    <div class="clear"></div>
+                                    <p data-bind="html: help"></p>
+                                    <!--<a href="javascript:">learn more...</a>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="question" data-bind="text: name"></p>
+                    <div class="answer">
+                        <!-- ko if: values.length -->
+                            <!-- ko foreach: values -->
+                                <label class="option">
+                                    <input class="left" type="radio" data-bind="value: valuetype_id, iCheck: $parent.selectedValue, attr: {name: 'group_' +$parent.characteristic_id}" >
+                                    <span data-bind="text: name"></span>
+                                </label>
+                            <!-- /ko -->
+                        <!-- /ko -->
+                        <!-- ko if: type_id == chTypes.checkbox -->
+                            <label class="option">
+                                <input class="left" value="True" type="radio" data-bind="iCheck: value, attr: {name: 'group_' +$parent.characteristic_id}" >
+                                <span>True</span>
+                            </label>
+
+                            <label class="option">
+                                <input class="left" value="False" type="radio" data-bind="iCheck: value, attr: {name: 'group_' +$parent.characteristic_id}" >
+                                <span>False</span>
+                            </label>
+                        <!-- /ko -->
+
+                        <!-- ko if: type_id == chTypes.text || type_id == chTypes.textarea -->
+                            <div class="text-field">
+                                <input type="text" maxlength="200" data-bind="value: value" />
+                            </div>
+                        <!-- /ko -->
+
+                        <!-- ko if: type_id == chTypes.number -->
+                            <div class="text-field">
+                                <input type="text" maxlength="200" data-bind="value: value" class="js-leading-zeros" />
+                            </div>
+                        <!-- /ko -->
+
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="identify-right right">
+            <span class="left-arrow"></span>
+            <h1>Identify the Solution Mechanisms
+                <br>
+                <span>at side of You</span>
+                <br>that fit your needs.</h1>
+            <a href="javascript:;" class="orange-big-btn align clear" data-bind="click: search">
+                <span class="orange-big-left left"></span>
+                                <span class="orange-big-middle left orange-shadow Identify">
+                                    <span class="search-icon left"></span>Identify Solutions</span>
+                <span class="orange-big-right left"></span>
+            </a>
+        </div>
+        <div class="clear"></div>
+    </div>
+    </div>
+</div>
+
+<!--Begin Placeholder-->
+<div id="placeholder">
+    <div class="wrapper clearfix">
+        <h2>Learn about What's in the guide</h2>
+
+        <!-- ko foreach: topics -->
+
+            <div class="imgcontent left last" data-bind="css: {last: $index() == 2}">
+            <img class="border left" data-bind="attr: {src: '/api/helpTopic/' + image_id + '/download' }" alt="Placeholder" width="130" height="95">
+            <div class="content left">
+                <h3 data-bind="text: name"></h3>
+                <p  data-bind="truncate: description, truncateOptions: { height: 60, extractText: true }">
+                </p>
+                <div class="learn">
+                    <a data-bind="attr: {href: '/help/' + id }">
+                        <span class="orange-small-left left"></span>
+                        <span class="orange-small-center left">Learn More <span class="icon right"></span></span>
+                        <span class="orange-small-right left"></span>
+
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- /ko -->
+    </div>
+</div>
+<!--End Placeholder-->
+
+<!--Begin Examples-->
+<div id="examples">
+    <h2>Hands on Examples</h2>
+    <div class="carousel-content" data-bind="foreach: examples">
+        <div class="imgcontent left">
+            <a class="carouse-item" data-bind="attr: {href: '/example/' + smg_id + '/'+id}">
+                <img class="border" src="/img/place_holder1.jpg" alt="Placeholder">
+                <div class="content">
+                    <p data-bind="text: name">
+                        Visual Impairment due to Intracranial Presure (VIIP)
+                    </p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<!--End Examples-->
+
+
+<% include common/footer.ejs %>

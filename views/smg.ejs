@@ -1,0 +1,418 @@
+
+<% include common/header.ejs %>
+
+<% locals.breadcrumb = [{text: "Home", url: "/home"}, "Identify Solution"]%>
+
+<% include common/breadcrumb.ejs %>
+<% include common/koTemplates.ejs %>
+
+
+<script type="text/html" id="filter-template">
+    <span class="nquestion" data-bind="text: name"></span>
+    <div class="options-root">
+
+        <!-- ko if: values.length -->
+            <div class="options-root">
+                <span class="wrapper-options left" data-bind="foreach: values">
+                    <!-- ko if: $index() % 2 == 0 -->
+                     <label class="wdh left form-label">
+                         <input type="radio" data-bind="value: valuetype_id, iCheck: $parent.selectedValue, attr: {name: 'group_' +$parent.characteristic_id}"/>
+                         <span data-bind="text: name"></span>
+                     </label>
+                    <!-- /ko -->
+                </span>
+                <span class="wrapper-options left"  data-bind="foreach: values">
+                    <!-- ko if: $index() % 2 == 1 -->
+                        <label class="wdh left form-label">
+                            <input type="radio" data-bind="value: valuetype_id, iCheck: $parent.selectedValue, attr: {name: 'group_' +$parent.characteristic_id}" />
+                            <span data-bind="text: name"></span>
+                        </label>
+                    <!-- /ko -->
+                </span>
+            </div>
+        <!-- /ko -->
+        <!-- ko if: type_id == chTypes.checkbox -->
+            <div class="options-root">
+                <span class="wrapper-options left">
+                     <label class="wdh left form-label">
+                         <input type="radio" value="True"  data-bind="iCheck: value, attr: {name: 'group_' +$parent.characteristic_id}"/>
+                         <span>True</span>
+                     </label>
+                </span>
+                <span class="wrapper-options left">
+                     <label class="wdh left form-label">
+                         <input type="radio" value="False"  data-bind="iCheck: value, attr: {name: 'group_' +$parent.characteristic_id}"/>
+                         <span>False</span>
+                     </label>
+                </span>
+            </div>
+        <!-- /ko -->
+
+        <!-- ko if: type_id == chTypes.text || type_id == chTypes.textarea -->
+            <div class="options-root">
+                <div class="text-field" data-bind="">
+                    <input type="text" maxlength="200" data-bind="value: value" />
+                </div>
+            </div>
+        <!-- /ko -->
+
+        <!-- ko if: type_id == chTypes.number -->
+        <div class="text-field">
+            <input type="text" maxlength="200" data-bind="value: value" class="js-leading-zeros" />
+        </div>
+        <!-- /ko -->
+    </div>
+</script>
+
+
+<div id="body" class="js-smg-listing">
+    <div class="wrapper background-wrapper">
+        <div id="left-panel" class="left">
+            <div id="compare" class="left">
+                <div class="wrapper left solution1 hide" data-bind="css: {hide: selectedItems().length == 0}">
+                    <p>
+                        This page shows a list of solutions based on the user selection. The user will be able to modify his/her selection.<br>The user will be able to compare two or more solutions. Please check the "Add to compare" checkbox on atleast two soutions to see how this works.
+                    </p>
+                    <div class="border-bottom left"></div>
+                    <div class="list-compare" data-bind="foreach: selectedItems">
+                        <ul>
+                            <li>
+                                <div class="list left">
+                                    <div class="compare-list-box left">
+                                        <span class="compare-list-up"></span>
+                                                <span class="compare-list-middle">
+                                                    <span class="content" data-bind="text: name"></span>
+                                                </span>
+                                        <span class="compare-list-down"></span>
+                                    </div>
+                                    <a href="javascript:;" class="delete-compare" data-bind="click: compare.bind($data, false)"></a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="compare-solutions-button left">
+                        <a href="smg_compare.html" class="orange-big-btn right"
+                           data-bind="attr: { href: $root.compareUrl}">
+                            <span class="orange-big-left left"></span>
+                            <span class="orange-big-middle left orange-shadow">Compare Solutions Above</span>
+                            <span class="orange-big-right left"></span>
+                        </a>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="filter-solution left solution2" data-bind="visible: !alternative()">
+                <h1>Filter Solution</h1>
+            </div>
+            <div class="questions left" data-bind="css :{'white-questions-bg':alternative}">
+                <ul class="solution2" data-bind="foreach: fields, css: { hide: alternative()}">
+                    <li data-bind=" css: {'less-margin': $index() == 0, 'last': $index() + 1 == $parent.fields().length}">
+                        <div class="questions-wrapper">
+                            <a class="left tooltip-icon" href="javascript:" data-bind="attr: { 'data-val' : help }"></a>
+
+                            <div class="nquestion-root left" data-bind="template: {name: 'filter-template'}">
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </li>
+                </ul>
+                <div class="update-result left">
+                    <ul class="solution1"  data-bind="foreach: fields, css: { hide: !alternative()}">
+                        <li>
+                            <div class="white-questions-wrapper">
+                                <a class="left tooltip-icon" href="javascript:"></a>
+
+                                <div class="nquestion-root left" data-bind="template: {name: 'filter-template'}">
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                        </li>
+                    </ul>
+                    <div class="orange-button left">
+                        <a href="javascript:" class="orange-big-btn align clear update-list-result" data-bind="click: search">
+                            <span class="orange-big-left left"></span>
+                            <span class="orange-big-middle left orange-shadow">Update Result</span>
+                            <span class="orange-big-right left"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div id="right-panel" class="right smg-listing">
+            <div class="row1">
+                <h2 class="left">Identify Solutions</h2>
+                <a href="javascript:" id="print" class="orange-big-btn right">
+                    <span class="orange-big-left left"></span>
+							<span class="orange-big-middle left orange-shadow">
+								<span class="print-icon left"></span>Print</span>
+                    <span class="orange-big-right left"></span>
+                </a>
+                <div class="clear"></div>
+            </div>
+            <!--Begin BorderLine-->
+            <div class="border-line left"></div>
+            <!--End Border Line-->
+            <!--Begin Row2-->
+            <div class="row2 left">
+                <p class="left">
+                    Based on your selection, <br>The following Solution Mechanisms are recommended. <br>To learn more, select a Solution Mechanism.
+                </p>
+                <div class="grid-list right">
+                    <a href="javascript:" class="grid left" data-bind="click: view.bind($data, 'grid'), css: { active: view() == 'grid' }">
+                        <span class="grid-icon left"></span>
+                        <span class="letter left">Grid</span>
+                    </a>
+                    <a href="javascript:" class="list left" data-bind="click: view.bind($data, 'list'), css: { active: view() == 'list' }">
+                        <span class="list-icon left"></span>
+                        <span class="letter left">List</span>
+                    </a>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <!--End Row2-->
+
+            <div class="list-grid-view-wrapper ajax-pre-loader-wrapper ajax-pre-loader-new init-load">
+
+                <!-- ko if: view() == 'list' -->
+                <div id="list-view" class="row3 left " data-bind="css :{'ajax-content' : loading()}">
+                    <div class="row3-wrapper" data-bind="if: items().length">
+                        <ul data-bind="foreach: items">
+
+                            <li  data-bind="css: {'last': $index() + 1 == $parent.items().length}">
+                                <div class="square left"></div>
+                                <div class="content left">
+                                    <label class="form-label"><input type="checkbox" data-bind="iCheck: compare"> <span>Add to compare</span></label>
+                                    <br>
+                                    <a class="title" data-bind="text: name, attr:{href: '/smg/' + id}"></a>
+                                    <p data-bind="truncate: desc, truncateOptions: {height: 50}"></p>
+                                </div>
+                                <div class="status right">
+											<span class="wdh left">
+												<span class="l left"></span>
+												<span class="months left" data-bind="text: duration"></span>
+											</span>
+											<span class="wdh left">
+												<span class="dolar left"></span>
+												<span class="left level">
+													<span class="k" data-bind="text: cost"></span>
+													<span class="size">Low</span>
+												</span>
+												<span class="color-round left"></span>
+											</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- /ko -->
+
+                <!-- ko if: view() == 'grid' -->
+                <div id="grid-view" class="row3 left "  data-bind="css :{'ajax-content' : loading()}, foreach: items">
+                    <div class="white-box" data-bind="css: {left: $index() % 2 == 0, right: $index() % 2 == 1}">
+                        <div class="box-wrapper left">
+                            <a class="title" data-bind="text: name, attr:{href: '/smg/' + id}"></a>
+                            <div class="square left"></div>
+                            <div class="content left">
+                                <label class="form-label"><input type="checkbox" data-bind="iCheck: compare"> <span>Add to compare</span></label>
+                                <br>
+                                <p class="left" data-bind="truncate: desc, truncateOptions: {height: 80}"></p>
+                            </div>
+                            <div class="border-bottom left"></div>
+                            <div class="status left">
+                                <span class="l left"></span>
+                                <span class="months left" data-bind="text: duration"></span>
+                                <span class="dolar left"></span>
+                                <span class="k left"  data-bind="text: cost"></span>
+                                <span class="size left">- <span class="yellow">Mid</span></span>
+                                <span class="color-round right yellow"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ko if: $parent.items().length == 2 && $index() == 1-->
+                    <div class="white-box left hidden"></div>
+                    <!-- /ko -->
+                </div>
+                <!-- /ko -->
+                <div class="clear"></div>
+                <div class="preloader preloader2" data-bind="loader : loading"></div>
+            </div>
+            <!--End Gridview-->
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+</div>
+<!--End Examples-->
+
+
+<div class="confirmpopup modal-window-wrapper hide popup-element" id="cannot-add-compare">
+    <div class="popup-wrapper">
+        <div class="popup-header">
+            <h4 class="left">Error</h4>
+            <a href="javascript:" class="right tooltip-close close-popup"></a>
+        </div>
+        <div class="popup-form">
+            <span>You already have two solutions selected, please remove existing solution to add different one</span>
+        </div>
+        <div class="form-buttons">
+            <a href="javascript:" class="btn-orange-big close-popup">
+                <span class="btn-right"><span class="btn-middle">OK, Close</span></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<div id="agreement-popup" class="modal-window-wrapper hide" data-bind="if:popupSmg">
+    <div class="modal-head">
+        <h1 class="left">Solution Mechanism</h1>
+        <div class="social-media right">
+            <a href="javascript:" class="g left"></a>
+            <a href="javascript:" class="t left"></a>
+            <a href="javascript:" class="f left"></a>
+        </div>
+        <span class="modal-close modal-close-btn right"></span>
+    </div>
+    <div class="ajax-pre-loader-wrapper popup-open-init" data-bind="with: popupSmgModel">
+        <div class="modal-subhead clearfix">
+            <h1 data-bind="text: name"></h1>
+            <div class="duration-details">
+                <div class="left ball-details">
+							<span class="duration left">
+								<span class="dur-icon left"></span>
+								<span class="dur-content left">Duration
+									<br>
+									<span data-bind="text: $root.popupSmg().duration"></span>
+								</span>
+							</span>
+							<span class="level left">
+								<span class="lvl-icon left"></span>
+								<span class="lvl-content left"> <span data-bind="text: $root.popupSmg().cost"></span>
+									<br>
+									<span class="green">low</span>
+								</span>
+							</span>
+                    <span class="lvl-ball left"></span>
+                </div>
+                <div class="right">
+                    <a class="details orange-big-btn align left" data-bind="attr : {href: '/smg/' + id}">
+                        <span class="orange-big-left left"></span>
+								<span class="orange-big-middle left orange-shadow">
+									<span class="details-icon left"></span>Details</span>
+                        <span class="orange-big-right left"></span>
+                    </a>
+                    <a href="javascript:;" class="compare orange-big-btn align left" data-bind="click: $root.comparePopup">
+                        <span class="orange-big-left left"></span>
+								<span class="orange-big-middle left orange-shadow">
+									<span class="compare-icon left"></span>Compare</span>
+                        <span class="orange-big-right left"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div id="table-scroll" class="has-bottom-border">
+            <div class="tables clear">
+                <p>
+                    <span>Defined:</span>One or more partners in a mutually beneficial activity that furthers NASA’s mission; collaborative agreement in which both parties bear the cost of its participation and no funds are exchanged.</p>
+                <div class="table-cover less first-less">
+                    <div class="table-head clearfix">
+                        <span class="tab-left left"></span>
+								<span class="tab-middle left">
+									<a href="javascript:" class="tb-collapse left"></a>Learn More Information</span>
+                        <span class="tab-right left"></span>
+                    </div>
+                    <table class="table1 clear">
+                        <colgroup>
+                            <col width="20%" >
+                            <col >
+                        </colgroup>
+                        <tbody data-bind="foreach: tab1Items">
+                        <tr>
+                            <td class="first" data-bind="text: characteristic.name"></td>
+                            <td data-bind="text: displayValue">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--table 2 -->
+                <div class="table-cover less">
+                    <div class="table-head clearfix">
+                        <span class="tab-left left"></span>
+								<span class="tab-middle left">
+									<a href="javascript:" class="tb-collapse left"></a>Examples within HH&amp;P</span>
+                        <span class="tab-right left"></span>
+                    </div>
+                    <table class="table2 clear">
+                        <thead>
+                        <tr>
+                            <th>Content</th>
+                        </tr>
+                        </thead>
+                        <tbody data-bind="foreach: examples">
+                        <tr>
+                            <td data-bind="html: $data" class="align-left"></td>
+                        </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+                <!-- table3 -->
+                <div class="table-cover less">
+                    <div class="table-head clearfix">
+                        <span class="tab-left left"></span>
+								<span class="tab-middle left">
+									<a href="javascript:" class="tb-collapse left"></a>How to Start</span>
+                        <span class="tab-right left"></span>
+                    </div>
+                    <div class="tb-note clear">
+                        <span>Your first step will be to contact the POC listed; other pertinent information is provided below</span>
+                    </div>
+                    <table class="table3 clear">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th class="special">SAA Non-Reimbursable</th>
+                        </tr>
+                        </thead>
+                        <tbody data-bind="foreach: tab3Items">
+                        <tr>
+                            <td class="first" data-bind="text: characteristic.name"></td>
+                            <td data-bind="text: displayValue">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-close-btn">
+        <a href="javascript:" class="details orange-big-btn align left">
+            <span class="orange-big-left left"></span>
+            <span class="orange-big-middle left orange-shadow">Close</span>
+            <span class="orange-big-right left"></span>
+        </a>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<div class="tool-tip" id="tooltip">
+    <span class="tooltip-left left"></span>
+    <div class="tooltip-middle left">
+        <div class="tooltip-head">
+            <div class="tooltip-head-content left">
+                <h2 class="left">Helps</h2>
+                <a href="javascript:" class="right tooltip-close"></a>
+            </div>
+            <div class="clear"></div>
+            <p></p>
+        </div>
+    </div>
+</div>
+
+
+<% include common/footer.ejs %>

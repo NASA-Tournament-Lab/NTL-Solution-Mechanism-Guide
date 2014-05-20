@@ -1,0 +1,1 @@
+ALTER TABLE characteristic ADD CONSTRAINT UC_c_sort UNIQUE (sort, tab)

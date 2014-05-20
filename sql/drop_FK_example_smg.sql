@@ -1,0 +1,1 @@
+ALTER TABLE smg DROP FOREIGN KEY FK_example_smg

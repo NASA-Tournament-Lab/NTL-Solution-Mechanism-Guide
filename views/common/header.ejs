@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<% include head.ejs %>
+
+<body class="page-<%= locals.name %>">
+
+<div id="container">
+    <div id="header">
+        <div class="head-content">
+            <a class="left" href="/home">
+                <img src="/img/logo.png" alt="Logo">
+            </a>
+            <div class="navigation right">
+                <div class="welcome right">
+                    <span class="welcome-left left"></span>
+                            <span class="welcome-center left">
+                                <span class="name">Welcome <%= username%>,</span><a href="javascript:" class="logout">Logout</a>
+                            </span>
+                    <span class="welcome-right left"></span>
+                </div>
+                <% if (locals.admin) {%>
+                    <% include menuAdmin.ejs %>
+                <%} else {%>
+                    <% include menu.ejs %>
+                <%}%>
+            </div>
+        </div>
+    </div>

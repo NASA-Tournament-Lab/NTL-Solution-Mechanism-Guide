@@ -1,0 +1,102 @@
+
+<% include common/header.ejs %>
+
+<% locals.breadcrumb = [{text: "Home", url: "/home"}, "Solution Details"]%>
+
+<% include common/breadcrumb.ejs %>
+<% include common/koTemplates.ejs %>
+
+<div id="body" class="js-smg-details">
+    <div class="wrapper">
+        <div class="row1 compare">
+            <h2 class="left page-head" data-bind="text: smg() ? smg().name : ''"></h2>
+            <a href="javascript:" id="print" class="orange-big-btn right">
+                <span class="orange-big-left left"></span>
+						<span class="orange-big-middle left orange-shadow">
+							<span class="print-icon left"></span>Print</span>
+                <span class="orange-big-right left"></span>
+            </a>
+            <div class="clear"></div>
+        </div>
+        <div class="border-line left"></div>
+        <a href="javascript:" class="back orange-big-btn left" onclick="javascript:history.back();return false;">
+            <span class="orange-big-left left"></span>
+					<span class="orange-big-middle left orange-shadow">
+						<span class="back-icon left"></span>Back</span>
+            <span class="orange-big-right left"></span>
+        </a>
+
+        <div class="ajax-pre-loader-new ajax-pre-loader-wrapper init-load">
+            <div class="smg-details-tb1 clear"  data-bind="css :{'ajax-content': loading()}">
+                <h1 class="page-head">Learn More</h1>
+                <div class="smg-details-wrapper clearfix" data-bind="if: smg">
+                    <table class="table1 clear left" data-bind="foreach: smg().tab1Items">
+                        <tr>
+                            <td class="first" data-bind="text: characteristic.name"></td>
+                            <td data-bind="text: displayValue">
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="graphics right"></div>
+                </div>
+            </div>
+            <div class="smg-details-tb2"  data-bind="css :{'ajax-content': loading()}">
+                <h1 class="page-head">Examples within HH&amp;P</h1>
+                <table class="table2 clear" data-bind="if: smg">
+                    <colgroup>
+                        <col >
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>Content</th>
+                    </tr>
+                    </thead>
+                    <tbody data-bind="foreach: smg().examples">
+                    <tr>
+                        <td data-bind="html: $data" class="align-left"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="smg-details-tb3" data-bind="css :{'ajax-content': loading()}">
+                <h1 class="page-head">How to Start</h1>
+
+                <div class="tb-note">
+                    <span>Your first step will be to contact the POC listed; other pertinent information is provided below</span>
+                </div>
+                <table class="table3 adjust" data-bind="if: smg">
+                    <colgroup>
+                        <col width="19%" >
+                        <col >
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th class="special">SAA Non-Reimbursable</th>
+                    </tr>
+                    </thead>
+                    <tbody data-bind="foreach: smg().tab3Items">
+                    <tr>
+                        <td class="first" data-bind="text: characteristic.name"></td>
+                        <td data-bind="text: displayValue">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="preloader preloader2" data-bind="loader: loading"></div>
+        </div>
+        <a href="javascript:" class="back orange-big-btn left" onclick="javascript:history.back();return false;">
+            <span class="orange-big-left left"></span>
+					<span class="orange-big-middle left orange-shadow">
+						<span class="back-icon left"></span>Back</span>
+            <span class="orange-big-right left"></span>
+        </a>
+    </div>
+</div>
+<!--End Examples-->
+
+
+
+<% include common/footer.ejs %>

@@ -1,0 +1,309 @@
+
+<% include ../common/header.ejs %>
+
+<% locals.breadcrumb = [{text: "Manage Solution", url: "/admin/smg"}, locals.name == "createSmg" ? "Add New Solution" : 'Edit Solution']%>
+
+<% include ../common/breadcrumb.ejs %>
+<% include ../common/koTemplates.ejs %>
+
+
+<script type="text/html" id="fields-template">
+
+    <div data-bind="foreach: $data">
+        <div class="field-container left">
+            <label class="left" data-bind="text: name"></label>
+            <div class="help-wrapper left">
+                <a class="help-icon left" href="javascript:"></a>
+                <div class="tool-tip left hide">
+                    <span class="tooltip-left left"></span>
+                    <div class="tooltip-middle left">
+                        <div class="tooltip-head">
+                            <div class="tooltip-head-content left">
+                                <h2 class="left">Helps</h2>
+                                <a href="javascript:" class="right tooltip-close"></a>
+                            </div>
+                            <div class="clear"></div>
+                            <p data-bind="html: description"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ko if: type_id == chTypes.text -->
+            <input class="left" type="text" data-bind="{value: value}"/>
+            <!-- /ko -->
+            <!-- ko if: type_id == chTypes.textarea -->
+            <textarea maxlength="32768" rows="4" cols="50" class="left" data-bind="{value: value}">
+            </textarea>
+            <!-- /ko -->
+            <!-- ko if: $data.type_id == chTypes.radio -->
+            <div class="left radio-wrapper" data-bind="foreach: values, hasError: value">
+
+                <label class="wdh left form-label">
+                    <input type="radio" data-bind="attr: { name: $parent.id }, iCheck: $parent.value, value: $data" > <span data-bind="text: name"></span>
+                </label>
+            </div>
+            <!-- /ko -->
+            <!-- ko if: type_id == chTypes.number -->
+            <input class="left js-leading-zeros" type="text" data-bind="{value: value}"/>
+            <!-- /ko -->
+            <!-- ko if: type_id == chTypes.checkbox -->
+            <input class="left"  type="checkbox" data-bind="iCheck: value, iCheckOptions: { trueFalseString: true }"/>
+            <!-- /ko -->
+            <!-- ko if: type_id == chTypes.picklist -->
+            <select class="left"  data-bind="options: values,
+                                             hasError: value,
+                                             hasErrorTarget: '.jqTransformSelectWrapper',
+                                             jqSelect: value,
+                                             optionsText: 'name',
+                                             value: value,
+                                             optionsCaption: 'Choose...'">
+
+            </select>
+            <!-- /ko -->
+        </div>
+    </div>
+    <div class="clear"></div>
+</script>
+
+<div id="body" class="js-add-edit-smg">
+<div class="wrapper">
+<div class="row1">
+    <h1 class="left page-head"><%= locals.name == "createSmg" ? "Add New Solution" : 'Edit Solution' %></h1>
+    <div class="clear"></div>
+</div>
+<div class="border-line border-nobtn-adjust left"></div>
+<div id="step-progress" class="clear active-step-1">
+    <div class="wrapper">
+        <div class="step-wrapper">
+            <span class="left step-1 step-number active-number" data-bind="click: goToStep.bind($root, 1)">1</span>
+							<span class="step-1 step-name left active-name">
+								<span class="name left">Information</span>
+								<span class="right" data-bind="css: {finish: step() > 1}"></span>
+							</span>
+            <span class="step-2 step-number left" data-bind="css: { 'active-number': step() > 1 }, click: goToStep.bind($root, 2)">2</span>
+							<span class="step-2 step-name left"  data-bind="css: { 'active-name': step() > 1 }">
+								<span class="name left">Examples</span>
+								<span class="right"  data-bind="css: {finish: step() > 2}"></span>
+							</span>
+            <span class="step-3 step-number left"  data-bind="css: { 'active-number': step() > 2 }, click: goToStep.bind($root, 3)">3</span>
+							<span class="step-3 step-name left"  data-bind="css: { 'active-name': step() > 2 }">
+								<span class="name left">How To Start</span>
+								<span class="right"  data-bind="css: {finish: step() > 3}"></span>
+							</span>
+            <span class="step-4 step-number left" data-bind="css: { 'active-number': step() > 3 }">4</span>
+							<span class="step-4 step-name end-step left"  data-bind="css: { 'active-name': step() > 3 }">
+								<span class="name left">Finish</span>
+								<span class="right"></span>
+							</span>
+        </div>
+    </div>
+</div>
+<!--End FormStep progress-->
+
+
+<!--Begin Form Design-->
+<div id="add-forms" class="clear">
+    <div class="wrapper">
+        <div class="form-container"  data-bind="css: {hide: step() == 4 }">
+             <!--ko if: step() == 1 -->
+            <div id="step-one" class="step">
+                <h1>Information</h1>
+                <div class="form-wrapper" data-bind="template: {name: 'fields-template', data: step1Items}">
+                </div>
+            </div>
+            <!-- /ko -->
+
+            <div id="step-two" class="step" data-bind="css: {hide: step() != 2}">
+                <h1>Examples</h1>
+                <div class="form-wrapper">
+                    <div class="field-container left">
+                        <label class="left">Example Details</label>
+                        <div class="help-wrapper left">
+                            <a class="help-icon left" href="javascript:"></a>
+                            <div class="tool-tip left hide">
+                                <span class="tooltip-left left"></span>
+                                <div class="tooltip-middle left">
+                                    <div class="tooltip-head">
+                                        <div class="tooltip-head-content left">
+                                            <h2 class="left">Helps</h2>
+                                            <a href="javascript:" class="right tooltip-close"></a>
+                                        </div>
+                                        <div class="clear"></div>
+                                        <p>KMLs represent distinct stages of maturity or development of a problem, project, or task.
+                                            <br>Gather : Early stage; immature, undefined
+                                            <br>Synthesize: Analyze; define requirements and ops concept
+                                            <br>Validate: Evaluate and validate; produce deliverable
+                                            <br>Apply: Integrate; augment; standardize deliverable</p>
+                                        <a href="javascript:">learn more...</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-bind="foreach: examples">
+                            <div data-bind="css: {'ckeditor-fields': $index() == 0, 'textarea-section': $index() != 0}">
+                                <textarea name="content" id="" rows="4" cols="50" class="ckeditor-target"
+                                          data-bind="attr: {id: $index() == 0 ? 'redactor' : 'ckeditor_' + $index() },ckEditor: value"></textarea>
+                            </div>
+                        </div>
+                        <a href="javascript:" class="orange-big-btn left" data-bind="click: $root.addExample">
+                            <span class="orange-big-left left"></span>
+											<span class="orange-big-middle left orange-shadow">
+												<span class="add-icon left"></span>Add Another Example</span>
+                            <span class="orange-big-right left"></span>
+                        </a>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+
+            <!-- ko if: step() == 3 -->
+            <div id="step-three" >
+                <h1>How To Start</h1>
+                <div class="form-wrapper" data-bind="template: {name: 'fields-template', data: step3Items}">
+                </div>
+            </div>
+            <!-- /ko -->
+        </div>
+        <div id="step-four" class="step clearfix"  data-bind="css: {hide: step() != 4}">
+            <div class="table-cover">
+                <!--table one -->
+                <div class="table-head clearfix">
+                    <span class="tab-left left"></span>
+									<span class="tab-middle left">
+										<span class="tb-collapse left"></span>Learn More Information
+										<a href="javascript:" class="compare orange-big-btn align right" data-bind="click: $root.goToStep.bind($root, 1)">
+                                            <span class="orange-big-left left"></span>
+											<span class="orange-big-middle left orange-shadow">
+												<span class="edit-icon left"></span>Edit</span>
+                                            <span class="orange-big-right left"></span>
+                                        </a>
+									</span>
+                    <span class="tab-right left"></span>
+                </div>
+
+                <div class="smg-details-wrapper clearfix">
+                    <table class="table1 clear left">
+                        <colgroup>
+                            <col width="20%" >
+                            <col >
+                        </colgroup>
+                        <tbody data-bind="foreach: step1Items">
+                        <tr>
+                            <td class="first" data-bind="text: name +':'"></td>
+                            <td data-bind="text: displayValue"> </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="graphics right"></div>
+                </div>
+            </div>
+            <!--table 2 -->
+            <div class="table-cover">
+                <div class="table-head clearfix">
+                    <span class="tab-left left"></span>
+									<span class="tab-middle left">
+										<span class="tb-collapse left"></span>Examples within HH&amp;P
+										<a href="javascript:" class="compare orange-big-btn align right" data-bind="click: $root.goToStep.bind($root, 2)">
+                                            <span class="orange-big-left left"></span>
+											<span class="orange-big-middle left orange-shadow">
+												<span class="edit-icon left"></span>Edit</span>
+                                            <span class="orange-big-right left"></span>
+                                        </a>
+									</span>
+                    <span class="tab-right left"></span>
+                </div>
+                <table class="table2 clear">
+                    <colgroup>
+                        <col >
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>Content</th>
+                    </tr>
+                    </thead>
+                    <tbody data-bind="foreach: exampleValues">
+                    <tr>
+                        <td class="align-left" data-bind="html: $data"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- table3 -->
+            <div class="table-cover">
+                <div class="table-head clearfix">
+                    <span class="tab-left left"></span>
+									<span class="tab-middle left">
+										<span class="tb-collapse left"></span>How to Start
+										<a href="javascript:;" class="compare orange-big-btn align right" data-bind="click: $root.goToStep.bind($root, 3)">
+                                            <span class="orange-big-left left"></span>
+											<span class="orange-big-middle left orange-shadow">
+												<span class="edit-icon left"></span>Edit</span>
+                                            <span class="orange-big-right left"></span>
+                                        </a>
+									</span>
+                    <span class="tab-right left"></span>
+                </div>
+                <div class="tb-note clear">
+                    <span>Your first step will be to contact the POC listed; other pertinent information is provided below</span>
+                </div>
+                <table class="table3 adjust">
+                    <colgroup>
+                        <col width="19%" >
+                        <col >
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th class="special">SAA Non-Reimbursable</th>
+                    </tr>
+                    </thead>
+                    <tbody data-bind="foreach: step3Items">
+                    <tr>
+                        <td class="first" data-bind="text: name +':'"></td>
+                        <td data-bind="text: displayValue"> </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="action-btn">
+            <a href="javascript:" class="orange-big-btn left previous-step" data-bind="click: prevStep, css: {hide: step() == 1}">
+                <span class="orange-big-left left"></span>
+								<span class="orange-big-middle left orange-shadow">
+									<span class="back-icon left"></span>Previous</span>
+                <span class="orange-big-right left"></span>
+            </a>
+            <div class="form-buttons right">
+                <a href="javascript:" class="orange-big-btn align left js-action-cancal-step" data-bind="click: cancel">
+                    <span class="orange-big-left left"></span>
+									<span class="orange-big-middle left orange-shadow">
+										<span class="cancel-icon left"></span>Cancel</span>
+                    <span class="orange-big-right left"></span>
+                </a>
+                <a href="javascript:" class="orange-big-btn align left last" data-bind="click: nextStep, css: {hide: step() == 4}">
+                    <span class="orange-big-left left"></span>
+									<span class="orange-big-middle left orange-shadow">
+										<span class="next-icon left"></span>Next</span>
+                    <span class="orange-big-right left"></span>
+                </a>
+                <a href="javascript:;" class="orange-big-btn align left last hide finish-step" data-bind="click: finish, css: {hide: step() !== 4}">
+                    <span class="orange-big-left left"></span>
+									<span class="orange-big-middle left orange-shadow">
+										<span class="finish-icon left"></span>Finish</span>
+                    <span class="orange-big-right left"></span>
+                </a>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+</div>
+<!--End Form Design-->
+
+</div>
+</div>
+<!--End Examples-->
+
+
+<% include ../common/footer.ejs %>

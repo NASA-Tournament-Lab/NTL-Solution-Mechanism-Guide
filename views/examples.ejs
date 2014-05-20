@@ -1,0 +1,68 @@
+
+<% include common/header.ejs %>
+
+<% locals.breadcrumb = [{text: "Home", url: "/home"}, "Examples"]%>
+
+<% include common/breadcrumb.ejs %>
+
+<div id="body">
+    <div class="wrapper js-example-listing">
+
+        <div class="bar-title">
+            <h1 class="left special">Examples</h1>
+            <div class="right-part right">
+                <a href="javascript:" class="btn-orange-big btn-print">
+							<span class="btn-right">
+								<span class="btn-middle orange-shadow">
+									<span class="btn-icon icon-print">Print</span>
+								</span>
+							</span>
+                </a>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <!--End .bar-title-->
+
+        <div class="ajax-pre-loader-wrapper ajax-pre-loader-new">
+            <div class="preloader" data-bind="loader: loading"></div>
+            <div class="examples-main">
+                <div class="select-solution-mechanism jqtransformNew clearfix">
+                    <label>Solution Mechanism</label>
+                    <select class="solution-mechanism-select"
+                            data-bind="options: sortedItems,
+                                       jqSelect: true,
+                                       optionsText: 'name',
+                                       value: selectedSmg,
+                                       optionsCaption: 'All'">
+                    </select>
+                </div>
+                <div class="examples-list clearfix ajax-content" data-bind="css: {show: !loading(), 'is-loading': loading()}">
+                    <!-- ko foreach: examples -->
+                    <div class="ceil no-margin-left" data-bind="css: { 'no-margin-left' : $index() % 3 == 0 }">
+                        <h3 data-bind="text: name"></h3>
+                        <div class="infor">
+                            <p data-bind="truncate: 'Solution Mechanism Used : ' + getSMGValue(smg, chIds.name), truncateOptions: {height: 20, wrap: 'letter'}"></p>
+                            <p data-bind="truncate: 'Type : ' + getSMGValue(smg, chIds.type), truncateOptions: {height: 20, wrap: 'letter'}"></p>
+                        </div>
+                        <div class="summary" data-bind="truncate: description, truncateOptions: {extractText: true}"> </div>
+                        <div class="ceil-command">
+                            <a class="btn-orange-mini" data-bind="attr: { href: '/example/' +  smg_id + '/' + id}">
+										<span class="btn-right">
+											<span class="btn-middle orange-shadow">
+												<span class="btn-icon icon-print">Learn More</span>
+											</span>
+										</span>
+                            </a>
+                        </div>
+                    </div><!--End .ceil-->
+
+                    <!-- /ko -->
+
+                </div><!--End .examples-list-->
+            </div>
+        </div>
+        <!--End .examples-main-->
+    </div>
+</div>
+
+<% include common/footer.ejs %>

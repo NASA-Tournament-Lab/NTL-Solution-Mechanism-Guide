@@ -1,0 +1,3 @@
+ALTER TABLE smgCharacteristic ADD CONSTRAINT FK_smgc_smg
+FOREIGN KEY (smg_id) REFERENCES smg(id)
+ON DELETE CASCADE;

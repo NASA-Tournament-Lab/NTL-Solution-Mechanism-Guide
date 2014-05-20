@@ -1,0 +1,64 @@
+
+<% include ../common/header.ejs %>
+<% include ../common/koTemplates.ejs %>
+
+<div id="body" class="js-admin-filter-listing">
+    <div class="wrapper height-adjust">
+        <div class="row1">
+            <h1 class="left page-head more-padding">Manage Search Parameters</h1>
+            <div class="clear"></div>
+        </div>
+        <div class="border-line border-nobtn-adjust left"></div>
+        <a href="/admin/forms/create" class="orange-big-btn new-filter left">
+            <span class="orange-big-left left"></span>
+					<span class="orange-big-middle left orange-shadow">
+						<span class="add-icon left"></span>Add New Filter Form</span>
+            <span class="orange-big-right left"></span>
+        </a>
+        <!--Begin ProductTable-->
+        <div id="table-container">
+            <div class="table-wrapper left filter ajax-pre-loader-wrapper  ">
+                <table class="filter-form" data-bind="css: {'ajax-content': loading}">
+                    <thead>
+                    <tr>
+                        <th class="th1">Filter Form Name</th>
+                        <th>Active</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody data-bind="foreach: items">
+                    <tr>
+                        <td class="td1" data-bind="text: name"></td>
+                        <td class="td2">
+                            <input type="radio" name="active" data-bind="value: id, iCheck: $root.activeId">
+                        </td>
+                        <td class="td3">
+                            <a href="javascript:;" class="first orange-small-btn left" data-bind="attr: {href: '/admin/forms/' + id}">
+                                <span class="orange-small-left left"></span>
+                                            <span class="orange-small-middle left orange-shadow">
+                                                <span class="view-icon left"></span>View</span>
+                                <span class="orange-small-right left"></span>
+                            </a>
+                            <a href="javascript:;" class="orange-small-btn delete delete-btn left" data-bind="click: $root.remove.bind($root, $data)">
+                                <span class="orange-small-left left"></span>
+                                            <span class="orange-small-middle left orange-shadow">
+                                                <span class="delete-icon left"></span>Delete</span>
+                                <span class="orange-small-right left"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="preloader" data-bind="loader: loading"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<!--End Examples-->
+
+
+
+
+
+<% include ../common/footer.ejs %>

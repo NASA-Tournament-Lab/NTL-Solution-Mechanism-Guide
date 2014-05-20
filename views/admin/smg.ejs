@@ -1,0 +1,133 @@
+
+<% include ../common/header.ejs %>
+
+
+
+<script type="text/html" id="header-template">
+
+    <a href="/admin/smg/create" class="orange-big-btn left">
+        <span class="orange-big-left left"></span>
+								<span class="orange-big-middle left orange-shadow">
+									<span class="add-icon left"></span>Add New Solution</span>
+        <span class="orange-big-right left"></span>
+    </a>
+    <div class="options right">
+        <span class="show left">show</span>
+        <div class="styled-select left">
+            <select class="left" data-bind="value: pageSize, foreach: availablePageSizes, jqSelect: true">
+                <option data-bind="text: $data, value: $data"></option>
+            </select>
+        </div>
+        <span class="left">per page</span>
+        <div class="border-right left"></div>
+        <span class="left" data-bind="text: paginatorText"></span>
+        <div class="border-right left"></div>
+        <a href="javascript:" class="backward left" data-bind="css: { disabled: !canPrevPage() }, click: prevPage"></a>
+        <div class="border-right left"></div>
+        <a href="javascript:" class="forward left" data-bind="css: { disabled: !canNextPage() }, click: nextPage"></a>
+    </div>
+</script>
+
+
+<div id="body"  class="js-admin-smg">
+        <div class="wrapper">
+            <div class="row1">
+                <h1 class="left page-head">Manage Solution</h1>
+                <div class="clear"></div>
+            </div>
+            <div class="border-line border-nobtn-adjust left"></div>
+            <!--Begin Searchsolution form-->
+            <div id="search-solution">
+                <div class="wrapper">
+                    <div class="form-container left required-form">
+                        <div class="field-container left">
+                            <label>Solution Name</label>
+                            <br>
+                            <input type="text" data-bind="value: searchFilter.name" />
+                        </div>
+                        <div class="field-container left">
+                            <label>Also Known As</label>
+                            <br>
+                            <input type="text" data-bind="value: searchFilter.aka" />
+                        </div>
+                        <div class="field-container description left">
+                            <label>Contain Description</label>
+                            <br>
+                            <input type="text" data-bind="value: searchFilter.desc" />
+                        </div>
+                        <div class="field-container right">
+                            <a href="javascript:;" class="orange-big-btn search-btn right" data-bind="click: search">
+                                <span class="orange-big-left left"></span>
+                                        <span class="orange-big-middle left orange-shadow">
+                                            <span class="search-icon left"></span>Search</span>
+                                <span class="orange-big-right left"></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="border-bottom left"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <!--End Searchsolution form-->
+            <!--Begin ProductTable-->
+            <div id="table-container">
+                <div class="wrapper">
+                    <div class="table-show-options left" data-bind="template: { name: 'header-template' }">
+                    </div>
+
+                    <div class="table-wrapper left  ajax-pre-loader-wrapper reloading" data-bind="css: {'is-loading': loading()}">
+                        <div class="preloader adjust-new" data-bind="loader: loading()"></div>
+                        <table class="solutions-table smg-admin-list-table " data-bind="css: {'ajax-content': loading()}">
+                            <colgroup>
+                                <col width="26%" >
+                                <col width="13%" >
+                                <col >
+                                <col width="21%" >
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th class="th1">Name</th>
+                                <th>Also Known As</th>
+                                <th>Description</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody data-bind="foreach: pagedItems">
+                            <tr>
+                                <td class="td1">
+                                    <div class="box left"></div>
+                                    <a class="left"  data-bind="text: name, attr: {href: '/admin/smg/' + id}"></a>
+                                </td>
+                                <td class="td2" data-bind="text: aka"></td>
+                                <td class="td3" data-bind="text: desc"></td>
+                                <td class="td4">
+                                    <a href="javascript:;" class="left orange-small-btn left" data-bind="attr: { href: '/admin/smg/edit/' + $data.id}">
+                                        <span class="orange-small-left left"></span>
+													<span class="orange-small-middle left orange-shadow edit">
+														<span class="edit-icon left"></span>Edit</span>
+                                        <span class="orange-small-right left"></span>
+                                    </a>
+                                    <a href="javascript:;" class="left orange-small-btn delete-btn del-ses left" data-bind="click: $root.deleteSmg.bind($root, $data)">
+                                        <span class="orange-small-left left"></span>
+													<span class="orange-small-middle left orange-shadow">
+														<span class="delete-icon left"></span>Delete</span>
+                                        <span class="orange-small-right left"></span>
+                                    </a>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-show-options  left" data-bind="template: { name: 'header-template' }">
+                    </div>
+                </div>
+            </div>
+            <!--End ProductTable-->
+        </div>
+    </div>
+
+
+<% include ../common/footer.ejs %>
