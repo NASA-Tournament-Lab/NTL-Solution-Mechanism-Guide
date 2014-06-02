@@ -13,7 +13,7 @@
     <div id="identify-search-wrapper" data-bind="visible: !loading()">
         <div class="identify-left left">
             <ul class="identify-questions" data-bind="foreach: fields">
-                <li class="clear">
+                <li class="clear" data-bind="css: {select: type_id == chTypes.picklist}">
                     <div class="help-wrapper">
                         <a class="help-icon left" href="javascript:"></a>
                         <div class="tool-tip left hide">
@@ -31,41 +31,52 @@
                             </div>
                         </div>
                     </div>
-                    <p class="question" data-bind="text: name"></p>
-                    <div class="answer">
-                        <!-- ko if: values.length -->
+                    <!-- ko if: type_id == chTypes.text || type_id == chTypes.textarea || type_id == chTypes.number -->
+                        <div class="question text"><div class="left label" data-bind="text: name"></div>
+
+                            <div class="right text-field required-field identify-questions">
+                                <input type="text" class="text"  maxlength="200" data-bind="value: value, css: {'js-leading-zeros':type_id == chTypes.number }" />
+                            </div>
+                        </div>
+                    <!-- /ko -->
+                    <!-- ko if: type_id == chTypes.checkbox -->
+                        <p class="question" data-bind="text: name"></p>
+                        <div class="answer">
+                            <label class="option">
+                                <input class="left"  type="checkbox"
+                                       data-bind="iCheck: value, iCheckOptions: { trueFalseString: true }"/> Yes/No
+                            </label>
+                        </div>
+                    <!-- /ko -->
+
+                    <!-- ko if: type_id == chTypes.radio -->
+                        <p class="question" data-bind="text: name"></p>
+                        <div class="answer" data-bind="">
                             <!-- ko foreach: values -->
-                                <label class="option">
-                                    <input class="left" type="radio" data-bind="value: valuetype_id, iCheck: $parent.selectedValue, attr: {name: 'group_' +$parent.characteristic_id}" >
-                                    <span data-bind="text: name"></span>
-                                </label>
+                            <label class="option">
+                                <input class="left" type="radio" data-bind="value: valuetype_id, iCheck: $parent.value, attr: {name: 'group_' +$parent.characteristic_id}" >
+                                <span data-bind="text: name"></span>
+                            </label>
                             <!-- /ko -->
-                        <!-- /ko -->
-                        <!-- ko if: type_id == chTypes.checkbox -->
-                            <label class="option">
-                                <input class="left" value="True" type="radio" data-bind="iCheck: value, attr: {name: 'group_' +$parent.characteristic_id}" >
-                                <span>True</span>
-                            </label>
+                        </div>
+                    <!-- /ko -->
+                    <!-- ko if: type_id == chTypes.picklist -->
 
-                            <label class="option">
-                                <input class="left" value="False" type="radio" data-bind="iCheck: value, attr: {name: 'group_' +$parent.characteristic_id}" >
-                                <span>False</span>
-                            </label>
-                        <!-- /ko -->
-
-                        <!-- ko if: type_id == chTypes.text || type_id == chTypes.textarea -->
-                            <div class="text-field">
-                                <input type="text" maxlength="200" data-bind="value: value" />
+                        <div class="html_reset">
+                            <div class="question left"><div class="left " data-bind="text: name"></div>
                             </div>
-                        <!-- /ko -->
+                            <div class="left select-field identify-questions jqtransformNew">
+                                <select class="left"  data-bind="options: values,
+                                             jqSelect: value,
+                                             optionsText: 'name',
+                                             optionsValue: 'valuetype_id',
+                                             value: value,
+                                             optionsCaption: 'Choose...'">
 
-                        <!-- ko if: type_id == chTypes.number -->
-                            <div class="text-field">
-                                <input type="text" maxlength="200" data-bind="value: value" class="js-leading-zeros" />
+                                </select>
                             </div>
-                        <!-- /ko -->
-
-                    </div>
+                        </div>
+                    <!-- /ko -->
                 </li>
             </ul>
         </div>

@@ -1,5 +1,6 @@
 
 <% include ../common/header.ejs %>
+<% include ../common/koTemplates.ejs %>
 
 <!-- .page -->
 <div class="page page-help-dashboard js-manage-help">
@@ -59,9 +60,11 @@
                     </div>
                 </div>
             </div>
-            <div class="file-field left">
-                <input type="text">
-                <input type="file">
+            <div class="file-field left" data-bind="fileUpload: images, fileUploadMultiple: true, fileUploadRoot: '#dashboard-details', fileName: '#fileName' ">
+                <form enctype="multipart/form-data" method="post" action="/api/helpTopic/upload">
+                    <input type="text" id="fileName" readonly="readonly">
+                    <input type="file" name="file">
+                </form>
             </div>
 
             <a href="javascript:" class="orange-big-btn align left js-action-browse">
@@ -69,6 +72,33 @@
                 <span class="orange-big-middle left orange-shadow">Browse</span>
                 <span class="orange-big-right left"></span>
             </a>
+        </div>
+        <div class="field-container clearfix uploading-field-container">
+            <label class="left">Uploaded Graphic</label>
+            <div class="help-wrapper left">
+                <a class="help-icon left" href="javascript:"></a>
+                <div class="tool-tip hide">
+                    <span class="tooltip-left left"></span>
+                    <div class="tooltip-middle left">
+                        <div class="tooltip-head">
+                            <div class="tooltip-head-content left">
+                                <h2 class="left">Helps</h2>
+                                <a href="javascript:" class="right tooltip-close"></a>
+                            </div>
+                            <div class="clear"></div>
+                            <p>KMLs represent distinct stages of maturity or development of a problem, project, or task.
+                                <br>Gather : Early stage; immature, undefined
+                                <br>Synthesize: Analyze; define requirements and ops concept
+                                <br>Validate: Evaluate and validate; produce deliverable
+                                <br>Apply: Integrate; augment; standardize deliverable</p>
+                            <a href="javascript:">learn more...</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="uploading-field left">
+                <div data-bind="template: { name: 'fileUpload', foreach: images}"></div>
+            </div>
         </div>
     </div>
 

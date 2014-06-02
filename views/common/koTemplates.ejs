@@ -2,3 +2,35 @@
 <script id="errorMessageIcon" type="text/html">
     <div class="error-icon show" data-bind="errorTooltip: field"></div>
 </script>
+
+
+<script id="fileUpload" type="text/html">
+
+    <div class="uploading-row clearfix">
+        <div class="img-wrapper">
+            <img alt="" data-bind="attr: { src: fileUrl() }">
+        </div>
+        <div class="upload-part">
+            <div class="green-process">
+                <div class="back-bar">
+                    <div class="left-corner"></div>
+                    <div class="right-corner"></div>
+                </div>
+                <div class="process-bar" data-bind="style: { width: progress() + '%' }">
+                    <div class="left-corner"></div>
+                    <div class="right-corner"></div>
+                </div>
+                <div class="process-text" data-bind="text: progress() + '%'"></div></div>
+            <div class="buttons">
+                <a href="javascript:" class="btn-orange-mini-shadow js-action-copy-url disabled" data-bind="zclip: fileId">
+                    <span class="btn-right"><span class="btn-middle">Copy URL</span>
+                    </span></a>
+                <a href="javascript:" class="btn-orange-mini-shadow js-action-remove-url disabled" data-bind="click: remove">
+                    <span class="btn-right">
+                        <span class="btn-middle">Remove</span>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</script>

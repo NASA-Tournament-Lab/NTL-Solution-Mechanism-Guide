@@ -96,7 +96,9 @@
                             <tbody data-bind="foreach: pagedItems">
                             <tr>
                                 <td class="td1">
-                                    <div class="box left"></div>
+                                    <div class="box left">
+                                        <img data-bind="attr: {src: picture}" width="68" height="68"  />
+                                    </div>
                                     <a class="left"  data-bind="text: name, attr: {href: '/admin/smg/' + id}"></a>
                                 </td>
                                 <td class="td2" data-bind="text: aka"></td>

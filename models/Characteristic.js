@@ -15,6 +15,7 @@ module.exports = {
             name: types.string,
             description: types.string,
             tab: {type: "text", required: true,  size: 30, defaultValue: "default"},
+            blockDelete: {type: "boolean", required: true, defaultValue: false},
 
             //UNIQUE constraint is set manually in sql file UC_c_sort.sql
             //because of this bug https://github.com/dresende/node-orm2/issues/326

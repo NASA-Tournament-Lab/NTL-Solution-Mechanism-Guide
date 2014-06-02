@@ -172,30 +172,6 @@ $(document).ready(function() {
 		$(".page-help-dashboard .tabs ul li:first a").trigger("click");
 	});
 
-	//browse file
-	$(".field-container").on("click", ".js-action-browse", function(){
-		$(this).closest(".field-container").find(":file").focus().trigger("click");
-	});
-	
-	//get browse file name
-	$(".field-container :file").change(function(){
-        var that = $(this);
-		var value = that.val();
-		var fileName = getFileName(value);
-        processbar(function(){
-			if(that.hasClass("change-block")){
-				$(".hide-change-block").addClass("hide");
-				$(".show-change-block").removeClass("hide");
-			}else{
-				that.closest(".field-container").find(".file-field :text").val(fileName).blur();
-			}
-			if(redactor) redactor.setData("<img src='img/img-placeholder-6.png' alt='' width='958' />");
-            unProcessbar();
-		});
-    });
-
-
-	
 });
 
 //url request
@@ -219,27 +195,5 @@ var clearAnimation = function(obj){
 	running = false;
 	if(obj) obj.css({backgroundPositionY: ""});
 	if(preloaderTimer) clearInterval(preloaderTimer);
-}
-
-//preloader with background image
-var preloaderAnimation = function(obj, height, callback){
-	if(preloaderTimer) clearInterval(preloaderTimer);
-	var fps = 16;
-	var fpsTimer = 50;
-	var counter = 0;
-	var preloaderCounter = 0;
-	var fpsCounter = loaderTimer / fpsTimer;
-	running = true;
-	preloaderTimer = setInterval(function(){
-		if(counter >= fps) counter = 0;
-		if(preloaderCounter >= fpsCounter) {
-			clearAnimation(obj);
-			if(callback) callback();
-		}else{
-			obj.css({backgroundPositionY: eval(-counter*height)+"px"});
-			counter++; 
-			preloaderCounter++;
-		}
-	}, fpsTimer);
-}
+};
 

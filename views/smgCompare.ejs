@@ -39,7 +39,9 @@
 
                     <!-- ko foreach: items-->
                     <th class="compare-head">
-                        <span class="left"></span>
+                        <span class="left">
+                            <img data-bind="attr: {src: picture}" width="47" height="47" />
+                        </span>
                         <a data-bind="attr:{ href: '/smg/' + id}, text: name"></a>
                     </th>
                     <!-- /ko -->

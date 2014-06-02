@@ -907,6 +907,7 @@ select{
 }
 #examples .imgcontent .carouse-item{
 	margin:0 25px;
+    display: block;
 }
 #examples .imgcontent img,
 #examples .imgcontent .content {
@@ -1493,6 +1494,7 @@ table a:hover{
 #body #left-panel .questions li {
     border-bottom: 1px dotted #333333;
     margin: 20px 4px 20px 10px;
+    padding-bottom: 15px;
 }
 #body #left-panel .questions li.less-margin{
 	margin-top:14px;
@@ -2461,7 +2463,7 @@ table.compare-tbl th span {
 }
 #add-forms .form-container .form-wrapper .field-container input[type="text"] {
     background: #f7f7f7;
-    width: 726px;
+    width: 100%;
     height: 20px;
 	line-height:20px;
 	padding:8px 0;
@@ -2550,6 +2552,17 @@ table.compare-tbl th span {
 }
 #add-forms .form-container #step-two .form-wrapper .field-container .help-icon {
 	margin: 0px 13px 0 0;
+}
+#add-forms .form-container .form-wrapper .field-container .help-icon:hover{
+    background-position: 0 -21px;
+}
+#add-forms .form-container .form-wrapper .field-container .tooltip-icon {
+    background: url("../img/help_search_icon.png")no-repeat 0 0;
+    width: 20px;
+    height: 20px;
+    display: block;
+    margin: 0 13px 0 0;
+    float:left;
 }
 #add-forms .form-container .form-wrapper .field-container .help-icon:hover{
     background-position: 0 -21px;
@@ -3415,10 +3428,6 @@ table.filter-view-form a .orange-small-middle .delete-icon{
     margin-top: 50px;
 }
 
-#cke_redactor {
-    margin-left: 149px;
-    width: 748px;
-}
 
 a.next-step.hide, a.previous-step.hide, a.finish-step.hide {
     display: none !important;
@@ -3603,6 +3612,43 @@ label.form-label .iradio {
 		.btn-orange-mini:hover .btn-middle {
 			background-position:left -101px;
 		}
+
+.btn-orange-mini-shadow {
+    height: 24px;
+    color:#00456e;
+    display: inline-block;
+    background: url(../img/orange_btn_24px.png) no-repeat 0 0;
+    padding-left:10px;
+}
+.btn-orange-mini-shadow .btn-right {
+    display:inline-block;
+    background: url(../img/orange_btn_24px.png) no-repeat right -50px;
+    height: 24px;
+    padding-right:10px;
+    cursor:pointer;
+}
+.btn-orange-mini-shadow .btn-middle {
+    display:inline-block;
+    height: 24px;
+    line-height: 22px;
+    color: #fff;
+    font-size: 11px;
+    padding:0 6px;
+    background: url(../img/orange_btn_24px.png) repeat-x 0 -25px;
+    cursor:pointer;
+    text-align:center;
+    text-shadow:0 1px 0 #666;
+}
+.btn-orange-mini-shadow:hover {
+    text-decoration:none;
+    background-position:left -75px;
+}
+.btn-orange-mini-shadow:hover .btn-right {
+    background-position:right -125px;
+}
+.btn-orange-mini-shadow:hover .btn-middle {
+    background-position:left -100px;
+}
 
 .btn-orange-big .icon-print{
 	background:url(../img/icon-print.png) left center no-repeat;
@@ -4534,7 +4580,6 @@ table.filter-view-form .td3 .orange-small-btn .orange-small-middle.edit{
 
 .textarea-section {
 	margin-top:10px;
-	margin-left: 149px;
 	width: 750px;
 }
 
@@ -4781,8 +4826,15 @@ line-height: 16px;
 }
 
 #step-one .error-icon,
+#step-two .error-icon,
 #step-three .error-icon{
     right: 37px;
+}
+
+
+#step-one .file-field .error-icon,
+#step-three .file-field .error-icon {
+    right: 164px;
 }
 
 #add-forms .form-buttons a.hide {
@@ -4824,13 +4876,27 @@ line-height: 16px;
     display: block;
 }
 
-#add-forms .form-container .form-wrapper .jqTransformSelectWrapper,
-#add-forms .form-container .form-wrapper .jqTransformSelectWrapper ul {
+#add-forms #step-one .form-wrapper .jqTransformSelectWrapper,
+#add-forms #step-three .form-wrapper .jqTransformSelectWrapper,
+#add-forms #step-one  .form-wrapper .jqTransformSelectWrapper ul,
+#add-forms #step-three .form-wrapper .jqTransformSelectWrapper ul {
     width: 726px !important;
 }
 
-#add-forms .form-container .form-wrapper .jqTransformSelectWrapper span {
+
+#add-forms #step-two .form-wrapper .jqTransformSelectWrapper,
+#add-forms #step-two .form-wrapper .jqTransformSelectWrapper ul {
+    width: 748px !important;
+}
+
+#add-forms #step-one .form-wrapper .jqTransformSelectWrapper span,
+#add-forms #step-three .form-wrapper .jqTransformSelectWrapper span {
     width: 690px !important;
+}
+
+
+#add-forms #step-two .form-wrapper .jqTransformSelectWrapper span {
+    width: 712px !important;
 }
 .radio-wrapper.is-error,
 .radio-wrapper.is-error span{
@@ -4886,24 +4952,569 @@ line-height: 16px;
 }
 
 
-#identify-search-wrapper input[type="text"] {
-    background: #f7f7f7;
-    height: 20px;
-    line-height:20px;
-    padding:8px 0;
-    border: 1px solid #c0c0c0;
-    padding-left:13px;
-    padding-right:13px;
-    width:100%;
-}
-#identify-search-wrapper  .text-field {
-    width:440px;
-    padding-right:28px;
-    overflow:visible;
-    position:relative;
-    margin-left: 34px;
-}
 
 .examples-list .ceil .summary {
     height: 130px;
+}
+
+/* new added*/
+
+#step-two .bottom-padding{
+    padding-bottom:10px !important;
+}
+#add-forms .form-container #step-two .form-wrapper .field-container select{
+    width:712px;
+}
+#add-forms .form-container #step-two .form-wrapper .field-container input[type=text]{
+    width:748px;
+    margin-left:11px;
+}
+#add-forms .form-container #step-two .form-wrapper .field-container .jqTransformSelectWrapper{
+    margin-left:11px;
+}
+.table-example tbody td{
+    padding:0;
+    vertical-align:top;
+    font-size:12px;
+}
+.table-example .examples-list li{
+    height:36px;
+    line-height:36px;
+    border-bottom:1px solid #b7b7b7;
+    cursor:pointer;
+    position:relative;
+    letter-spacing:-0.2px;
+    word-spacing:-1px;
+}
+.table-example .examples-list li.active:after{
+    content:"";
+    display:block;
+    width:12px;
+    height:12px;
+    position:absolute;
+    right:6px;
+    top:12px;
+    background:url(../img/icon-tab-active.png) center center no-repeat;
+}
+.table-example .examples-list li.active{
+    font-weight:bold;
+}
+.table-example .examples-list-content .example-entity{
+    text-align:left;
+    padding:10px 14px;
+    min-height:315px;
+    line-height:18px;
+}
+.table-example .examples-list-content .example-entity label{
+    font-weight:bold;
+    width:110px;
+    line-height:24px;
+}
+.table-example .examples-list-content .example-entity .label{
+    line-height:24px;
+}
+
+.green-process{
+    height:20px;
+    width:407px;
+    overflow:hidden;
+    padding:0 10px;
+    position:relative;
+}
+.green-process .process-text{
+    font-size:16px;
+    color:#fff;
+    text-align:center;
+    line-height:20px;
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    height:20px;
+    z-index:3;
+}
+.green-process .back-bar{
+    position:relative;
+    width:100%;
+    height:20px;
+    background:url(../img/bg-progress-green.png) left -20px repeat-x;
+}
+.green-process .back-bar .left-corner{
+    position:absolute;
+    left:-10px;
+    top:0;
+    width:10px;
+    height:20px;
+    background:url(../img/bg-progress-green.png) left 0px no-repeat;
+}
+.green-process .back-bar .right-corner{
+    position:absolute;
+    right:-10px;
+    top:0;
+    width:10px;
+    height:20px;
+    background:url(../img/bg-progress-green.png) left -40px no-repeat;
+}
+.green-process .process-bar{
+    margin-top:-20px;
+    position:relative;
+    z-index:2;
+    height:20px;
+    background-color:#fff;
+    width:0;
+    overflow:visible !important;
+    background:url(../img/bg-progress-green.png) left -80px repeat-x;
+}
+.green-process .process-bar .left-corner{
+    position:absolute;
+    left:-10px;
+    top:0;
+    width:10px;
+    height:20px;
+    overflow:hidden;
+    background:url(../img/bg-progress-green.png) left -60px no-repeat;
+}
+.green-process .process-bar .right-corner{
+    position:absolute;
+    right:-10px;
+    top:0;
+    width:10px;
+    height:20px;
+    overflow:hidden;
+    background:url(../img/bg-progress-green.png) left -100px no-repeat;
+}
+
+.uploading-field-container{
+    padding-top:10px;
+}
+.uploading-field{
+    width:684px;
+}
+.uploading-field .uploading-row{
+    padding-top:10px;
+    padding-bottom:5px;
+}
+.uploading-field .upload-part{
+    width:428px;
+    float:left;
+}
+.uploading-field .img-wrapper{
+    float:left;
+    width:108px;
+    height:73px;
+    margin-right:15px;
+}
+.uploading-field .img-wrapper img{
+    width:100%;
+    height:100%;
+}
+
+.uploading-field .buttons{
+    padding-top:15px;
+    text-align:right;
+}
+.uploading-field .buttons .btn-orange-mini-shadow{
+    margin-left:6px;
+}
+.uploading-field .buttons .btn-middle{
+    width:60px;
+}
+
+#step-two .form-list .form-wrapper{
+    margin-top:10px;
+}
+
+#step-two .form-list .form-first-entity{
+    margin-top:0;
+}
+
+#step-two .form-list .form-wrapper .js-action-add-another-example{
+    display:inline-block;
+}
+
+
+/* new ui controls */
+
+
+.icheckbox {
+    display: inline;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: url(../img/icheckbox.png) no-repeat 0 0;
+    overflow: hidden;
+}
+
+.icheckbox.checked {
+    background-position: 0 -16px;
+}
+
+label.form-label .icheckbox {
+    position: relative;
+    top: 2px;
+}
+
+#identify-search-wrapper .icheckbox {
+    top: 2px;
+    margin-right: 6px;
+}
+#identify-search-wrapper  .identify-left .identify-questions li.text {
+    vertical-align: top;
+
+    text-align:center;
+    vertical-align:middle;
+
+
+    margin-left: 22px;
+    padding:0;
+    margin:0;
+    margin-top:10px;
+    max-height:40px;
+    padding-left:22px;
+}
+
+
+
+#identify-search-wrapper .question .text-field input[type="text"] {
+    background: none repeat scroll 0 0 #F7F7F7;
+    border: 1px solid #C0C0C0;
+    height: 20px;
+    line-height: 20px;
+    padding:5px;
+    width: 100%;
+    top:-8px;
+    position:relative;
+    margin-left:10px;
+    width:343px;
+    margin-right:60px;
+}
+
+/*  reset */
+
+#identify-search-wrapper .identify-left .identify-questions  li.select {
+    margin-top:0;
+    margin-bottom: 20px;
+}
+
+
+
+#identify-search-wrapper .identify-left .identify-questions .html_reset {
+    float:left;
+    position:relative;
+}
+
+#identify-search-wrapper  .identify-left .identify-questions  .html_reset .question {
+    left:5px;
+    float:left;
+    top:-15px;
+}
+
+#identify-search-wrapper  .identify-left .identify-questions  .html_reset .question .left{
+    left:5px;
+    margin-right:20px;
+    margin-top:0;
+    width: 105px;
+}
+
+#identify-search-wrapper .identify-left .identify-questions  li.select .help-wrapper  {
+
+}
+
+#identify-search-wrapper .identify-left .identify-questions .html_reset ul  {
+
+    padding-top: 0;
+
+}
+#identify-search-wrapper .identify-left .identify-questions .html_reset ul li {
+    margin-left: 0;
+    margin-top: 0;
+    padding-bottom: 0;
+    position:relative;
+
+}
+#identify-search-wrapper .identify-left .identify-questions li.text .tool-tip ,
+#identify-search-wrapper .identify-left .identify-questions li .tool-tip {
+
+    z-index: 1000;
+}
+
+#identify-search-wrapper .identify-left  .html_reset .jqtransformNew.left  {
+
+    margin-top:-25px;
+}
+
+#identify-search-wrapper .identify-left  .html_reset .jqTransformSelectWrapper,
+#identify-search-wrapper .identify-left  .html_reset .jqTransformSelectWrapper ul {
+    width: 354px !important;
+}
+
+
+#identify-search-wrapper .identify-left  .html_reset .jqTransformSelectWrapper span {
+    width: 318px !important;
+}
+
+#identify-search-wrapper .identify-left  .html_reset .jqtransformNew.left .select-field {
+    float:left;
+    margin-left:20px;
+
+}
+
+#identify-search-wrapper .identify-left .identify-questions .html_reset .jqtransformNew select {
+    width:318px;
+    max-height:30px;
+
+}
+
+#identify-search-wrapper  .identify-left .identify-questions li.text.last {
+    margin-top:25px;
+}
+
+/* Task 2*/
+
+#body #left-panel .questions ul li.text {
+    height: 30px;
+    border-bottom:none;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+#body #left-panel .questions ul li .questions-wrapper .nquestion-root .nquestion {
+    margin-top:3px;
+}
+
+#body #left-panel .questions ul li .questions-wrapper .nquestion-root .options-root.check .wrapper-options .icheckbox {
+    margin-right: 6px;
+    top: 2px;
+}
+#body #left-panel .questions ul li .questions-wrapper .nquestion-root .options-root  input[type="text"] {
+    background: none repeat scroll 0 0 #F7F7F7;
+    border: 1px solid #C0C0C0;
+    height: 20px;
+    line-height: 20px;
+    margin-left: 10px;
+    margin-top: -5px;
+    padding: 3px;
+
+
+    width: 120px;
+}
+
+#body #left-panel .questions ul li.not-inline  {
+    height: 60px;
+}
+
+
+
+#body #left-panel .questions ul li.not-inline .questions-wrapper .nquestion-root .options-root  input[type="text"] {
+
+    margin-top: 12px;
+    width: 232px;
+    margin-left:0;
+}
+
+#body #left-panel .questions ul li.last {
+    margin-top:10px;
+    height:60px;
+    padding-bottom:20px;
+    border-bottom: 1px dotted #333333;
+    margin-bottom:0;
+}
+
+#body #left-panel .questions ul li.select .questions-wrapper .nquestion-root .options-root  {
+    margin-top:10px;
+}
+
+#body #left-panel .questions ul li.select .questions-wrapper .nquestion-root .options-root  .jqtransformNew {
+    margin-top:10px;
+
+}
+#body #left-panel .questions ul li.select .questions-wrapper .nquestion-root .options-root  .jqtransformNew select {
+
+    width:200px;
+}
+
+#body #left-panel .questions ul li.select  ul li {
+    height:36px;
+    margin:0;
+    padding: 0;
+}
+
+#body #left-panel .questions ul li.select .jqtransformNew .jqTransformSelectWrapper  {
+    height:32px;
+}
+
+#body #left-panel  .button-wrapper {
+    width:100%;
+    text-align:middle;
+    margin-top:20px;
+    padding-top:15px;
+    background: url("../img/green_bg_shadow_wrapper.jpg") repeat-y scroll left top ;
+    padding-bottom: 50px;
+}
+
+#body #left-panel  .button-wrapper .orange-button {
+    margin-left:25%;
+
+}
+#body #left-panel .update-result {
+
+    padding-bottom: 20px;
+
+}
+
+/* end task 2 */
+/*  task 3 */
+
+/* step 1 */
+
+#add-forms .form-container .form-wrapper .field-container.check  {
+    margin-top:8px;
+}
+
+#add-forms .form-container .form-wrapper .field-container.check .clear {
+    clear:both;
+}
+#add-forms .form-container .form-wrapper .field-container.check .answer {
+    /*margin-top:10px;*/
+}
+#add-forms .form-container .form-wrapper .field-container.check .answer label {
+    margin-right:20px;
+}
+
+#add-forms .form-container .form-wrapper .field-container.check  .iradio,
+#add-forms .form-container .form-wrapper .field-container.check  .icheckbox {
+    margin-right: 6px;
+    top: 2px;
+}
+
+
+#add-forms .form-container .form-wrapper .field-container.step1-upload  {
+    margin-bottom:0;
+    margin-top:15px;
+}
+#add-forms .form-container .form-wrapper .step1-upload .file-field {
+    width:600px;
+    margin-right:15px;
+
+}
+
+#add-forms .form-container .form-wrapper .step1-upload .orange-big-btn {
+
+    padding-top:0;
+
+}
+
+#add-forms .form-container .form-wrapper .uploading-field-container  .uploading-field {
+    padding-left: 172px;
+
+}
+#add-forms .form-container .form-wrapper .uploading-field-container  .uploading-field  .js-action-copy-url {
+    display:none;
+}
+
+/*  step 3 */
+
+#add-forms .form-container .form-wrapper .field-container
+#add-forms .form-container .step.three .form-wrapper .field-container input[type="textarea"] {
+    background: none repeat scroll 0 0 #F7F7F7;
+    border: 1px solid #C0C0C0;
+    height: 20px;
+    line-height: 20px;
+    padding: 8px 0;
+    width: 100%;
+}
+
+
+/* end task 3 */
+
+
+#add-forms .form-container #step-three .form-wrapper .field-container .text-field {
+    width: 726px;
+}
+
+#add-forms .form-container #step-three .form-wrapper .field-container .text-field select.edit-step-3 {
+    width: 680px;
+}
+
+#add-forms .form-container #step-three .form-wrapper .field-container .text-field select.add-step-3 {
+    width: 680px;
+}
+
+#add-forms .form-container .form-wrapper .field-container .step-3 textarea {
+    width: 724px;
+}
+
+
+#add-forms .form-container .form-wrapper .field-container .step-1 textarea {
+    width: 724px;
+}
+
+#add-forms .form-container .form-wrapper .field-container.check .radio {
+    padding-top: 1px;
+}
+
+
+#step-two .cke-wrapper{
+    margin-left: 149px;
+    width: 748px;
+}
+
+.jqTransformSelectWrapper div span.jqTransformPlaceholder {
+    color: #cccccc;
+}
+
+#add-forms .form-container #step-one .form-wrapper .field-container .text-field {
+    width: 726px;
+}
+
+#identify-search-wrapper .error-icon {
+    top: -1px;
+    right: 64px;
+}
+
+#identify-search-wrapper .select .error-icon {
+    top: -10px
+}
+#identify-search-wrapper .answer.is-error {
+    border: none !important;
+}
+#identify-search-wrapper .answer.is-error span {
+    color: red;
+}
+
+#body #left-panel .nquestion-root .options-root .jqTransformSelectWrapper,
+#body #left-panel .nquestion-root .options-root .jqTransformSelectWrapper ul {
+    width: 236px !important;
+}
+
+#body #left-panel .nquestion-root .options-root .jqTransformSelectWrapper span {
+    width: 200px !important;
+}
+
+
+.questions-wrapper .options-root {
+    position: relative;
+}
+
+.questions-wrapper .options-root .error-icon {
+    top: -1px;
+    right: 5px;
+}
+
+
+#body #left-panel .white-questions-wrapper .nquestion-root .options-root  input[type="text"] {
+    background: none repeat scroll 0 0 #F7F7F7;
+    border: 1px solid #C0C0C0;
+    height: 20px;
+    line-height: 20px;
+    margin-left: 10px;
+    margin-top: -5px;
+    padding: 3px;
+
+
+    width: 120px;
+}
+
+#body #left-panel .white-questions-wrapper .nquestion-root .options-root .jqtransformNew {
+    margin-top: 10px;
 }

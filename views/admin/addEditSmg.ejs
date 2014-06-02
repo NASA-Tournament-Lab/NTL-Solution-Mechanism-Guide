@@ -9,8 +9,8 @@
 
 <script type="text/html" id="fields-template">
 
-    <div data-bind="foreach: $data">
-        <div class="field-container left">
+    <div data-bind="foreach: $data" class="js-field-wrapper">
+        <div class="field-container left" data-bind="css: {'step1-upload': type_id == chTypes.image, check: type_id == chTypes.radio || type_id == chTypes.checkbox }">
             <label class="left" data-bind="text: name"></label>
             <div class="help-wrapper left">
                 <a class="help-icon left" href="javascript:"></a>
@@ -29,25 +29,40 @@
                 </div>
             </div>
             <!-- ko if: type_id == chTypes.text -->
-            <input class="left" type="text" data-bind="{value: value}"/>
+            <div class="left text-field">
+                <input class="left" type="text" data-bind="{value: value}"/>
+            </div>
             <!-- /ko -->
             <!-- ko if: type_id == chTypes.textarea -->
-            <textarea maxlength="32768" rows="4" cols="50" class="left" data-bind="{value: value}">
-            </textarea>
+            <div class="left text-field">
+                <textarea maxlength="32768" rows="4" cols="50" class="left" data-bind="{value: value}">
+                </textarea>
+            </div>
             <!-- /ko -->
             <!-- ko if: $data.type_id == chTypes.radio -->
-            <div class="left radio-wrapper" data-bind="foreach: values, hasError: value">
+            <div class="left text-field check">
+                <div class="answer" data-bind="foreach: values, hasError: value">
 
-                <label class="wdh left form-label">
-                    <input type="radio" data-bind="attr: { name: $parent.id }, iCheck: $parent.value, value: $data" > <span data-bind="text: name"></span>
-                </label>
+                    <label class="option">
+                        <input type="radio" data-bind="attr: { name: $parent.id }, iCheck: $parent.value, value: $data" > <span data-bind="text: name"></span>
+                    </label>
+                </div>
             </div>
             <!-- /ko -->
             <!-- ko if: type_id == chTypes.number -->
-            <input class="left js-leading-zeros" type="text" data-bind="{value: value}"/>
+            <div class="left text-field">
+                <input class="left js-leading-zeros" type="text" data-bind="{value: value}"/>
+            </div>
             <!-- /ko -->
             <!-- ko if: type_id == chTypes.checkbox -->
-            <input class="left"  type="checkbox" data-bind="iCheck: value, iCheckOptions: { trueFalseString: true }"/>
+            <div class="left text-field check">
+                <div class="answer">
+
+                    <label class="option">
+                        <input class="left"  type="checkbox" data-bind="iCheck: value, iCheckOptions: { trueFalseString: true }"/> Yes/No
+                    </label>
+                </div>
+            </div>
             <!-- /ko -->
             <!-- ko if: type_id == chTypes.picklist -->
             <select class="left"  data-bind="options: values,
@@ -60,7 +75,28 @@
 
             </select>
             <!-- /ko -->
+            <!-- ko if: type_id == chTypes.image -->
+                <div class="file-field left" data-bind="fileUploadRoot: '.js-field-wrapper', fileUpload: file">
+                    <form enctype="multipart/form-data" method="post" action="/api/helpTopic/upload">
+                        <input type="text" readonly="readonly" data-bind="value: file.filename">
+                        <input type="file" name="file" class="inline" style="opacity: 0.001;">
+                    </form>
+                </div>
+                <a href="javascript:" class="orange-big-btn align left js-action-browse">
+                    <span class="orange-big-left left"></span>
+                    <span class="orange-big-middle left orange-shadow">Browse</span>
+                    <span class="orange-big-right left"></span>
+                </a>
+            <!-- /ko -->
         </div>
+        <!-- ko if: type_id == chTypes.image -->
+        <div class="clear"></div>
+        <div class="field-container clearfix uploading-field-container" data-bind="visible: file.uploading() || file.uploaded()">
+            <div class="uploading-field left" data-bind="template: {name: 'fileUpload', data: file}">
+
+            </div>
+        </div>
+        <!-- /ko -->
     </div>
     <div class="clear"></div>
 </script>
@@ -115,44 +151,56 @@
 
             <div id="step-two" class="step" data-bind="css: {hide: step() != 2}">
                 <h1>Examples</h1>
-                <div class="form-wrapper">
-                    <div class="field-container left">
-                        <label class="left">Example Details</label>
-                        <div class="help-wrapper left">
-                            <a class="help-icon left" href="javascript:"></a>
-                            <div class="tool-tip left hide">
-                                <span class="tooltip-left left"></span>
-                                <div class="tooltip-middle left">
-                                    <div class="tooltip-head">
-                                        <div class="tooltip-head-content left">
-                                            <h2 class="left">Helps</h2>
-                                            <a href="javascript:" class="right tooltip-close"></a>
-                                        </div>
-                                        <div class="clear"></div>
-                                        <p>KMLs represent distinct stages of maturity or development of a problem, project, or task.
-                                            <br>Gather : Early stage; immature, undefined
-                                            <br>Synthesize: Analyze; define requirements and ops concept
-                                            <br>Validate: Evaluate and validate; produce deliverable
-                                            <br>Apply: Integrate; augment; standardize deliverable</p>
-                                        <a href="javascript:">learn more...</a>
+
+                <div class="form-list" data-bind="foreach: examples">
+                    <div class="form-wrapper form-entity">
+                        <div class="field-container clearfix bottom-padding">
+                            <label class="left">Name</label>
+                            <a class="tooltip-icon" href="javascript:"></a>
+                            <div class="left text-field required-field">
+                                <input class="text required" type="text" data-bind="{value: name}">
+                            </div>
+                        </div>
+                        <div class="field-container clearfix bottom-padding">
+                            <label class="left">Type</label>
+                            <a class="tooltip-icon" href="javascript:"></a>
+
+                            <select class="left"  data-bind="options: exampleTypes,
+                                             hasError: type,
+                                             hasErrorTarget: '.jqTransformSelectWrapper',
+                                             jqSelect: type,
+                                             value: type,
+                                             optionsCaption: 'Choose...'">
+                            </select>
+
+                        </div>
+                        <div class="field-container clearfix">
+                            <label class="left">Example Details</label>
+                            <a class="tooltip-icon" href="javascript:"></a>
+                            <div class="ckeditor-fields">
+                                <div class='textarea-section'>
+                                    <div class="cke-wrapper" data-bind="css: {'is-error': !description.isValid() && description.isModified() }">
+
+                                        <textarea name="content" id="" rows="4" cols="50" class="ckeditor-target"
+                                                  data-bind="attr: {id: $index() == 0 ? 'redactor' : 'ckeditor_' + $index() }, ckEditor: description"></textarea>
                                     </div>
                                 </div>
+                                <a href="javascript:" class="orange-big-btn" data-bind="click: $root.examples.remove.bind($root.examples, $data), visible: $index() != 0 ">
+                                    <span class="orange-big-left left"></span>
+													<span class="orange-big-middle left orange-shadow">
+														<span class="delete-icon left"></span>Delete</span>
+                                    <span class="orange-big-right left"></span>
+                                </a>
+                                <a href="javascript:" class="orange-big-btn" data-bind="click: $root.addExample, visible: $index() + 1 == $parent.examples().length ">
+                                    <span class="orange-big-left left"></span>
+													<span class="orange-big-middle left orange-shadow">
+														<span class="add-icon left"></span>Add Another Example</span>
+                                    <span class="orange-big-right left"></span>
+                                </a>
                             </div>
                         </div>
-                        <div data-bind="foreach: examples">
-                            <div data-bind="css: {'ckeditor-fields': $index() == 0, 'textarea-section': $index() != 0}">
-                                <textarea name="content" id="" rows="4" cols="50" class="ckeditor-target"
-                                          data-bind="attr: {id: $index() == 0 ? 'redactor' : 'ckeditor_' + $index() },ckEditor: value"></textarea>
-                            </div>
-                        </div>
-                        <a href="javascript:" class="orange-big-btn left" data-bind="click: $root.addExample">
-                            <span class="orange-big-left left"></span>
-											<span class="orange-big-middle left orange-shadow">
-												<span class="add-icon left"></span>Add Another Example</span>
-                            <span class="orange-big-right left"></span>
-                        </a>
                     </div>
-                    <div class="clear"></div>
+
                 </div>
             </div>
 
@@ -188,46 +236,76 @@
                             <col >
                         </colgroup>
                         <tbody data-bind="foreach: step1Items">
-                        <tr>
-                            <td class="first" data-bind="text: name +':'"></td>
-                            <td data-bind="text: displayValue"> </td>
-                        </tr>
+                        <!-- ko if: type_id != chTypes.image -->
+                            <tr>
+                                <td class="first" data-bind="text: name +':'"></td>
+                                <td data-bind="text: displayValue"> </td>
+                            </tr>
+                        <!-- /ko -->
                         </tbody>
                     </table>
-                    <div class="graphics right"></div>
+                    <div class="graphics right">
+                        <img data-bind="attr: {src: $root.picture()}" width="242px" height="224px" />
+                    </div>
                 </div>
             </div>
             <!--table 2 -->
+
             <div class="table-cover">
                 <div class="table-head clearfix">
                     <span class="tab-left left"></span>
-									<span class="tab-middle left">
-										<span class="tb-collapse left"></span>Examples within HH&amp;P
-										<a href="javascript:" class="compare orange-big-btn align right" data-bind="click: $root.goToStep.bind($root, 2)">
-                                            <span class="orange-big-left left"></span>
-											<span class="orange-big-middle left orange-shadow">
-												<span class="edit-icon left"></span>Edit</span>
-                                            <span class="orange-big-right left"></span>
-                                        </a>
-									</span>
+										<span class="tab-middle left">
+											<span class="tb-collapse left"></span>Examples within HH&amp;P
+											<a href="javascript:" class="compare orange-big-btn align right" data-bind="click: $root.goToStep.bind($root, 2)">
+                                                <span class="orange-big-left left"></span>
+												<span class="orange-big-middle left orange-shadow">
+													<span class="edit-icon left"></span>Edit</span>
+                                                <span class="orange-big-right left"></span>
+                                            </a>
+										</span>
                     <span class="tab-right left"></span>
                 </div>
-                <table class="table2 clear">
+                <table class="table2 table-example clear">
                     <colgroup>
-                        <col >
+                        <col width="29%">
+                        <col>
                     </colgroup>
                     <thead>
                     <tr>
-                        <th>Content</th>
+                        <th>Example Name </th>
+                        <th>Example Details</th>
                     </tr>
                     </thead>
-                    <tbody data-bind="foreach: exampleValues">
+                    <tbody>
                     <tr>
-                        <td class="align-left" data-bind="html: $data"></td>
+                        <td>
+                            <div class="examples-list">
+                                <ul data-bind="foreach: examples">
+                                    <li class="" data-bind="text: name,
+                                        click: $root.activeExample.bind($root, $data),
+                                        css: {active: $data == $root.activeExample()}"></li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="examples-list-content" data-bind="with:activeExample ">
+                                <div class="example-entity">
+                                    <div class="row clearfix">
+                                        <label class="left">Example Type</label>
+                                        <span class="label" data-bind="text: type"></span>
+                                    </div>
+                                    <div class="row">
+                                        <label>Description</label>
+                                        <div class="example-description" data-bind="html: description"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
+
             <!-- table3 -->
             <div class="table-cover">
                 <div class="table-head clearfix">

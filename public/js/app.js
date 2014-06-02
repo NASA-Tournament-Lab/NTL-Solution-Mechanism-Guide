@@ -18,8 +18,11 @@ var chTypes = {
     picklist: 3,
     radio: 4,
     text: 5,
-    textarea: 6
+    textarea: 6,
+    image: 7
 };
+
+var exampleTypes = ["type1", "type2", "type3", "type4"];
 
 /**
  * Allowed tabs for characteristics
@@ -33,7 +36,7 @@ var chIds = {
     name: 1,
     desc: 2,
     aka: 3,
-    type: 4,
+    image: 4,
     duration: 5,
     cost: 6
 };
@@ -44,8 +47,7 @@ if(typeof String.prototype.trim !== 'function') {
     }
 }
 
-if (!Array.prototype.indexOf)
-{
+if (!Array.prototype.indexOf) {
     Array.prototype.indexOf = function(elt /*, from*/)
     {
         var len = this.length >>> 0;
@@ -85,6 +87,14 @@ function handleError(response) {
     alert("ERROR OCCURRED: \n" + response.responseJSON ? response.responseJSON.details : response.responseText);
 }
 
+/**
+ * Get picture url for smg
+ * @param {String} fileId the file upload id
+ * @returns {string} the url
+ */
+function getPictureUrl(fileId) {
+    return API_URL + "/helpTopic/" + fileId + "/download";
+}
 
 /**
  * Get JSON response from API. Random parameter is added to query string to prevent caching
@@ -313,7 +323,7 @@ function ManageCharacteristicsViewModel() {
                 });
             }, function (cb) {
                 getJSON(API_URL + "/characteristicTypes", function (ret) {
-                    self.types(ret);
+                    self.types(_.filter(ret, function (type) { return type.id !== chTypes.image}));
                     cb();
                 });
             }
@@ -359,6 +369,9 @@ function ManageCharacteristicsViewModel() {
 
     self.editingItem = ko.observable();
     self.startEdit = function (item) {
+        if (item.blockDelete) {
+            return;
+        }
         initCharToCreateOrEdit();
         self.editingItem(item);
         self.newCharacteristic().name(item.name);
@@ -469,8 +482,7 @@ function ManageCharacteristicsViewModel() {
         });
     };
     self.remove = function (item) {
-        if (_.values(chIds).indexOf(item.id) != -1) {
-            showAlert("This characteristic cannot be deleted.");
+        if (item.blockDelete) {
             return;
         }
         showConfirm("Are you sure you want to delete this item?", function () {
@@ -503,25 +515,27 @@ function AddEditSMGViewModel() {
     self.loading = ko.observable(true);
     self.characteristics = ko.observableArray([]);
     self.step = ko.observable(1);
-    self.examples = ko.observableArray([{value: ko.observable("")}]);
-    //non empty examples
-    self.exampleValues = ko.computed(function () {
-        var values = _.map(self.examples(), function (ele) {
-            return ele.value();
-        });
-        return _.filter(values, function (v) {
-            return $('<div></div>').html(v).text().trim().length;
-        });
-    });
+    self.examples = ko.observableArray([]);
+    self.activeExample = ko.observable();
+
     self.step1Items = ko.computed(function () {
         return _.filter(self.characteristics(), function (item) {
-            return item.tab === chTabs[0]
+            return item.tab === chTabs[0];
         })
     });
     self.step3Items = ko.computed(function () {
         return _.filter(self.characteristics(), function (item) {
-            return item.tab === chTabs[1]
+            return item.tab === chTabs[1];
         })
+    });
+    self.picture = ko.computed(function () {
+        var item = _.filter(self.characteristics(), function (item) {
+            return item.id == chIds.image;
+        })[0];
+        if (item) {
+            return getPictureUrl(item.file.fileId());
+        }
+        return null;
     });
     blockUI();
     self.loaded = ko.observable(false);
@@ -551,6 +565,31 @@ function AddEditSMGViewModel() {
                             }
                             return val;
                         });
+                        if (item.type_id == chTypes.image) {
+                            item.file = {
+                                progress: ko.observable(0),
+                                filename: ko.observable("").extend(extend),
+                                fileId: ko.observable(""),
+                                uploading: ko.observable(false),
+                                uploaded: ko.observable(false)
+                            };
+                            item.file.fileUrl = ko.computed(function () {
+                                if (!item.file.fileId()) {
+                                    return "";
+                                }
+                                return getPictureUrl(item.file.fileId());
+                            });
+                            item.file.fileId.subscribe(function (val) {
+                                item.value(String(val));
+                            });
+                            item.file.remove = function () {
+                                item.file.progress(0);
+                                item.file.filename("");
+                                item.file.fileId("");
+                                item.file.uploading(false);
+                                item.file.uploaded(false);
+                            }
+                        }
                         return item;
                     });
                     self.characteristics(items);
@@ -581,11 +620,19 @@ function AddEditSMGViewModel() {
                                 val = currentCh.value;
                             }
                             ch.value(val);
+                            if (ch.type_id == chTypes.image) {
+                                ch.file.progress(100);
+                                ch.file.filename(getPictureUrl(val));
+                                ch.file.fileId(val);
+                                ch.file.uploaded(true);
+                            }
                         });
                     });
                     self.examples(_.map(ret.examples, function (item) {
                         return {
-                            value: ko.observable(item.description)
+                            description: ko.observable(item.description).extend({required: true}),
+                            type: ko.observable(item.type).extend({required: true}),
+                            name: ko.observable(item.name).extend({required: true})
                         };
                     }));
                     cb();
@@ -600,26 +647,25 @@ function AddEditSMGViewModel() {
     self.nextStep = function () {
         var step = self.step();
         if (step == 1) {
+            window.errors = self.errorsTab1();
             self.errorsTab1.showAllMessages();
             if (self.errorsTab1().length) {
                 return;
             }
+        }
+        if (step == 2) {
+            self.errorsExamples = ko.validation.group({examples: self.examples}, { deep: true });
+            self.errorsExamples.showAllMessages();
+            if (self.errorsExamples().length) {
+                return;
+            }
+            self.activeExample(self.examples()[0]);
         }
         if (step == 3) {
             self.errorsTab3.showAllMessages();
             if (self.errorsTab3().length) {
                 return;
             }
-        }
-
-        if (step === 2) {
-            var values = self.exampleValues();
-            if (!values.length) {
-                alert('At least one example is required (non-empty value)');
-                return;
-            }
-            self.step(self.step() + 1);
-            return;
         }
         self.step(self.step() + 1);
     };
@@ -628,9 +674,13 @@ function AddEditSMGViewModel() {
     };
 
     self.addExample = function () {
-        self.examples.push({value: ko.observable("")});
+        self.examples.push({
+            description: ko.observable().extend({required: true}),
+            name: ko.observable().extend({required: true}),
+            type: ko.observable().extend({required: true})
+        });
     };
-
+    self.addExample();
     self.goToStep = function (step) {
         if (step < self.step()) {
             self.step(step);
@@ -653,11 +703,7 @@ function AddEditSMGViewModel() {
                     value: val
                 };
             }),
-            examples: _.map(self.exampleValues(), function (item) {
-                return {
-                    description: item
-                }
-            })
+            examples: ko.toJS(self.examples())
         };
         blockUI();
         fakeTimeout(function () {
@@ -752,7 +798,8 @@ function AdminSMGViewModel() {
                             id: item.id,
                             name: getChar(chIds.name),
                             desc: getChar(chIds.desc),
-                            aka: getChar(chIds.aka)
+                            aka: getChar(chIds.aka),
+                            picture: getPictureUrl(getChar(chIds.image))
                         }
                     });
                     self.allItems(items);
@@ -818,7 +865,7 @@ function FormFilterViewModel() {
             async.series([
                 function (cb) {
                     getJSON(API_URL + "/characteristics", function (ret) {
-                        self.characteristics(ret);
+                        self.characteristics(_.filter(ret, function (item) { return item.type_id != chTypes.image; }));
                         cb();
                     });
                 }, function (cb) {
@@ -1079,7 +1126,13 @@ function SMGListingViewModel() {
                         alert('Active search form not found');
                         return;
                     }
+                    var values = window.location.hash.substr(1).split(",");
                     var fields = _.map(form.fields, function (field) {
+                        var value = values.shift();
+                        if (field.characteristic.type_id == chTypes.picklist ||
+                            field.characteristic.type_id == chTypes.radio) {
+                            value = Number(value) || undefined;
+                        }
                         var ret = {
                             name: field.characteristic.name,
                             type_id: field.characteristic.type_id,
@@ -1097,7 +1150,7 @@ function SMGListingViewModel() {
                                 })
                                 .compact()
                                 .value(),
-                            value: ko.observable(""),
+                            value: ko.observable(value),
                             selectedValue: ko.observable()
                         };
                         if ([chTypes.number, chTypes.text, chTypes.textarea].indexOf(ret.type_id) != -1) {
@@ -1135,11 +1188,11 @@ function SMGListingViewModel() {
     self.search = function () {
         self.loading(true);
         var criteria = _.chain(self.fields()).map(function (f) {
-            var val = f.selectedValue();
-            if (val) {
+            var val = f.value();
+            if (_.isNumber(val)) {
                 val = [val];
             } else {
-                val = f.value().trim();
+                val = (val || "").trim();
             }
             return {
                 characteristic: f.characteristic_id,
@@ -1172,6 +1225,7 @@ function SMGListingViewModel() {
                         name: getChar(chIds.name),
                         desc: getChar(chIds.desc),
                         duration: getChar(chIds.duration),
+                        picture:  getPictureUrl(getChar(chIds.image)),
                         cost: formatCost(getChar(chIds.cost)),
                         compare: ko.observable(false),
                         org: item
@@ -1205,7 +1259,6 @@ function SMGListingViewModel() {
     self.comparePopup = function () {
         hideModal($("#agreement-popup"));
         if (!self.popupSmg().compare()) {
-            console.log(self.selectedItems().length);
             if (self.selectedItems().length == 2) {
                 showModal($("#cannot-add-compare"));
             } else {
@@ -1234,6 +1287,7 @@ function SMGModel(data) {
     //without name
     self.otherValues = {};
     self.name = "";
+    self.picture = "";
     self.id = data.id;
 
     _.each(data.smgCharacteristics, function (prop) {
@@ -1253,6 +1307,8 @@ function SMGModel(data) {
         prop.displayValue = val;
         if (prop.characteristic.id == chIds.name) {
             self.name = val;
+        } else if (prop.characteristic.id == chIds.image) {
+            self.picture = getPictureUrl(val);
         } else {
             self.otherValues[prop.characteristic.name] = val;
         }
@@ -1261,7 +1317,7 @@ function SMGModel(data) {
     self.smgCharacteristics = ko.observableArray(data.smgCharacteristics);
     self.tab1Items = ko.computed(function () {
         return _.filter(self.smgCharacteristics(), function (item) {
-            return item.characteristic.tab === chTabs[0]
+            return item.characteristic.tab === chTabs[0] && item.characteristic.id != chIds.image;
         })
     });
     self.tab3Items = ko.computed(function () {
@@ -1408,7 +1464,7 @@ function HelpViewModel() {
     self.topicsLoaded = ko.observable(false);
     self.dashboardLoaded = ko.observable(false);
     self.dashboardText = ko.observable("");
-
+    self.images = ko.observableArray([]);
     self.showDashboard = function () {
         self.tab("dashboard");
         window.location.hash = "";
@@ -1419,6 +1475,25 @@ function HelpViewModel() {
         fakeTimeout(function () {
             getJSON(API_URL + "/dashboard", function (ret) {
                 self.dashboardText(ret.description);
+                self.images(_.map(ret.images || [], function (id) {
+                    var fileModel = {
+                        filename: ko.observable(""),
+                        fileId: ko.observable(id),
+                        uploading: ko.observable(false),
+                        progress: ko.observable(100),
+                        uploaded: ko.observable(true),
+                        remove: function () {
+                            self.images.remove(fileModel);
+                        }
+                    };
+                    fileModel.fileUrl = ko.computed(function () {
+                        if (!fileModel.fileId()) {
+                            return null;
+                        }
+                        return getPictureUrl(fileModel.fileId());
+                    });
+                    return fileModel;
+                }));
                 self.dashboardLoaded(true);
                 unBlockUI();
             });
@@ -1431,7 +1506,10 @@ function HelpViewModel() {
         blockUI();
         fakeTimeout(function () {
             var data = JSON.stringify({
-                description: self.dashboardText()
+                description: self.dashboardText(),
+                images: _.map(ko.toJS(self.images), function (image) {
+                    return image.fileId;
+                })
             });
             $.ajax({
                 type: "post",
@@ -1559,6 +1637,9 @@ function AddEditHelpViewModel() {
         self.previewImg(API_URL + "/helpTopic/" + self.imageId() + "/download");
         $(".preview-panel").show();
     };
+    $(".field-container").on("click", ".js-action-browse", function(){
+        $(this).closest(".field-container").find(":file").focus().trigger("click");
+    });
     $('#FileUpload').change(function () {
         var value = $('#FileUpload').val();
         if (!value.length) {
@@ -1710,6 +1791,7 @@ function HomeViewModel() {
                     });
                     var fields = _.map(form.fields, function (field) {
                         var ret = {
+                            id: field.id,
                             name: field.characteristic.name,
                             type_id: field.characteristic.type_id,
                             characteristic_id: field.characteristic_id,
@@ -1754,8 +1836,14 @@ function HomeViewModel() {
     });
 
     self.search = function () {
-        self.errors.showAllMessages();
-        window.location = "/smg";
+//        self.errors.showAllMessages();
+//        if (self.errors().length) {
+//            return;
+//        }
+        var hash = _.map(self.fields(), function (field) {
+            return field.value() || "";
+        }).join(",");
+        window.location = "/smg#" + hash;
     }
 }
 

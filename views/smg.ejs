@@ -8,60 +8,69 @@
 
 
 <script type="text/html" id="filter-template">
-    <span class="nquestion" data-bind="text: name"></span>
-    <div class="options-root">
 
-        <!-- ko if: values.length -->
-            <div class="options-root">
-                <span class="wrapper-options left" data-bind="foreach: values">
-                    <!-- ko if: $index() % 2 == 0 -->
-                     <label class="wdh left form-label">
-                         <input type="radio" data-bind="value: valuetype_id, iCheck: $parent.selectedValue, attr: {name: 'group_' +$parent.characteristic_id}"/>
-                         <span data-bind="text: name"></span>
-                     </label>
-                    <!-- /ko -->
-                </span>
-                <span class="wrapper-options left"  data-bind="foreach: values">
-                    <!-- ko if: $index() % 2 == 1 -->
-                        <label class="wdh left form-label">
-                            <input type="radio" data-bind="value: valuetype_id, iCheck: $parent.selectedValue, attr: {name: 'group_' +$parent.characteristic_id}" />
-                            <span data-bind="text: name"></span>
-                        </label>
-                    <!-- /ko -->
-                </span>
-            </div>
-        <!-- /ko -->
-        <!-- ko if: type_id == chTypes.checkbox -->
-            <div class="options-root">
-                <span class="wrapper-options left">
-                     <label class="wdh left form-label">
-                         <input type="radio" value="True"  data-bind="iCheck: value, attr: {name: 'group_' +$parent.characteristic_id}"/>
-                         <span>True</span>
-                     </label>
-                </span>
-                <span class="wrapper-options left">
-                     <label class="wdh left form-label">
-                         <input type="radio" value="False"  data-bind="iCheck: value, attr: {name: 'group_' +$parent.characteristic_id}"/>
-                         <span>False</span>
-                     </label>
-                </span>
-            </div>
-        <!-- /ko -->
+    <div></div>
 
-        <!-- ko if: type_id == chTypes.text || type_id == chTypes.textarea -->
-            <div class="options-root">
-                <div class="text-field" data-bind="">
-                    <input type="text" maxlength="200" data-bind="value: value" />
-                </div>
-            </div>
-        <!-- /ko -->
+    <!-- ko if: type_id == chTypes.text || type_id == chTypes.textarea || type_id == chTypes.number -->
+        <span class="nquestion left" data-bind="text: name"></span>
+        <span class="options-root left">
+            <input type="text" maxlength="200" data-bind="value: value" data-bind="css: {'js-leading-zeros': type_id == chTypes.number}" />
+        </span>
+    <!-- /ko -->
 
-        <!-- ko if: type_id == chTypes.number -->
-        <div class="text-field">
-            <input type="text" maxlength="200" data-bind="value: value" class="js-leading-zeros" />
+    <!-- ko if: type_id == chTypes.checkbox -->
+
+        <div class="nquestion " data-bind="text: name"></div>
+        <div class="options-root check">
+            <span class="wrapper-options left">
+                <label class="wdh left form-label">
+                    <input class="left"  type="checkbox"
+                           data-bind="iCheck: value, iCheckOptions: { trueFalseString: true }"/> Yes/No
+                </label>
+            </span>
         </div>
-        <!-- /ko -->
-    </div>
+    <!-- /ko -->
+
+    <!-- ko if: type_id == chTypes.picklist -->
+        <div class="nquestion " data-bind="text: name"></div>
+        <div class="options-root ">
+            <div class="jqtransformNew select-field required-field identify-questions">
+                <select class="left"  data-bind="options: values,
+                                         jqSelect: value,
+                                         optionsText: 'name',
+                                         optionsValue: 'valuetype_id',
+                                         value: value,
+                                         optionsCaption: 'Choose...'">
+                </select>
+            </div>
+
+        </div>
+    <!-- /ko -->
+
+    <!-- ko if: type_id == chTypes.radio -->
+
+        <div class="nquestion left" data-bind="text: name"></div>
+        <div class="options-root left">
+            <span class="wrapper-options left" data-bind="foreach: values">
+                <!-- ko if: $index() % 2 == 0 -->
+                 <label class="wdh left form-label">
+                     <input type="radio" data-bind="value: valuetype_id, iCheck: $parent.value, attr: {name: 'group_' +$parent.characteristic_id}"/>
+                     <span data-bind="text: name"></span>
+                 </label>
+                <!-- /ko -->
+            </span>
+            <span class="wrapper-options left"  data-bind="foreach: values">
+                <!-- ko if: $index() % 2 == 1 -->
+                    <label class="wdh left form-label">
+                        <input type="radio" data-bind="value: valuetype_id, iCheck: $parent.value, attr: {name: 'group_' +$parent.characteristic_id}" />
+                        <span data-bind="text: name"></span>
+                    </label>
+                <!-- /ko -->
+            </span>
+        </div>
+    <!-- /ko -->
+    <div class="clear"></div>
+
 </script>
 
 
@@ -107,7 +116,7 @@
             </div>
             <div class="questions left" data-bind="css :{'white-questions-bg':alternative}">
                 <ul class="solution2" data-bind="foreach: fields, css: { hide: alternative()}">
-                    <li data-bind=" css: {'less-margin': $index() == 0, 'last': $index() + 1 == $parent.fields().length}">
+                    <li data-bind=" css: {'less-margin': $index() == 0, 'last': $index() + 1 == $parent.fields().length, select: type_id == chTypes.picklist }">
                         <div class="questions-wrapper">
                             <a class="left tooltip-icon" href="javascript:" data-bind="attr: { 'data-val' : help }"></a>
 
@@ -119,7 +128,7 @@
                 </ul>
                 <div class="update-result left">
                     <ul class="solution1"  data-bind="foreach: fields, css: { hide: !alternative()}">
-                        <li>
+                        <li data-bind="css: {select: type_id == chTypes.picklist}">
                             <div class="white-questions-wrapper">
                                 <a class="left tooltip-icon" href="javascript:"></a>
 
@@ -181,7 +190,9 @@
                         <ul data-bind="foreach: items">
 
                             <li  data-bind="css: {'last': $index() + 1 == $parent.items().length}">
-                                <div class="square left"></div>
+                                <div class="square left">
+                                    <img data-bind="attr: {src: picture}" width="76" height="76" />
+                                </div>
                                 <div class="content left">
                                     <label class="form-label"><input type="checkbox" data-bind="iCheck: compare"> <span>Add to compare</span></label>
                                     <br>
@@ -213,7 +224,9 @@
                     <div class="white-box" data-bind="css: {left: $index() % 2 == 0, right: $index() % 2 == 1}">
                         <div class="box-wrapper left">
                             <a class="title" data-bind="text: name, attr:{href: '/smg/' + id}"></a>
-                            <div class="square left"></div>
+                            <div class="square left">
+                                <img data-bind="attr: {src: picture}" width="76" height="76" />
+                            </div>
                             <div class="content left">
                                 <label class="form-label"><input type="checkbox" data-bind="iCheck: compare"> <span>Add to compare</span></label>
                                 <br>

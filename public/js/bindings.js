@@ -23,7 +23,6 @@ ko.bindingHandlers.errorTooltip = {
             $("body").append(tmp.join(""));
         }
         $(element).on("mouseover", function () {
-            console.log($(element).data('error'));
             $("#error-popup").show();
             var pos = $(this).offset();
             $("#error-popup .msg").html("<p>" + $(element).data('error') + "</p>");
@@ -249,6 +248,13 @@ ko.bindingHandlers.jqSelect = {
                 $(element).parent().css('zIndex', i);
             });
         }
+
+        var index = $(element).prop("selectedIndex");
+        if (index == 0 && allBindings().optionsCaption) {
+            $(element).closest('.jqTransformSelectWrapper').find('span').addClass('jqTransformPlaceholder');
+        } else {
+            $(element).closest('.jqTransformSelectWrapper').find('span').addClass('jqTransformPlaceholder');
+        }
     },
     update: function(element, valueAccessor, allBindings) {
         var value = allBindings().value();
@@ -259,6 +265,11 @@ ko.bindingHandlers.jqSelect = {
             }
             var ele = $(element).closest('.jqTransformSelectWrapper').find('li > a').eq(index);
             ele.click();
+            if (index == 0 && allBindings().optionsCaption) {
+                $(element).closest('.jqTransformSelectWrapper').find('span').addClass('jqTransformPlaceholder');
+            } else {
+                $(element).closest('.jqTransformSelectWrapper').find('span').removeClass('jqTransformPlaceholder');
+            }
         }, 50);
     }
 };
@@ -290,5 +301,107 @@ ko.bindingHandlers.loader = {
                 $ele.data('timer', null);
             }
         }
+    }
+};
+
+
+//copy to clipboard plugin
+ko.bindingHandlers.zclip = {
+    init: function(element, valueAccessor, allBindings) {
+        $(element).zclip({
+            path: '/js/libs/zclip/ZeroClipboard.swf',
+            copy: function() {
+                var val = ko.unwrap(valueAccessor());
+                if (!val) {
+                    return "";
+                }
+                return getPictureUrl(val);
+            }
+        });
+    }
+};
+
+//file upload
+ko.bindingHandlers.fileUpload = {
+    init: function(element, valueAccessor, allBindings) {
+        var $root = $(allBindings().fileUploadRoot);
+        var multiple = allBindings().fileUploadMultiple;
+        var fileModel;
+        var uploads;
+        if (multiple) {
+            uploads = valueAccessor();
+        } else {
+            fileModel = ko.unwrap(valueAccessor());
+        }
+        //browse file
+        $root.on("click", ".js-action-browse", function(){
+            $root.find(":file").trigger("click");
+        });
+
+        //get browse file name
+        $root.find(":file").change(function() {
+            var that = $(this);
+           // var _this = this;
+            var value = that.val();
+            if (!value) {
+                return;
+            }
+            var fileName = getFileName(value);
+            if (allBindings().fileName) {
+                $(allBindings().fileName).val(fileName);
+            }
+            if (multiple) {
+                fileModel = {
+                    filename: ko.observable(""),
+                    fileId: ko.observable(""),
+                    uploading: ko.observable(false),
+                    progress: ko.observable(0),
+                    uploaded: ko.observable(true),
+                    remove: function () {
+                        uploads.remove(fileModel);
+                    }
+                };
+                fileModel.fileUrl = ko.computed(function () {
+                    if (!fileModel.fileId()) {
+                        return null;
+                    }
+                    return getPictureUrl(fileModel.fileId());
+                });
+                uploads.push(fileModel);
+            }
+
+            fileModel.uploading(true);
+            $root.find('form').ajaxSubmit({
+                dataType: 'json',
+                success: function (ret) {
+                    if (ret.mime.indexOf("image") == -1) {
+                        showAlert("Invalid image");
+                        fileModel.uploading(false);
+                        if (multiple) {
+                            uploads.remove(fileModel);
+                        }
+                        return;
+                    }
+                    fileModel.filename(ret.filename);
+                    fileModel.fileId(ret.id);
+                    fileModel.uploading(false);
+                    fileModel.uploaded(true);
+                },
+                uploadProgress: function (event, position, total, percent) {
+                    fileModel.progress(Math.floor(percent));
+                },
+                error: function (response) {
+                    if (multiple) {
+                        uploads.remove(fileModel);
+                    }
+                    fileModel.uploading(false);
+                    handleError(response);
+                }
+            });
+
+        });
+
+    },
+    update: function(element, valueAccessor) {
     }
 };

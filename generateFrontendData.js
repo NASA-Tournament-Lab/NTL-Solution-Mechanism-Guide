@@ -54,16 +54,17 @@ testData.characteristicType = [
     { id: 3, name: 'picklist', description: randomText() },
     { id: 4, name: 'radio', description: randomText() },
     { id: 5, name: 'text', description: randomText() },
-    { id: 6, name: 'textarea', description: randomText() }
+    { id: 6, name: 'textarea', description: randomText() },
+    { id: 7, name: 'image', description: randomText() }
 ];
 
 testData.characteristic =  [
-    { id: 1, type_id: 5, sort: i++, name: 'Name', description: randomShortText(), tab: "Information" },
-    { id: 2, type_id: 6, sort: i++, name: 'Description', description: randomShortText(), tab: "Information"  },
-    { id: 3, type_id: 5, sort: i++, name: 'Also Known Us', description: randomShortText(), tab: "Information"   },
-    { id: 4, type_id: 5, sort: i++, name: 'Type', description: randomShortText(), tab: "Information"   },
-    { id: 5, type_id: 4, sort: i++, name: 'Duration', description: randomShortText(), tab: "Information"   },
-    { id: 6, type_id: 2, sort: i++, name: 'Cost', description: randomShortText(), tab: "Information"   },
+    { id: 1, type_id: 5, sort: i++, name: 'Name', description: randomShortText(), tab: "Information", blockDelete: true },
+    { id: 2, type_id: 6, sort: i++, name: 'Description', description: randomShortText(), tab: "Information", blockDelete: true },
+    { id: 3, type_id: 5, sort: i++, name: 'Also Known Us', description: randomShortText(), tab: "Information", blockDelete: true },
+    { id: 4, type_id: 7, sort: i++, name: 'Image', description: randomShortText(), tab: "Information", blockDelete: true },
+    { id: 5, type_id: 4, sort: i++, name: 'Duration', description: randomShortText(), tab: "Information", blockDelete: true },
+    { id: 6, type_id: 2, sort: i++, name: 'Cost', description: randomShortText(), tab: "Information", blockDelete: true },
 
     { id: 7, type_id: 1, sort: i++, name: 'Public?', description: randomShortText(), tab: "Information"   },
     { id: 8, type_id: 3, sort: i++, name: 'Color', description: randomShortText(), tab: "Information"   },
@@ -120,8 +121,8 @@ testData.searchFormField =  [
     { id: 4, sort: i++, form_id: 1, characteristic_id: 6 },
     //Color
     { id: 5, sort: i++, form_id: 1, characteristic_id: 8 },
-    //Size
-    { id: 6, sort: i++, form_id: 1, characteristic_id: 9 }
+    //Risk
+    { id: 6, sort: i++, form_id: 1, characteristic_id: 11 }
 ];
 
 
@@ -131,9 +132,9 @@ testData.searchFormFieldValue =  [
     { id: 3, field_id: 5, valuetype_id: 7},
     { id: 4, field_id: 5, valuetype_id: 8},
 
-    { id: 5, field_id: 6, valuetype_id: 9},
-    { id: 6, field_id: 6, valuetype_id: 10},
-    { id: 7, field_id: 6, valuetype_id: 11}
+    { id: 5, field_id: 6, valuetype_id: 17},
+    { id: 6, field_id: 6, valuetype_id: 18},
+    { id: 7, field_id: 6, valuetype_id: 19}
 ];
 
 testData.dashboard = [
@@ -201,6 +202,10 @@ initDb(function (err, db) {
                                 //textarea
                                 values.value = randomText();
                             }
+                            if (characteristic.type_id === 7) {
+                                //image
+                                values.value = 1;
+                            }
                             db.models.smgCharacteristic.create(values, cb);
                         }, cb);
                     }, function (cb) {
@@ -208,6 +213,7 @@ initDb(function (err, db) {
                             db.models.example.create({
                                 smg_id: smgId,
                                 name: moniker.choose(),
+                                type: _.sample(["type1", "type2", "type3", "type4"]),
                                 description: randomHtml()
                             }, cb);
                         }, cb);
