@@ -13,15 +13,16 @@
     <div id="identify-search-wrapper" data-bind="visible: !loading()">
         <div class="identify-left left">
             <ul class="identify-questions" data-bind="foreach: fields">
-                <li class="clear" data-bind="css: {select: type_id == chTypes.picklist}">
+                <li class="clearfix" data-bind="css: {select: type_id == chTypes.picklist}">
                     <div class="help-wrapper">
                         <a class="help-icon left" href="javascript:"></a>
+                        <a class="reset-icon left" href="javascript:" data-bind="click: revert"></a>
                         <div class="tool-tip left hide">
                             <span class="tooltip-left left"></span>
                             <div class="tooltip-middle left">
                                 <div class="tooltip-head">
                                     <div class="tooltip-head-content left">
-                                        <h2 class="left">Helps</h2>
+                                        <h2 class="left">Help</h2>
                                         <a href="javascript:" class="right tooltip-close"></a>
                                     </div>
                                     <div class="clear"></div>
@@ -39,22 +40,24 @@
                             </div>
                         </div>
                     <!-- /ko -->
-                    <!-- ko if: type_id == chTypes.checkbox -->
-                        <p class="question" data-bind="text: name"></p>
-                        <div class="answer">
-                            <label class="option">
-                                <input class="left"  type="checkbox"
-                                       data-bind="iCheck: value, iCheckOptions: { trueFalseString: true }"/> Yes/No
-                            </label>
-                        </div>
-                    <!-- /ko -->
 
                     <!-- ko if: type_id == chTypes.radio -->
                         <p class="question" data-bind="text: name"></p>
                         <div class="answer" data-bind="">
                             <!-- ko foreach: values -->
                             <label class="option">
-                                <input class="left" type="radio" data-bind="value: valuetype_id, iCheck: $parent.value, attr: {name: 'group_' +$parent.characteristic_id}" >
+                                <input class="left" type="radio" data-bind="value: valuetype_id, iCheck: $parent.selectedValues, attr: {name: 'group' + $parent.id}" >
+                                <span data-bind="text: name"></span>
+                            </label>
+                            <!-- /ko -->
+                        </div>
+                    <!-- /ko -->
+                    <!-- ko if: type_id == chTypes.checkbox -->
+                        <p class="question" data-bind="text: name"></p>
+                        <div class="answer" data-bind="">
+                            <!-- ko foreach: values -->
+                            <label class="option">
+                                <input class="left" type="checkbox" data-bind="value: valuetype_id, iCheck: $parent.selectedValues" >
                                 <span data-bind="text: name"></span>
                             </label>
                             <!-- /ko -->

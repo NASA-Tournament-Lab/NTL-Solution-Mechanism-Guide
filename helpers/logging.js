@@ -129,7 +129,11 @@ function wrapExpress(signature, fn, customHandled) {
                     transaction.commit(cb);
                 }
             }, function (cb) {
-                paramsToLog.response = apiResult;
+                if (process.env.NO_LOG_RESPONSE) {
+                    paramsToLog.response = "<disabled>";
+                } else {
+                    paramsToLog.response = apiResult;
+                }
                 winston.info("EXIT %s %j", signature, paramsToLog, {});
                 if (!customHandled) {
                     res.json(apiResult);

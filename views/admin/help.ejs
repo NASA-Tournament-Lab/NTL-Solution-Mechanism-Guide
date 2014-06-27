@@ -25,6 +25,16 @@
                 <span class="tab-right"><span class="tab-left">Help Topics</span></span>
             </a>
         </li>
+        <li>
+            <a href="javascript:"  data-bind="click: showConfiguration, css:{ active: tab() == 'configuration' }">
+                <span class="tab-right"><span class="tab-left">Configuration</span></span>
+            </a>
+        </li>
+		<li>
+            <a href="javascript:" rel="#export-smg" data-bind="click: showExportSMG, css:{ active: tab() == 'export-smg' }">
+                <span class="tab-right"><span class="tab-left">Export/Import SMG</span></span>
+            </a>
+        </li>
     </ul>
     <a href="/admin/help/add" class="orange-big-btn btn-action-new-topic right" data-bind="visible: tab() == 'topics'">
         <span class="orange-big-left left"></span>
@@ -46,7 +56,7 @@
                     <div class="tooltip-middle left">
                         <div class="tooltip-head">
                             <div class="tooltip-head-content left">
-                                <h2 class="left">Helps</h2>
+                                <h2 class="left">Help</h2>
                                 <a href="javascript:" class="right tooltip-close"></a>
                             </div>
                             <div class="clear"></div>
@@ -82,7 +92,7 @@
                     <div class="tooltip-middle left">
                         <div class="tooltip-head">
                             <div class="tooltip-head-content left">
-                                <h2 class="left">Helps</h2>
+                                <h2 class="left">Help</h2>
                                 <a href="javascript:" class="right tooltip-close"></a>
                             </div>
                             <div class="clear"></div>
@@ -100,12 +110,72 @@
                 <div data-bind="template: { name: 'fileUpload', foreach: images}"></div>
             </div>
         </div>
+
+
+        <div class="field-container clearfix">
+                <label class="left">HTML</label>
+                <div class="help-wrapper left">
+                    <a class="help-icon left" href="javascript:"></a>
+                    <div class="tool-tip hide">
+                        <span class="tooltip-left left"></span>
+                        <div class="tooltip-middle left">
+                            <div class="tooltip-head">
+                                <div class="tooltip-head-content left">
+                                    <h2 class="left">Help</h2>
+                                    <a href="javascript:" class="right tooltip-close"></a>
+                                </div>
+                                <div class="clear"></div>
+                                <p>KMLs represent distinct stages of maturity or development of a problem, project, or task.
+                                    <br>Gather : Early stage; immature, undefined
+                                    <br>Synthesize: Analyze; define requirements and ops concept
+                                    <br>Validate: Evaluate and validate; produce deliverable
+                                    <br>Apply: Integrate; augment; standardize deliverable</p>
+                                <a href="javascript:">learn more...</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-field">
+                    <textarea  rows="" cols="" data-bind="value: dashboardText"></textarea>
+                </div>
+            </div>
+
+        <div class="field-container clearfix last-field-container">
+                <label class="left">CSS</label>
+                <div class="help-wrapper left">
+                    <a class="help-icon left" href="javascript:"></a>
+                    <div class="tool-tip hide">
+                        <span class="tooltip-left left"></span>
+                        <div class="tooltip-middle left">
+                            <div class="tooltip-head">
+                                <div class="tooltip-head-content left">
+                                    <h2 class="left">Help</h2>
+                                    <a href="javascript:" class="right tooltip-close"></a>
+                                </div>
+                                <div class="clear"></div>
+                                <p>KMLs represent distinct stages of maturity or development of a problem, project, or task.
+                                    <br>Gather : Early stage; immature, undefined
+                                    <br>Synthesize: Analyze; define requirements and ops concept
+                                    <br>Validate: Evaluate and validate; produce deliverable
+                                    <br>Apply: Integrate; augment; standardize deliverable</p>
+                                <a href="javascript:">learn more...</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-field">
+                    <textarea  rows="" cols=""  data-bind="value: dashboardCss"></textarea>
+                </div>
+            </div>
     </div>
 
-    <div class="ckeditor-field">
-        <textarea name="content" id="redactor-topic" rows="4" cols="50" data-bind="ckEditor: dashboardText, ckEditorOptions: {height: '214px'}"></textarea>
+    <div class="panel-changes-preview">
+        <div id="poster">
+            <div id="banner-preview" class="clearfix">
+
+            </div>
+        </div>
     </div>
-    <!-- end CKEditor-field-->
 
     <div class="tab-command clearfix">
         <a href="javascript:" class="orange-big-btn align right" data-bind="click: saveDashboard">
@@ -120,38 +190,286 @@
 										<span class="cancel-icon left"></span>Discard Changes</span>
             <span class="orange-big-right left"></span>
         </a>
+        <a href="javascript:" class="orange-big-btn align right" data-bind="click: preview">
+            <span class="orange-big-left left"></span>
+            <span class="orange-big-middle left orange-shadow">Preview Changes</span>
+            <span class="orange-big-right left"></span>
+
+        </a>
     </div>
+
     <!-- end .tab-command-->
 </div>
 
     <div class="tab" id="help-topics" data-bind="css: {active:  tab() == 'topics'}">
-    <div class="help-topics-list ajax-pre-loader-wrapper">
-        <div class="preloader" data-bind="loader: loading"></div>
-        <div class="ajax-content" data-bind="css: {show: !loading()}, foreach: topics">
-            <div class="topic-box">
-                <h3 data-bind="text: name"></h3>
-                <div class="img-wrapper">
-                    <img alt="" data-bind="attr: { src: '/api/helpTopic/' + image_id + '/download'}" width="261" height="143" >
+
+
+
+        <div class="help-topics-list ajax-pre-loader-wrapper">
+            <div class="preloader" data-bind="loader: loading"></div>
+            <div class="ajax-content" data-bind="css: {show: !loading()}, foreach: topics">
+                <div class="topic-box">
+                    <h3 data-bind="text: name"></h3>
+                    <div class="img-wrapper">
+                        <img alt="" data-bind="attr: { src: '/api/helpTopic/' + image_id + '/download'}" width="261" height="143" >
+                    </div>
+                    <div class="topic-command clearfix">
+                        <a class="orange-small-btn  left" data-bind="attr: {href: '/admin/help/edit/' + id}">
+                            <span class="orange-small-left left"></span>
+                                                    <span class="orange-small-middle edit left orange-shadow">
+                                                        <span class="edit-icon left"></span>Edit</span>
+                            <span class="orange-small-right left"></span>
+                        </a>
+                        <a href="javascript:" class="orange-small-btn delete-btn right" data-bind="click: $root.deleteTopic.bind($root, $data)">
+                            <span class="orange-small-left left"></span>
+                                                    <span class="orange-small-middle delete left orange-shadow">
+                                                        <span class="delete-icon left"></span>Delete</span>
+                            <span class="orange-small-right left"></span>
+                        </a>
+                    </div>
                 </div>
-                <div class="topic-command clearfix">
-                    <a class="orange-small-btn  left" data-bind="attr: {href: '/admin/help/edit/' + id}">
-                        <span class="orange-small-left left"></span>
-												<span class="orange-small-middle edit left orange-shadow">
-													<span class="edit-icon left"></span>Edit</span>
-                        <span class="orange-small-right left"></span>
-                    </a>
-                    <a href="javascript:" class="orange-small-btn delete-btn right" data-bind="click: $root.deleteTopic.bind($root, $data)">
-                        <span class="orange-small-left left"></span>
-												<span class="orange-small-middle delete left orange-shadow">
-													<span class="delete-icon left"></span>Delete</span>
-                        <span class="orange-small-right left"></span>
-                    </a>
+
+            </div>
+        </div>
+        <!-- end .help-topics-list -->
+    </div>
+
+
+    <div class="tab" id="dashboard-details"  data-bind="css: {active:  tab() == 'configuration'}">
+        <div class="form-wrapper">
+            <div class="field-container clearfix">
+                <label class="left">Logout text</label>
+                <div class="help-wrapper left">
+                    <a class="help-icon left" href="javascript:"></a>
+                    <div class="tool-tip hide">
+                        <span class="tooltip-left left"></span>
+                        <div class="tooltip-middle left">
+                            <div class="tooltip-head">
+                                <div class="tooltip-head-content left">
+                                    <h2 class="left">Help</h2>
+                                    <a href="javascript:" class="right tooltip-close"></a>
+                                </div>
+                                <div class="clear"></div>
+                                <p>KMLs represent distinct stages of maturity or development of a problem, project, or task.
+                                    <br>Gather : Early stage; immature, undefined
+                                    <br>Synthesize: Analyze; define requirements and ops concept
+                                    <br>Validate: Evaluate and validate; produce deliverable
+                                    <br>Apply: Integrate; augment; standardize deliverable</p>
+                                <a href="javascript:">learn more...</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-field">
+                    <textarea  rows="" cols=""  data-bind="value: configuration.logoutText"></textarea>
+                </div>
+            </div>
+
+            <div class="field-container clearfix">
+                <label class="left">Feedback URL</label>
+                <div class="help-wrapper left">
+                    <a class="help-icon left" href="javascript:"></a>
+                    <div class="tool-tip hide">
+                        <span class="tooltip-left left"></span>
+                        <div class="tooltip-middle left">
+                            <div class="tooltip-head">
+                                <div class="tooltip-head-content left">
+                                    <h2 class="left">Help</h2>
+                                    <a href="javascript:" class="right tooltip-close"></a>
+                                </div>
+                                <div class="clear"></div>
+                                <p>KMLs represent distinct stages of maturity or development of a problem, project, or task.
+                                    <br>Gather : Early stage; immature, undefined
+                                    <br>Synthesize: Analyze; define requirements and ops concept
+                                    <br>Validate: Evaluate and validate; produce deliverable
+                                    <br>Apply: Integrate; augment; standardize deliverable</p>
+                                <a href="javascript:">learn more...</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-field">
+                    <input type="text" data-bind="value: configuration.feedbackURL"></textarea>
+                </div>
+            </div>
+
+            <div class="field-container clearfix">
+                <label class="left">Contact us URL</label>
+                <div class="help-wrapper left">
+                    <a class="help-icon left" href="javascript:"></a>
+                    <div class="tool-tip hide">
+                        <span class="tooltip-left left"></span>
+                        <div class="tooltip-middle left">
+                            <div class="tooltip-head">
+                                <div class="tooltip-head-content left">
+                                    <h2 class="left">Help</h2>
+                                    <a href="javascript:" class="right tooltip-close"></a>
+                                </div>
+                                <div class="clear"></div>
+                                <p>KMLs represent distinct stages of maturity or development of a problem, project, or task.
+                                    <br>Gather : Early stage; immature, undefined
+                                    <br>Synthesize: Analyze; define requirements and ops concept
+                                    <br>Validate: Evaluate and validate; produce deliverable
+                                    <br>Apply: Integrate; augment; standardize deliverable</p>
+                                <a href="javascript:">learn more...</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-field">
+                    <input type="text" data-bind="value: configuration.contactUsURL"></textarea>
+                </div>
+            </div>
+
+            <div class="field-container clearfix">
+                <label class="left">FAQ URL</label>
+                <div class="help-wrapper left">
+                    <a class="help-icon left" href="javascript:"></a>
+                    <div class="tool-tip hide">
+                        <span class="tooltip-left left"></span>
+                        <div class="tooltip-middle left">
+                            <div class="tooltip-head">
+                                <div class="tooltip-head-content left">
+                                    <h2 class="left">Help</h2>
+                                    <a href="javascript:" class="right tooltip-close"></a>
+                                </div>
+                                <div class="clear"></div>
+                                <p>KMLs represent distinct stages of maturity or development of a problem, project, or task.
+                                    <br>Gather : Early stage; immature, undefined
+                                    <br>Synthesize: Analyze; define requirements and ops concept
+                                    <br>Validate: Evaluate and validate; produce deliverable
+                                    <br>Apply: Integrate; augment; standardize deliverable</p>
+                                <a href="javascript:">learn more...</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-field">
+                    <input type="text" data-bind="value: configuration.faqURL"></textarea>
                 </div>
             </div>
 
         </div>
+
+
+        <div class="tab-command clearfix">
+            <a href="javascript:" class="orange-big-btn align right" data-bind="click: saveConfiguration">
+                <span class="orange-big-left left"></span>
+									<span class="orange-big-middle left orange-shadow">
+										<span class="save-icon left"></span>Save Changes</span>
+                <span class="orange-big-right left"></span>
+            </a>
+            <a href="javascript:" class="orange-big-btn align right" data-bind="click: revert">
+                <span class="orange-big-left left"></span>
+									<span class="orange-big-middle left orange-shadow">
+										<span class="cancel-icon left"></span>Discard Changes</span>
+                <span class="orange-big-right left"></span>
+            </a>
+        </div>
+
+        <!-- end .tab-command-->
     </div>
-    <!-- end .help-topics-list -->
+
+	<div class="tab" id="export-smg" data-bind="css: {active:  tab() == 'export-smg'}">
+        <div class="form-wrapper">
+            <div class="form-top-bar clearfix">
+                <label class="left">You can Import/Export SMG content using this tab</label>
+                <div class="right">
+                    <a href="javascript:" class="orange-big-btn js-action-preview left" data-bind="click: $root.getTemplate.bind($root)">
+                        <span class="orange-big-left left"></span>
+                        <span class="orange-big-middle left orange-shadow">Get Template</span>
+                        <span class="orange-big-right left"></span>
+                    </a>
+                    <a href="javascript:" class="orange-big-btn js-action-preview left" data-bind="click: $root.exportSMG.bind($root)">
+                        <span class="orange-big-left left"></span>
+                        <span class="orange-big-middle left orange-shadow">Export</span>
+                        <span class="orange-big-right left"></span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="field-container available-row clearfix">
+                <label class="left">Available Fields</label>
+                <em class="left">:</em>
+                <div class="file-field left"></div>
+            </div>
+
+            <div class="field-container clearfix">
+                <label class="left">Field Mapping</label>
+                <div class="help-wrapper left">
+                    <a class="help-icon left" href="javascript:"></a>
+                    <div class="tool-tip hide">
+                        <span class="tooltip-left left"></span>
+                        <div class="tooltip-middle left">
+                            <div class="tooltip-head">
+                                <div class="tooltip-head-content left">
+                                    <h2 class="left">Helps</h2>
+                                    <a href="javascript:" class="right tooltip-close"></a>
+                                </div>
+                                <div class="clear"></div>
+                                <p>KMLs represent distinct stages of maturity or development of a problem, project, or task.
+                                    <br>Gather : Early stage; immature, undefined
+                                    <br>Synthesize: Analyze; define requirements and ops concept
+                                    <br>Validate: Evaluate and validate; produce deliverable
+                                    <br>Apply: Integrate; augment; standardize deliverable</p>
+                                <a href="javascript:">learn more...</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="left text-field required-field">
+                    <select id="option-field-mapping" multiple>
+                    </select>
+                </div>
+            </div>
+           <form enctype="multipart/form-data" method="post" action="/api/importSMGs" id="importSMGForm">
+                <div class="browse-list clearfix">
+                    <div class="field-container clearfix">
+                        <div class="file-field left">
+                            <input type="text">
+                            <input type="file" name="smg">
+                        </div>
+                        <a href="javascript:" class="orange-big-btn align left js-action-browse">
+                            <span class="orange-big-left left"></span>
+                            <span class="orange-big-middle left orange-shadow">Browse</span>
+                            <span class="orange-big-right left"></span>
+                        </a>
+                        <a href="javascript:" class="orange-big-btn align left btn-delete-file js-action-delete-file hidden">
+                            <span class="orange-big-left left"></span>
+                                                <span class="orange-big-middle left orange-shadow">
+                                                    <span class="delete-icon left"></span>Delete
+                                                </span>
+                            <span class="orange-big-right left"></span>
+                        </a>
+                        <a href="javascript:" class="orange-big-btn align left btn-add-more-file js-action-add-file">
+                            <span class="orange-big-left left"></span>
+                            <span class="orange-big-middle left orange-shadow">Add more Files</span>
+                            <span class="orange-big-right left"></span>
+                        </a>
+                    </div>
+                </div>
+               </form>
+            <!-- end .browse-list -->
+
+            <div class="import-command clearfix">
+                <a href="javascript:" class="orange-big-btn align left" data-bind="click: $root.importSMG.bind($root)">
+                    <span class="orange-big-left left"></span>
+                    <span class="orange-big-middle left orange-shadow">Import</span>
+                    <span class="orange-big-right left"></span>
+                </a>
+                <a href="javascript:" class="import-command-btn orange-big-btn align right" data-bind="click: $root.exportSMG.bind($root)">
+                    <span class="orange-big-left left"></span>
+                    <span class="orange-big-middle left orange-shadow">Export</span>
+                    <span class="orange-big-right left"></span>
+                </a>
+                <a href="javascript:" class="import-command-btn orange-big-btn align right" data-bind="click: $root.getTemplate.bind($root)">
+                    <span class="orange-big-left left"></span>
+                    <span class="orange-big-middle left orange-shadow">Get Template</span>
+                    <span class="orange-big-right left"></span>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 </div>
 <!-- end .tabs-content -->

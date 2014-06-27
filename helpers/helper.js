@@ -379,18 +379,7 @@ helper.checkCanDeleteCharacteristic = function (db, entity, callback) {
         callback(new BadRequestError("Characteristic with id=" + entity.id + " cannot be deleted."));
         return;
     }
-    db.models.smgCharacteristic.exists({characteristic_id: entity.id }, function (err, exists) {
-        if (err) {
-            callback(err);
-            return;
-        }
-        if (exists) {
-            callback(new BadRequestError("Can't delete Characteristic with id=" + entity.id +
-                ". Characteristic is already associated with SMGCharacteristic."));
-        } else {
-            callback();
-        }
-    });
+    callback();
 };
 
 /**

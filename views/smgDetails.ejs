@@ -44,18 +44,44 @@
             </div>
             <div class="smg-details-tb2"  data-bind="css :{'ajax-content': loading()}">
                 <h1 class="page-head">Examples within HH&amp;P</h1>
-                <table class="table2 clear" data-bind="if: smg">
+
+
+                <table class="table2 table-example clear" data-bind="if: smg">
                     <colgroup>
-                        <col >
+                        <col width="29%">
+                        <col>
                     </colgroup>
                     <thead>
                     <tr>
-                        <th>Content</th>
+                        <th>Example Name </th>
+                        <th>Example Details</th>
                     </tr>
                     </thead>
-                    <tbody data-bind="foreach: smg().examples">
+                    <tbody>
                     <tr>
-                        <td data-bind="html: $data" class="align-left"></td>
+                        <td>
+                            <div class="examples-list">
+                                <ul data-bind="foreach: examples">
+                                    <li class="" data-bind="text: name,
+                                        click: $root.activeExample.bind($root, $data),
+                                        css: {active: $data == $root.activeExample()}"></li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="examples-list-content" data-bind="with:activeExample ">
+                                <div class="example-entity">
+                                    <div class="row clearfix">
+                                        <label class="left">Example Type</label>
+                                        <span class="label" data-bind="text: type"></span>
+                                    </div>
+                                    <div class="row">
+                                        <label>Description</label>
+                                        <div class="example-description" data-bind="html: description"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                     </tbody>
                 </table>

@@ -16,8 +16,10 @@ var crudHelper = require('../helpers/crudHelper');
 var helper = require('../helpers/helper');
 var wrapExpress = require("../helpers/logging").wrapExpress;
 var validate = require("../helpers/validator").validate;
+var groupMigrate = require("../helpers/groupMigrate");
+var BadRequestError = require("../errors/BadRequestError");
 
-var ValueDefinition = {type: [{name: "string", description: "string?", value: "string?"}], required: false };
+var ValueDefinition = {type: [{name: "string", description: "string?", value: "string?", id: "id?"}], required: false };
 var TabDefinition = {type: "string", maxLength: 30, required: false};
 
 var Definition = {name: "string", description: "string", type_id: "id", sort: "int+", values: ValueDefinition, tab: TabDefinition};
@@ -56,6 +58,91 @@ function _create(db, values, callback) {
     });
 }
 
+/**
+ * Fix all smgCharacteristic and set valueType_id to first value of associated Characteristic.
+ * This function should be called when we delete CharacteristicValueType which is associated with SMG
+ * @param {Object} db the database object
+ * @param {Number} characteristicId the characteristic id
+ * @param {Function<err>} callback the callback function
+ * @private
+ */
+function _fixSMGCharacteristcs(db, characteristicId, callback) {
+    var value;
+    async.waterfall([
+        function (cb) {
+            db.models.characteristicTypeValue.find({characteristic_id: characteristicId}, cb);
+        }, function (values, cb) {
+            //don't fix if there is no values
+            if (values.length === 0) {
+                callback();
+                return;
+            }
+            value = values[0];
+            db.models.smgCharacteristic.find({valuetype_id: null, characteristic_id: characteristicId}, cb);
+        }, function (smgs, cb) {
+            async.forEach(smgs, function (smg, cbx) {
+                smg.valuetype_id = value.id;
+                smg.save(cbx);
+            }, cb);
+        }
+    ], function (err) {
+        callback(err);
+    })
+}
+
+/**
+ * Update CharacteristicTypeValues for given characteristic
+ * @param {Object} db the orm2 database instance
+ * @param {Object} values the values to create
+ * @param {Number} characteristicId the characteristic id
+ * @param {Function<err} callback
+ * @private
+ */
+function _updateTypeValues(db, values, characteristicId, callback) {
+    var val2Id = {};
+    async.waterfall([
+        function (cb) {
+            db.models.characteristicTypeValue.find({characteristic_id: characteristicId}, cb);
+        }, function (currentValues, cb) {
+            currentValues.forEach(function (v) {
+                val2Id[v.id] = v;
+            });
+            async.parallel({
+                create: function (cbx) {
+                    var newValues = _.filter(values.values, function (v) {
+                        return !v.id;
+                    });
+                    db.models.characteristicTypeValue.create(newValues, cbx);
+                },
+                update: function (cbx) {
+                    var updateValues = _.filter(values.values, function (v) {
+                        return v.id;
+                    });
+                    async.forEach(updateValues, function (v, cbk) {
+                        var current = val2Id[v.id];
+                        if (!current) {
+                            cbk(new BadRequestError("CharacteristicTypeValue with id=" + v.id +
+                                " not found for characteristic with id=" + values.id));
+                            return;
+                        }
+                        current.save(v, cbk);
+                    }, cbx);
+                },
+                remove: function (cbx) {
+                    var updatedValues = _.pluck(values.values, "id");
+                    var toRemove = _.filter(currentValues, function (v) {
+                        return updatedValues.indexOf(v.id) == -1;
+                    });
+                    async.forEach(toRemove, function (v, cbk) {
+                        v.remove(cbk);
+                    }, cbx);
+                }
+            }, cb);
+        }
+    ], function (err) {
+        callback(err);
+    });
+}
 
 /**
  * Update a Characteristic with given values
@@ -65,24 +152,60 @@ function _create(db, values, callback) {
  * @private
  */
 function _update(db, values, callback) {
-    var result;
+    var result, oldGroup, isGroupMigrate = false;
+    if (!values.values) {
+        values.values = [];
+    }
+    values.values.forEach(function (v) {
+        v.characteristic_id = values.id;
+    });
     async.waterfall([
         function (cb) {
-            helper.checkCanUpdateCharacteristic(db, values.id, values, cb);
-        }, function (cb) {
             helper.getSingle(values.id, db.models.characteristic, cb);
         }, function (entity, cb) {
             result = entity;
+            helper.getSingle(result.type_id, db.models.characteristicType, cb);
+        }, function (type, cb) {
+            oldGroup = type.group;
             var toUpdate = _.pick(values, "name", "description", "type_id", "sort", "tab");
             result.save(toUpdate, cb);
-        }, function (entity, cb) {
-            db.models.characteristicTypeValue.find({characteristic_id: values.id}).remove(cb);
-        }, function () {
-            var cb = arguments[arguments.length - 1];
-            async.forEach(values.values || [], function (v, cbx) {
-                v.characteristic_id = result.id;
-                db.models.characteristicTypeValue.create(v, cbx);
-            }, cb);
+        }, function (ret, cb) {
+            helper.getSingle(values.type_id, db.models.characteristicType, cb);
+        }, function (type, cb) {
+            if (oldGroup !== type.group) {
+                isGroupMigrate = true;
+                if (result.blockDelete) {
+                    callback(new BadRequestError("Cannot change group for this characteristic"));
+                    return;
+                }
+                async.waterfall([
+                    function (cbx) {
+                        //perform full update only when change between radio/picklist <=> checkbox
+                        if ((oldGroup == 2 && type.group == 3) || (oldGroup == 3 && type.group == 2)) {
+                            _updateTypeValues(db, values, values.id, function (err) {
+                                cbx(err, null);
+                            });
+                        } else {
+                            //this should be always new values when changing from non-multiple values type to multiple values type
+                            //example: checkbox -> listpic, textbox -> radio
+                            db.models.characteristicTypeValue.create(values.values, cbx);
+                        }
+                    }, function (res, cbx) {
+                        groupMigrate(db, result.id, oldGroup, type.group, cbx);
+                    }
+                ], cb);
+            } else {
+                cb();
+            }
+        }, function (cb) {
+            if (isGroupMigrate) {
+                //ignore edit of values if group has changed
+                cb();
+                return;
+            }
+            _updateTypeValues(db, values, values.id, cb);
+        }, function (cb) {
+            _fixSMGCharacteristcs(db, values.id, cb);
         }, function (cb) {
             result.getValues(cb);
         }
@@ -190,6 +313,57 @@ function updateSingle(req, db, callback) {
     ], _getPopulateDelegate(callback));
 }
 
+/**
+ * Check if update of Characteristic will affect SMGCharacteristic values.
+ * It will affect only if some CharacteristicTypeValue are deleted.
+ * @param {Object} req the express request
+ * @param {Object} db the orm2 database instance
+ * @param {Function<err, result>} callback the callback function
+ */
+function checkWillAffectSMG(req, db, callback) {
+    var characteristic, id = Number(req.params.id);
+    async.waterfall([
+        function (cb) {
+            var error = validate(req.params.id, "stringId") || validate(req.body, Definition_updateSingle);
+            cb(error);
+        }, function (cb) {
+            helper.getSingle(id, db.models.characteristic, cb);
+        }, function (result, cb) {
+            characteristic = result;
+            characteristic.getType(cb);
+        }, function (type, cb) {
+            helper.getSingle(req.body.type_id, db.models.characteristicType, cb);
+        }, function (type, cb) {
+            if (type.group != characteristic.type.group) {
+                callback(null, {affect: false, groupChange: true, values: []});
+                return;
+            }
+            characteristic.getValues(cb);
+        }, function (values, cb) {
+            var ids = _.pluck(values, "id");
+            var updatedIds = _.chain(req.body.values).pluck("id").compact().value();
+            var diff = _.difference(ids, updatedIds);
+            if (diff.length == 0) {
+                callback(null, {affect: false, values: []});
+                return;
+            }
+            db.models.smgCharacteristic.find({valuetype_id: diff}, cb);
+        }, function (smgs, cb) {
+            if (smgs.length == 0) {
+                cb(null, {affect: false, values: []});
+                return;
+            }
+            var id2Type = {};
+            characteristic.values.forEach(function (v) {
+                id2Type[v.id] = v.name;
+            });
+            var values = _.map(smgs, function (smg) {
+                return id2Type[smg.valuetype_id];
+            });
+            cb(null, {affect: true, values: _.unique(values)});
+        }
+    ], callback);
+}
 
 /**
  * Remove batch of Characteristics.
@@ -226,5 +400,6 @@ module.exports = {
     updateSingle: wrapExpress("Characteristic#updateSingle", updateSingle),
     updateBatch: wrapExpress("Characteristic#updateBatch", updateBatch),
     removeSingle: wrapExpress("Characteristic#removeSingle", removeSingle),
-    removeBatch: wrapExpress("Characteristic#removeBatch", removeBatch)
+    removeBatch: wrapExpress("Characteristic#removeBatch", removeBatch),
+    checkWillAffectSMG: wrapExpress("Characteristic#checkWillAffectSMG", checkWillAffectSMG)
 };

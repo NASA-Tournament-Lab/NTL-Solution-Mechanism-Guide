@@ -179,12 +179,20 @@ Object.keys(urlMapping).forEach(function (url) {
         Object.keys(req.params).forEach(function (p) {
             urlParams[p] = req.params[p];
         });
-        res.render(params.template, {
-            username: req.headers['x-iisnode-logon_user'] || "domain/unknown",//if running as non IIS app
-            name: params.name,
-            urlParams: urlParams,
-            menu: params.menu,
-            admin: params.admin
+        global.db.models.dashboard.one({}, function (err, ret) {
+            res.render(params.template, {
+                username: req.headers['x-iisnode-logon_user'] || "domain/unknown",//if running as non IIS app
+                name: params.name,
+                urlParams: urlParams,
+                menu: params.menu,
+                admin: params.admin,
+                dashboard: ret ? ret.data : {}
+            });
         });
     });
+});
+
+
+app.get("/logout", function (req, res) {
+    res.send(401);
 });

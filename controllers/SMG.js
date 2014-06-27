@@ -17,7 +17,11 @@ var BadRequestError = require('../errors/BadRequestError');
 var helper = require('../helpers/helper');
 var wrapExpress = require("../helpers/logging").wrapExpress;
 var validate = require("../helpers/validator").validate;
-
+var archiver = require('archiver');
+var csv = require('csv');
+var fs = require('fs');
+//value for not exist Characteristics for SMG
+var nullCharacteristicsValue="[NULL]";
 var SMGDefinition_create = {
     name: "string?",
     description: "string?",
@@ -344,6 +348,284 @@ function search2(req, db, callback) {
     search(req, db, callback);
 }
 
+/**
+ * Retrieve the Characteristics by giving ids.
+ * @param {Array} ids the ids
+ * @param {Function<err, result>} callback the callback function
+ */
+function getCharacteristic(ids,callback){
+    async.waterfall([
+        function (cb) {
+            cb(validate(ids, ["id"]) || helper.checkUniqueIds(ids));
+        }, function (cb) {
+            crudHelper.filter({id:ids}, db.models.characteristic, {id:["id"]}, helper.getPopulateDelegate(function(err,result) {
+                cb(err,result)
+            }, helper.populateCharacteristic));
+        }], function (err,result) {
+            callback(err,result);
+        });
+}
+
+/**
+ * Get ordered Characteristics
+ * @param input the input characteristics
+ * @param ids the order ids
+ * @returns {Array} the ordered characteristics
+ */
+function getOrderedCharacteristics(input,ids){
+    var data = _.indexBy(input,"id");
+    var result =[];
+    for(var i=0;i<ids.length;i++){
+        result.push(data[ids[i]]);
+    }
+    return result;
+}
+
+/**
+ * Export SMG entities.
+ * @param {Object} req the express request
+ * @param {Object} res the express response
+ * @param {Object} db the orm2 database instance
+ * @param {Function<err,result>} callback the callback function
+ */
+function exportSMG(req, res,db, callback) {
+    var ids = req.body.ids || [];
+    ids =  _.map(ids, function(str){ return Number(str); });
+    var characteristics;
+    async.waterfall([
+        function (cb) {
+            getCharacteristic(ids,cb);
+        },function (result,cb) {
+            characteristics =getOrderedCharacteristics(result,ids);
+            crudHelper.filter(req.query, db.models.smg, SMGDefinition_search, _getPopulateDelegate(cb));
+        }],function(err,result){
+            if(err){
+                callback(err);
+                return;
+            }
+            var zipArchiver = archiver('zip');
+            zipArchiver.on('close', function() {
+                callback(null);
+            });
+            zipArchiver.on('error', function(err) {
+                callback(err);
+            });
+            res.setHeader('Content-disposition', 'attachment; filename="smgs.zip"');
+            res.setHeader('Content-type', 'application/x-zip-compressed');
+            zipArchiver.pipe(res);
+            //export field-mapping.csv
+            var fieldNames =["Name","Description","Tab","Type"];
+            var mappings =[];
+            mappings.push(fieldNames);
+           for(var i=0;i<characteristics.length;i++){
+               var values =[];
+               var item = characteristics[i];
+               values.push(item.name);
+               values.push(item.description);
+               values.push(item.tab);
+               values.push(item.type.name);
+               mappings.push(values);
+           }
+            csv.stringify(mappings, function(err, data){
+                    if(err){
+                        callback(err);
+                        return;
+                    }
+                    zipArchiver
+                        .append(data, { name: 'field-mapping.csv' });
+                    //export SMG entities
+                    async.map(result, function(smg,cb){
+                        var smgCharacteristics=[];
+                        var values={};
+                        for(var j=0;j<smg.smgCharacteristics.length;j++){
+                            var smgCharacteristic = smg.smgCharacteristics[j];
+                            if(ids.indexOf(smgCharacteristic.characteristic_id)!=-1){
+                                if(smgCharacteristic.value){
+                                    values[smgCharacteristic.characteristic_id]=smgCharacteristic.value;
+                                }else{
+                                    //use valueType.value not valuetype_id
+                                    if(values[smgCharacteristic.characteristic_id]){
+                                        values[smgCharacteristic.characteristic_id].push(smgCharacteristic.valueType.value);
+                                    }else{
+                                        values[smgCharacteristic.characteristic_id]= [smgCharacteristic.valueType.value];
+                                    }
+                                }
+                            }
+                        }
+                        //use order of input ids
+                        for(var i=0;i<ids.length;i++){
+                            var id = ids[i];
+                            if(values[id]){
+                                if(_.isArray(values[id])){
+                                    smgCharacteristics.push([values[id].join(",")]);
+                                }else{
+                                    smgCharacteristics.push([values[id]]);
+                                }
+                            }else{
+                                //empty when not exist
+                                smgCharacteristics.push([nullCharacteristicsValue]);
+                            }
+                        }
+                        csv.stringify(smgCharacteristics, function(err, data){
+                            if(err){
+                                cb(err);
+                                return;
+                            }
+                            zipArchiver
+                                .append(data, { name: smg.id+'.csv' });
+                            cb();
+                        });
+                    }, function(err){
+                        if(err){
+                            callback(err);
+                            return;
+                        }
+                        zipArchiver.finalize();
+                    });
+                });
+        });
+}
+
+/**
+ * Import SMG entities.
+ * @param {Object} req the express request
+ * @param {Object} db the orm2 database instance
+ * @param {Function<err,result>} callback the callback function
+ */
+function importSMG(req,db, callback) {
+    var smgs=[];
+    var fileNameExpression= /(.+).csv/i;
+    var multiValueTypes=["picklist","radio"];
+    var ids = req.body.ids || [];
+    ids =  _.map(ids, function(str){ return Number(str); });
+    var characteristics;
+    async.waterfall([
+        function (cbk) {
+            var error = null;
+            if(!req.files.smg){
+                error =new BadRequestError("should exist files when importing smg entities");
+            }
+            cbk(error);
+        },
+        function (cbk) {
+            getCharacteristic(ids,cbk);
+        },function (result,cbk) {
+            characteristics = getOrderedCharacteristics(result,ids);
+            var files = req.files.smg;
+            if(!_.isArray(files)){
+                files = [files];
+            }
+            async.mapSeries(files, function(file,cb){
+                var originalFilename =file.originalFilename;
+                var nameResult= fileNameExpression.exec(originalFilename);
+                if(!nameResult){
+                    cb(new BadRequestError("File '"+file.originalFilename+"' contains invalid csv file name"));
+                    return;
+                }
+                fs.readFile(file.path,function(err,input){
+                    if(err){
+                        cb(err);
+                        return;
+                    }
+                    csv.parse(input.toString(), function(err, data){
+                        if(!err && data && data.length>0){
+                            if(data.length!=ids.length){
+                                err = new BadRequestError("File '"+file.originalFilename+"' contains invalid numbers of lines(valid lines number is "+ids.length+")");
+                            }else{
+                                var rowValues=[];
+                                for(var i=0;i<data.length;i++){
+                                    if(data[i].length != 1){
+                                        err = new BadRequestError("File '"+file.originalFilename+"' Line "+(i+1)+" contains invalid numbers of rows(1 row is valid)");
+                                        break;
+                                    }
+                                    rowValues.push({line:(i+1),row:data[i]});
+                                }
+                                smgs.push({
+                                    data:rowValues,
+                                    originalFilename:originalFilename
+                                });
+                            }
+                        }
+                        cb(err);
+                    });
+                });
+            },function(err){
+                cbk(err);
+            });
+        },function(cbk){
+            async.map(smgs, function(item,cb){
+                async.map(item.data, function (rowValue, cbp) {
+                    var lineNumber = Number(rowValue.line);
+                    var matchCharacteristics = characteristics[lineNumber - 1];
+                    var valueType = matchCharacteristics.type.name;
+                    var characteristicValue = rowValue.row[0];
+                    rowValue.id = matchCharacteristics.id;
+                    //handle null value for characteristic
+                    if(characteristicValue!=nullCharacteristicsValue){
+                        if (multiValueTypes.indexOf(valueType) != -1) {
+                            rowValue.multi = true;
+                            characteristicValue =  characteristicValue.split(",");
+                            var valueIds = [];
+                            for (var i = 0; i < characteristicValue.length; i++) {
+                                if (valueIds.length == characteristicValue.length) {
+                                    break;
+                                }
+                                for (var j = 0; j < matchCharacteristics.values.length; j++) {
+                                    if (characteristicValue[i]==matchCharacteristics.values[j].value) {
+                                        valueIds.push(matchCharacteristics.values[i].id);
+                                        break;
+                                    }
+                                }
+                            }
+                            if (valueIds.length != characteristicValue.length) {
+                                cbp(new BadRequestError("File '" + item.originalFilename + ".csv' Line " + lineNumber + " contains invalid characteristicTypeValue(characteristicTypeValue with value="
+                                    + characteristicValue + " not exist for characteristic("+matchCharacteristics.name+"))"));
+                                return;
+                            }
+                            rowValue.ids = valueIds;
+                        } else {
+                            characteristicValue = [characteristicValue];
+                        }
+                    }
+                    cbp();
+                }, cb);
+            },function(err){
+                cbk(err);
+            });
+        },function (cbk) {
+            async.map(smgs, function(item,cb){
+                var values=[];
+                var characteristicIds =[];
+                for(var i=0;i<item.data.length;i++){
+                    var characteristicValue = item.data[i].row[0];
+                    //handle null value for characteristic
+                    if(characteristicValue!=nullCharacteristicsValue) {
+                        if (item.data[i].multi) {
+                            characteristicValue = item.data[i].ids;
+                        }
+                        characteristicIds.push(item.data[i].id);
+                        values.push({
+                            "characteristic": item.data[i].id,
+                            "value": characteristicValue
+                        });
+                    }
+                }
+                async.waterfall([
+                    function (cbj) {
+                        //create smg
+                        db.models.smg.create({},cbj);
+                    },function (entity,cbj) {
+                        //create smgCharacteristic
+                        async.forEach(values, _createCharacteristic.bind(null, db, entity.id), cbj);
+                    }],cb);
+            },function(err){
+                cbk(err);
+            });
+        }],function(err){
+        callback(err,"Successfully import smg entities!")
+    });
+
+}
 
 module.exports = {
     index: wrapExpress("SMG#index", index),
@@ -355,5 +637,7 @@ module.exports = {
     removeSingle: wrapExpress("SMG#removeSingle", removeSingle),
     removeBatch: wrapExpress("SMG#removeBatch", removeBatch),
     search: wrapExpress("SMG#search", search),
-    search2: wrapExpress("SMG#search2", search2)
+    search2: wrapExpress("SMG#search2", search2),
+    export: wrapExpress("SMG#export", exportSMG,true),
+    import:wrapExpress("SMG#import", importSMG)
 };

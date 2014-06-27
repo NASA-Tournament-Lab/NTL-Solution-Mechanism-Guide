@@ -19,7 +19,7 @@
                     <div class="tooltip-middle left">
                         <div class="tooltip-head">
                             <div class="tooltip-head-content left">
-                                <h2 class="left">Helps</h2>
+                                <h2 class="left">Help</h2>
                                 <a href="javascript:" class="right tooltip-close"></a>
                             </div>
                             <div class="clear"></div>
@@ -56,10 +56,10 @@
             <!-- /ko -->
             <!-- ko if: type_id == chTypes.checkbox -->
             <div class="left text-field check">
-                <div class="answer">
+                <div class="answer" data-bind="foreach: values, hasError: multipleValue">
 
                     <label class="option">
-                        <input class="left"  type="checkbox" data-bind="iCheck: value, iCheckOptions: { trueFalseString: true }"/> Yes/No
+                        <input type="checkbox" data-bind="attr: { name: $parent.id }, iCheck: $parent.multipleValue, value: $data" > <span data-bind="text: name"></span>
                     </label>
                 </div>
             </div>

@@ -6,7 +6,7 @@
 "use strict";
 
 /**
- * Run this script to recreate all tables and insert test data for frontend application.
+ * Run this script to recreate all tables and insert test data for real frontend application.
  */
 
 var async = require('async');
@@ -58,47 +58,59 @@ testData.characteristicType = [
     { id: 7, group: -1, name: 'image', description: randomText() }
 ];
 
-testData.characteristic =  [
-    { id: 1, type_id: 5, sort: i++, name: 'Name', description: randomShortText(), tab: "Information", blockDelete: true },
-    { id: 2, type_id: 6, sort: i++, name: 'Description', description: randomShortText(), tab: "Information", blockDelete: true },
-    { id: 3, type_id: 5, sort: i++, name: 'Also Known Us', description: randomShortText(), tab: "Information", blockDelete: true },
-    { id: 4, type_id: 7, sort: i++, name: 'Image', description: randomShortText(), tab: "Information", blockDelete: true },
-    { id: 5, type_id: 4, sort: i++, name: 'Duration', description: randomShortText(), tab: "Information", blockDelete: true },
-    { id: 6, type_id: 2, sort: i++, name: 'Cost', description: randomShortText(), tab: "Information", blockDelete: true },
 
-    { id: 7, type_id: 1, sort: i++, name: 'Public?', description: randomShortText(), tab: "Information"   },
-    { id: 8, type_id: 3, sort: i++, name: 'Color', description: randomShortText(), tab: "Information"   },
-    { id: 9, type_id: 3, sort: i++, name: 'Size', description: randomShortText(), tab: "How to start"   },
-    { id: 10, type_id: 3, sort: i++, name: 'Difficulty', description: randomShortText(), tab: "How to start"   },
-    { id: 11, type_id: 4, sort: i++, name: 'Risk', description: randomShortText(), tab: "How to start"   },
-    { id: 12, type_id: 5, sort: i++, name: 'POC', description: randomShortText(), tab: "How to start"   }
+/**
+ * Base characteristic Ids that cannot be removed used in public/app.js
+ */
+/*var chIds = {
+    name: 1,
+    desc: 2,
+    aka: 3,
+    image: 4,
+    duration: 5,
+    cost: 6
+};*/
+testData.characteristic =  [
+    { id: 1, type_id: 5, sort: i++, name: 'Solution Mechanism Name', description: "Name of the Solution Mechanism", tab: "Information", blockDelete: true },
+    { id: 2, type_id: 6, sort: i++, name: 'Brief Description', description: "A brief description of the Solution Mechanism", tab: "Information", blockDelete: true },
+    { id: 3, type_id: 5, sort: i++, name: 'Other Known Names', description: "Other known acronyms or names for the Solution Mechanism that are often used", tab: "Information", blockDelete: true },
+    { id: 4, type_id: 7, sort: i++, name: 'Graphics', description: "Images or visuals that are relevant to the Solution Mechanism", tab: "How to start"   },
+    { id: 5, type_id: 3, sort: i++, name: 'Duration of Solution Mechanism', description: "Time expectations related to each phase of the Solution Mechanism", tab: "Information"   },
+    { id: 6, type_id: 2, sort: i++, name: 'Cost of Solution Mechanism', description: "Associated monetary costs for the Solution Mechanism", tab: "How to start"   },
+    { id: 7, type_id: 6, sort: i++, name: 'More Information', description: "More relevant information and details about the Solution Mechanism", tab: "Information", blockDelete: true },
+    { id: 8, type_id: 3, sort: i++, name: 'Deliverable Type', description: "What deliverable can be expected from using the Solution Mechanism ", tab: "Information", blockDelete: true },
+    { id: 9, type_id: 5, sort: i++, name: 'Kickoff Restrictions for Solution Mechanism', description: "Deadline or kickoff restrictions for the Solution Mechanism", tab: "Information", blockDelete: true },
+    { id: 10, type_id: 5, sort: i++, name: 'Relevant Links and Guidance', description: "Website links that can provide more information", tab: "Information", blockDelete: true },
+    { id: 11, type_id: 5, sort: i++, name: 'Examples', description: "Follow current structure (name, description, ability to add visuals/attachments/links)", tab: "Information", blockDelete: true },
+    { id: 12, type_id: 5, sort: i++, name: 'Point of Contact (POC): Name and Email Address', description: "Point of Contact (POC): Name and Email Address", tab: "Information"   },
+    { id: 13, type_id: 3, sort: i++, name: 'Time Investment', description: "Expected time investment for the Technical POC and Solution Mechanism POC for each phase of the Solution Mechanism", tab: "How to start"   },
+    { id: 14, type_id: 3, sort: i++, name: 'Solution Mechanism Metrics', description: "Metrics", tab: "How to start"   },
+    { id: 15, type_id: 5, sort: i++, name: 'Repository', description: "Site where data for the Solution Mechanism", tab: "How to start"   },
+    { id: 16, type_id: 7, sort: i++, name: 'Attachments', description: "Attachments", tab: "How to start"   }
 ];
 
 
 testData.characteristicTypeValue =  [
-    { id: 1, characteristic_id: 5, name: "1 Month", value: 'value', description: DESC },
-    { id: 2, characteristic_id: 5, name: "3 Months", value: 'value', description: DESC },
-    { id: 3, characteristic_id: 5, name: "6 Months", value: 'value', description: DESC },
-    { id: 4, characteristic_id: 5, name: "1 Year", value: 'value', description: DESC },
-
-    { id: 5, characteristic_id: 8, name: "Red", value: 'value', description: DESC },
-    { id: 6, characteristic_id: 8, name: "Blue", value: 'value', description: DESC },
-    { id: 7, characteristic_id: 8, name: "Black", value: 'value', description: DESC },
-    { id: 8, characteristic_id: 8, name: "Orange", value: 'value', description: DESC },
-
-    { id: 9, characteristic_id: 9, name: "XS", value: 'value', description: DESC },
-    { id: 10, characteristic_id: 9, name: "S", value: 'value', description: DESC },
-    { id: 11, characteristic_id: 9, name: "M", value: 'value', description: DESC },
-    { id: 12, characteristic_id: 9, name: "L", value: 'value', description: DESC },
-    { id: 13, characteristic_id: 9, name: "XL", value: 'value', description: DESC },
-
-    { id: 14, characteristic_id: 10, name: "Easy", value: 'value', description: DESC },
-    { id: 15, characteristic_id: 10, name: "Medium", value: 'value', description: DESC },
-    { id: 16, characteristic_id: 10, name: "Hard", value: 'value', description: DESC },
-
-    { id: 17, characteristic_id: 11, name: "Low", value: 'value', description: DESC },
-    { id: 18, characteristic_id: 11, name: "Average", value: 'value', description: DESC },
-    { id: 19, characteristic_id: 11, name: "High", value: 'value', description: DESC }
+    //Deliverable Type
+    { id: 1, characteristic_id: 8, name: "Knowledge", value: 'Knowledge', description: DESC },
+    { id: 2, characteristic_id: 8, name: "Countermeasures", value: 'Countermeasures', description: DESC },
+    { id: 3, characteristic_id: 8, name: "Controls", value: 'Controls', description: DESC },
+    { id: 4, characteristic_id: 8, name: "Technology", value: 'Technology', description: DESC },
+    { id: 5, characteristic_id: 8, name: "Guidelines", value: 'Guidelines', description: DESC },
+    { id: 6, characteristic_id: 8, name: "Standards", value: 'Standards', description: DESC },
+    { id: 7, characteristic_id: 8, name: "Requirements", value: 'Requirements', description: DESC },
+    //Duration of Solution Mechanism
+    { id: 8, characteristic_id: 5, name: "Prep", value: 'Prep', description: DESC },
+    { id: 9, characteristic_id: 5, name: "Time to Execute", value: 'Time to Execute', description: DESC },
+    { id: 10, characteristic_id: 5, name: "Agreement Duration", value: 'Agreement Duration', description: DESC },
+    //Time Investment
+    { id: 11, characteristic_id: 13, name: "Prep", value: 'Prep', description: DESC },
+    { id: 12, characteristic_id: 13, name: "Time to Execute", value: 'Time to Execute', description: DESC },
+    { id: 13, characteristic_id: 13, name: "Agreement Duration", value: 'Agreement Duration', description: DESC },
+    //Solution Mechanism Metrics
+    { id: 14, characteristic_id: 14, name: "In Prep", value: 'In Prep', description: DESC },
+    { id: 15, characteristic_id: 14, name: "Active", value: 'Active', description: DESC },
+    { id: 16, characteristic_id: 14, name: "Expired", value: 'Expired', description: DESC },
 ];
 
 testData.fileUpload =  [
@@ -115,26 +127,25 @@ testData.searchFormField =  [
     { id: 1, sort: i++, form_id: 1, characteristic_id: 1 },
     //description
     { id: 2, sort: i++, form_id: 1, characteristic_id: 2 },
-    //Public?
-    { id: 3, sort: i++, form_id: 1, characteristic_id: 7 },
     //Cost
-    { id: 4, sort: i++, form_id: 1, characteristic_id: 6 },
-    //Color
-    { id: 5, sort: i++, form_id: 1, characteristic_id: 8 },
-    //Risk
-    { id: 6, sort: i++, form_id: 1, characteristic_id: 11 }
+    { id: 3, sort: i++, form_id: 1, characteristic_id: 6 },
+    //Other Known Names
+    { id: 4, sort: i++, form_id: 1, characteristic_id: 3 },
+    //Duration of Solution Mechanism
+    { id: 5, sort: i++, form_id: 1, characteristic_id: 5 },
+    //Solution Mechanism Metrics
+    { id: 6, sort: i++, form_id: 1, characteristic_id: 13 }
 ];
 
 
 testData.searchFormFieldValue =  [
-    { id: 1, field_id: 5, valuetype_id: 5},
-    { id: 2, field_id: 5, valuetype_id: 6},
-    { id: 3, field_id: 5, valuetype_id: 7},
-    { id: 4, field_id: 5, valuetype_id: 8},
+    { id: 1, field_id: 5, valuetype_id: 8},
+    { id: 2, field_id: 5, valuetype_id: 9},
+    { id: 3, field_id: 5, valuetype_id: 10},
 
-    { id: 5, field_id: 6, valuetype_id: 17},
-    { id: 6, field_id: 6, valuetype_id: 18},
-    { id: 7, field_id: 6, valuetype_id: 19}
+    { id: 4, field_id: 6, valuetype_id: 14},
+    { id: 5, field_id: 6, valuetype_id: 15},
+    { id: 6, field_id: 6, valuetype_id: 16}
 ];
 
 testData.dashboard = [

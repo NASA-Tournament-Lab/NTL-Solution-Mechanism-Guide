@@ -6,24 +6,48 @@
 <body class="page-<%= locals.name %>">
 
 <div id="container">
-    <div id="header">
-        <div class="head-content">
-            <a class="left" href="/home">
-                <img src="/img/logo.png" alt="Logo">
-            </a>
-            <div class="navigation right">
+    <div id="header" class="<%= locals.admin ? 'admin-header' : '' %>">
+
+        <% if (locals.admin) {%>
+            <div class="head-content">
+                <a class="left" href="/home">
+                    <img src="/img/logo.png" alt="Logo">
+                </a>
+                <div class="navigation right">
+                    <div class="welcome right">
+                        <span class="welcome-left left"></span>
+                                <span class="welcome-center left">
+                                    <span class="name">Welcome <%= username%>,</span><a href="javascript:" class="logout">Logout</a>
+                                </span>
+                        <span class="welcome-right left"></span>
+                    </div>
+                    <% include menuAdmin.ejs %>
+                </div>
+            </div>
+
+
+        <%} else {%>
+
+            <div class="head-content head-content-top">
+                <a class="left" href="/home">
+                    <img src="img/logo.png" alt="Logo">
+                </a>
                 <div class="welcome right">
                     <span class="welcome-left left"></span>
-                            <span class="welcome-center left">
-                                <span class="name">Welcome <%= username%>,</span><a href="javascript:" class="logout">Logout</a>
-                            </span>
+                        <span class="welcome-center left">
+                            <span class="name">Welcome <%= username %>,</span><a href="javascript:" class="logout">Logout</a>
+                        </span>
                     <span class="welcome-right left"></span>
                 </div>
-                <% if (locals.admin) {%>
-                    <% include menuAdmin.ejs %>
-                <%} else {%>
-                    <% include menu.ejs %>
-                <%}%>
             </div>
-        </div>
+            <div class="border-line">&nbsp;</div>
+
+            <div class="head-content head-content-bottom">
+                <div class="navigation left">
+                    <% include menu.ejs %>
+                </div>
+            </div>
+
+            <div class="border-line">&nbsp;</div>
+        <% }%>
     </div>

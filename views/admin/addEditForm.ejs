@@ -142,7 +142,7 @@
 
             <!-- ko if: newField.characteristic -->
                 <div class="field-container clearfix content-values"
-                        data-bind="if: [chTypes.radio, chTypes.picklist].indexOf(newField.characteristic().type_id) != -1">
+                        data-bind="if: [chTypes.radio, chTypes.picklist, chTypes.checkbox].indexOf(newField.characteristic().type_id) != -1">
                     <label class="left">Content</label>
                     <div class="level left">
 

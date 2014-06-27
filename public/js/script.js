@@ -73,7 +73,7 @@ $(document).ready(function() {
 		var newY = Math.round(browserH / 2);
 		newY -= Math.round(modalH / 2);
 		if (newY<=20) newY = 20;
-		$elem.css("top", newY);
+        $elem.css("top", newY);
 	};
 	window.showModal = showModal;
 	//hide modal window
@@ -89,6 +89,9 @@ $(document).ready(function() {
 	//click ".close-popup" to hide modal window
 	$('.close-popup').click(function () {
 		hideModal($(this).closest('.popup-element'));
+	});
+    $('#add-search-popup .cancel').click(function () {
+		hideModal($('#add-search-popup '));
 	});
 	
 	//click ".tooltip-close" to hide modal window
@@ -172,6 +175,108 @@ $(document).ready(function() {
 		$(".page-help-dashboard .tabs ul li:first a").trigger("click");
 	});
 
+
+    var remove_print_icons = function () {
+        $('.span.color-round').removeClass('image-green');
+        $('.span.color-round').removeClass('image-yellow');
+        $('.span.color-round').removeClass('image-red');
+        $('span.dolar').removeClass('image-dollar');
+        $('span.l').removeClass('image-l');
+        $('div.iradio').removeClass('image-iradio');
+        $('div.iradio').removeClass('image-iradio-sel');
+        $('div.icheckbox').removeClass('image-icheckbox');
+        $('div.icheckbox').removeClass('image-icheckbox-sel');
+    };
+
+    var print_icons = function (elem) {
+        $("span.color-round").each(function (index, element) {
+            //print color dots
+            var elem = $(this);
+            var pos = elem.css('background-position').split(" ");
+            var img = "";
+            pos[1] = pos[1].replace(/[^0-9]+/ig, "");
+            switch (true) {
+                case (pos[1] < 15):
+                    elem.addClass('image-green');
+                    break;
+                case (pos[1] > 15 && pos[1] < 35):
+                    elem.addClass('image-yellow');
+                    break;
+                case (pos[1] > 35) :
+                    elem.addClass('image-red');
+                    break;
+            }
+        });
+
+        $("span.dolar").each(function (index, element) {
+            //print color dots
+            var elem = $(this);
+            elem.addClass('image-dollar');
+        });
+        $("span.l").each(function (index, element) {
+            //print color dots
+            var elem = $(this);
+            elem.addClass('image-l');
+        });
+        $("div.iradio").each(function (index, element) {
+            //print radio input
+            var elem = $(this);
+            var pos = elem.css('background-position').split(" ");
+            var img = "";
+            pos[1] = pos[1].replace(/[^0-9]+/ig, "");
+            switch (true) {
+                case (pos[1] < 10):
+                    elem.addClass('image-iradio');
+                    break;
+                case (pos[1] > 10) :
+                    elem.addClass('image-iradio-sel');
+                    break;
+            }
+
+        });
+        $("div.icheckbox").each(function (index, element) {
+            //print checkbox input
+            var elem = $(this);
+            var pos = elem.css('background-position').split(" ");
+            var img = "";
+            pos[1] = pos[1].replace(/[^0-9]+/ig, "");
+            switch (true) {
+                case (pos[1] < 10):
+                    elem.addClass('image-icheckbox');
+                    break;
+                case (pos[1] > 10) :
+                    elem.addClass('image-icheckbox-sel');
+                    break;
+            }
+        });
+    };
+    $('#print').click( function () {
+        $('#header').addClass('not-in-print');
+
+        $('body').addClass('in-print');
+        var title = $('.row1');
+        $('.row1').addClass('not-in-print');
+        $('#body .wrapper').prepend('<div class="row1 in-print"><h2>Identify Solutions</h2></div>');
+        //	$('.row1').hide();
+        var $close = $('<a href="javascript:" id="closebutton"></a>');
+        $close.append('<a href="javascript:print()" id="print">Print</a>');
+        $('body').append($close);
+        print_icons();
+    });
+
+    /* close print preview */
+
+    $( document ).on('click', 'a#closebutton', function(event) {
+        if ($(event.target).attr('id') == 'print') {
+            return;
+        }
+        $('#header').removeClass('not-in-print');
+        $('body').removeClass('in-print');
+        $('.row1').show();
+        $('.row1.in-print').remove();
+        remove_print_icons();
+        $(this).remove();
+    });
 });
 
 //url request
@@ -195,5 +300,9 @@ var clearAnimation = function(obj){
 	running = false;
 	if(obj) obj.css({backgroundPositionY: ""});
 	if(preloaderTimer) clearInterval(preloaderTimer);
+    var timer = obj.data('timer');
+    if (timer) {
+        clearInterval(timer);
+    }
 };
 

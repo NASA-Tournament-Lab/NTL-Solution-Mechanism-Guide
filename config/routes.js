@@ -19,7 +19,8 @@ module.exports = {
     "PUT /smgs": "SMG#updateBatch",
     "DELETE /smg/:id": "SMG#removeSingle",
     "DELETE /smgs": "SMG#removeBatch",
-
+    "POST /exportSMGs": "SMG#export",
+    "POST /importSMGs": "SMG#import",
     //Helper topic
     "GET /helpTopic": "HelpTopic#index",
     "GET /helpTopic/:id": "HelpTopic#show",
@@ -49,6 +50,7 @@ module.exports = {
     "PUT /characteristics": "Characteristic#updateBatch",
     "DELETE /characteristic/:id": "Characteristic#removeSingle",
     "DELETE /characteristics": "Characteristic#removeBatch",
+    "PUT /characteristic/:id/check": "Characteristic#checkWillAffectSMG",
 
     //SearchForm
     "GET /searchForms": "SearchForm#index",

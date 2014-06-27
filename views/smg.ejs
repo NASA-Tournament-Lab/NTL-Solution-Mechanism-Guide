@@ -16,19 +16,7 @@
         <span class="options-root left">
             <input type="text" maxlength="200" data-bind="value: value" data-bind="css: {'js-leading-zeros': type_id == chTypes.number}" />
         </span>
-    <!-- /ko -->
 
-    <!-- ko if: type_id == chTypes.checkbox -->
-
-        <div class="nquestion " data-bind="text: name"></div>
-        <div class="options-root check">
-            <span class="wrapper-options left">
-                <label class="wdh left form-label">
-                    <input class="left"  type="checkbox"
-                           data-bind="iCheck: value, iCheckOptions: { trueFalseString: true }"/> Yes/No
-                </label>
-            </span>
-        </div>
     <!-- /ko -->
 
     <!-- ko if: type_id == chTypes.picklist -->
@@ -54,7 +42,7 @@
             <span class="wrapper-options left" data-bind="foreach: values">
                 <!-- ko if: $index() % 2 == 0 -->
                  <label class="wdh left form-label">
-                     <input type="radio" data-bind="value: valuetype_id, iCheck: $parent.value, attr: {name: 'group_' +$parent.characteristic_id}"/>
+                     <input type="radio" data-bind="value: valuetype_id, iCheck: $parent.selectedValues, attr: {name: 'group_' +$parent.characteristic_id}, attr: {name: 'group' + $parent.id}"/>
                      <span data-bind="text: name"></span>
                  </label>
                 <!-- /ko -->
@@ -62,7 +50,29 @@
             <span class="wrapper-options left"  data-bind="foreach: values">
                 <!-- ko if: $index() % 2 == 1 -->
                     <label class="wdh left form-label">
-                        <input type="radio" data-bind="value: valuetype_id, iCheck: $parent.value, attr: {name: 'group_' +$parent.characteristic_id}" />
+                        <input type="radio" data-bind="value: valuetype_id, iCheck: $parent.selectedValues, attr: {name: 'group_' +$parent.characteristic_id}, attr: {name: 'group' + $parent.id}" />
+                        <span data-bind="text: name"></span>
+                    </label>
+                <!-- /ko -->
+            </span>
+        </div>
+    <!-- /ko -->
+    <!-- ko if: type_id == chTypes.checkbox -->
+
+        <div class="nquestion left" data-bind="text: name"></div>
+        <div class="options-root left">
+            <span class="wrapper-options left" data-bind="foreach: values">
+                <!-- ko if: $index() % 2 == 0 -->
+                 <label class="wdh left form-label">
+                     <input type="checkbox" data-bind="value: valuetype_id, iCheck: $parent.selectedValues, attr: {name: 'group_' +$parent.characteristic_id}"/>
+                     <span data-bind="text: name"></span>
+                 </label>
+                <!-- /ko -->
+            </span>
+            <span class="wrapper-options left"  data-bind="foreach: values">
+                <!-- ko if: $index() % 2 == 1 -->
+                    <label class="wdh left form-label">
+                        <input type="checkbox" data-bind="value: valuetype_id, iCheck: $parent.selectedValues, attr: {name: 'group_' +$parent.characteristic_id}" />
                         <span data-bind="text: name"></span>
                     </label>
                 <!-- /ko -->
@@ -119,6 +129,7 @@
                     <li data-bind=" css: {'less-margin': $index() == 0, 'last': $index() + 1 == $parent.fields().length, select: type_id == chTypes.picklist }">
                         <div class="questions-wrapper">
                             <a class="left tooltip-icon" href="javascript:" data-bind="attr: { 'data-val' : help }"></a>
+                            <a class="reset-icon left" href="javascript:" data-bind="click: revert"></a>
 
                             <div class="nquestion-root left" data-bind="template: {name: 'filter-template'}">
                             </div>
@@ -272,7 +283,7 @@
         </div>
         <div class="form-buttons">
             <a href="javascript:" class="btn-orange-big close-popup">
-                <span class="btn-right"><span class="btn-middle">OK, Close</span></span>
+                <span class="btn-right"><span class="btn-middle">Close</span></span>
             </a>
         </div>
     </div>
@@ -418,7 +429,7 @@
     <div class="tooltip-middle left">
         <div class="tooltip-head">
             <div class="tooltip-head-content left">
-                <h2 class="left">Helps</h2>
+                <h2 class="left">Help</h2>
                 <a href="javascript:" class="right tooltip-close"></a>
             </div>
             <div class="clear"></div>

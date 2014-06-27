@@ -60,7 +60,7 @@
                                 <div data-bind="text: name"></div>
                             </td>
                             <td class="td5">
-                                <a href="javascript:" class="orange-small-btn edit-character left" data-bind="css:{disable: blockDelete}, click: $root.startEdit.bind($root, $data)">
+                                <a href="javascript:" class="orange-small-btn edit-character left" data-bind="click: $root.startEdit.bind($root, $data)">
                                     <span class="orange-small-left left"></span>
                                                 <span class="orange-small-middle edit left orange-shadow">
                                                     <span class="edit-icon left"></span>Edit</span>
@@ -129,11 +129,16 @@
                 <a class="left" href="javascript:">
                     <span class="help-icon"></span>
                 </a>
-                <select class="left" data-bind="value: type, foreach: $root.types, jqSelect: true">
-                    <option data-bind="value: id, text: name"></option>
-                </select>
+                <!-- ko ifnot: blockDelete -->
+                    <select class="left" data-bind="value: type, foreach: $root.types, jqSelect: true">
+                        <option data-bind="value: id, text: name"></option>
+                    </select>
+                <!-- /ko -->
+                <!-- ko if: blockDelete -->
+                    <input class="left" type="text" data-bind="value: typeName" disabled="disabled" />
+                <!-- /ko -->
             </div>
-            <div class="field-container text-align left" data-bind="if: [3, 4].indexOf(type()) !== -1 ">
+            <div class="field-container text-align left" data-bind="if: [chTypes.checkbox, chTypes.radio, chTypes.picklist].indexOf(type()) !== -1 ">
                 <label class="left"></label>
                 <a class="left" href="javascript:">
                     <span class="help-icon"></span>
@@ -162,7 +167,7 @@
                 <a href="javascript:" class="orange-big-btn align left hide" data-bind="click: $parent.createNewCharacteristic">
                     <span class="orange-big-left left"></span>
                             <span class="orange-big-middle left orange-shadow ">
-                                <span class="js-add-loader next-icon btn-icon left" data-bind="css: {'next-icon': !$root.submitting(), loading: $root.submitting()}"></span><span data-bind="text: $root.editingItem() ? 'Edit' : 'Add'"></span></span>
+                                <span class="js-add-loader next-icon btn-icon left" data-bind="css: {'next-icon': !$root.submitting(), loading: $root.submitting()}"></span><span data-bind="text: $root.editingItem() ? 'Ok' : 'Add'"></span></span>
                     <span class="orange-big-right left"></span>
                 </a>
             </div>

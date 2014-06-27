@@ -12,7 +12,8 @@ module.exports = {
     init : function (db, callback) {
         var CharacteristicType = db.define('characteristicType', {
             name: types.string,
-            description: types.string
+            description: types.string,
+            group: types.int
         });
         CharacteristicType.collectionName = "CharacteristicType";
         callback(null, CharacteristicType);

@@ -11,7 +11,7 @@
         <div class="bar-title">
             <h1 class="left special" data-bind="html: (topic() ? topic().name : '')"></h1>
             <div class="right-part right">
-                <a href="#" class="btn-orange-big btn-print">
+                <a href="#" class="btn-orange-big btn-print" id="print">
 							<span class="btn-right">
 								<span class="btn-middle orange-shadow">
 									<span class="btn-icon icon-print">Print</span>
@@ -24,7 +24,7 @@
         <!--End .bar-title-->
 
         <div class="command top-command">
-            <a href="/help" class="btn-orange-big btn-back">
+            <a href="/help" class="btn-orange-big btn-back js-history-back">
 							<span class="btn-right">
 								<span class="btn-middle orange-shadow">
 									<span class="btn-icon icon-back">Back</span>
@@ -90,7 +90,7 @@
         <!--End #help-article-->
 
         <div class="command bottom-command">
-            <a href="/help" class="btn-orange-big btn-back">
+            <a href="/help" class="btn-orange-big btn-back js-history-back">
 							<span class="btn-right">
 								<span class="btn-middle orange-shadow">
 									<span class="btn-icon icon-back">Back</span>

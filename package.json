@@ -16,6 +16,8 @@
     "orm-transaction": "0.0.2",
     "ejs": "~1.0.0",
     "moniker": "~0.1.2",
-    "lorem": "~0.4.0"
+    "lorem": "~0.4.0",
+	"csv": "0.4.0",
+    "archiver": "~0.10.0"
   }
 }

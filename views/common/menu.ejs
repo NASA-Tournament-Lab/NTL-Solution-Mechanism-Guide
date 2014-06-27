@@ -1,10 +1,10 @@
-<div class="nav right">
+<div class="nav">
     <ul>
         <li>
             <span class="lileft left"></span>
                                     <span class="licenter left">
                                         <a class="left <%= locals.menu == 'home' ? 'active' : '' %> " href="/home">
-                                            <span class="home left"></span>
+                                            <span class="icon home left"></span>
                                             <span class="link left">Home</span>
                                         </a>
                                     </span>
@@ -15,7 +15,7 @@
             <span class="lileft left"></span>
                                     <span class="licenter left">
                                         <a href="/help" class="<%= locals.menu == 'help' ? 'active' : '' %>">
-                                            <span class="topics left"></span>
+                                            <span class="icon topics left"></span>
                                             <span class="link">Help Topics</span>
                                         </a>
                                     </span>
@@ -26,10 +26,43 @@
             <span class="lileft left"></span>
                                     <span class="licenter left">
                                         <a href="/examples" class="<%= locals.menu == 'examples' ? 'active' : '' %>">
-                                            <span class="example left"></span>
+                                            <span class="icon example left"></span>
                                             <span class="link">Examples</span>
                                         </a>
                                     </span>
+            <span class="liright left"></span>
+        </li>
+
+        <li class="right deadlink">
+            <span class="lileft left"></span>
+								<span class="licenter left">
+									<a href="<%= locals.dashboard.faqURL || "#" %>">
+                                        <span class="icon faq left"></span>
+                                        <span class="link">F.A.Q.</span>
+                                    </a>
+								</span>
+            <span class="liright left"></span>
+        </li>
+
+        <li class="right deadlink">
+            <span class="lileft left"></span>
+								<span class="licenter left">
+									<a href="<%= locals.dashboard.contactUsURL || "#" %>">
+                                        <span class="icon contact left"></span>
+                                        <span class="link">Contact Us</span>
+                                    </a>
+								</span>
+            <span class="liright left"></span>
+        </li>
+
+        <li class="right deadlink">
+            <span class="lileft left"></span>
+								<span class="licenter left">
+									<a href="<%= locals.dashboard.feedbackURL || "#" %>">
+                                        <span class="icon feedback left"></span>
+                                        <span class="link">Feedback</span>
+                                    </a>
+								</span>
             <span class="liright left"></span>
         </li>
     </ul>

@@ -4,10 +4,18 @@
  * @author TCSASSEMBLER
  */
 
+CKEDITOR.config.allowedContent = true; 
+CKEDITOR.config.protectedSource.push(/<[^>]*><\/[^>]*>/g);
+ 
 /**
  * Base API URL
  */
 var API_URL = "/api";
+
+/**
+ * Template Zip file URL
+ */
+var TEMPLATE_URL="/sample.zip"
 
 /**
  * Characteristic types, number represent ID
@@ -118,9 +126,13 @@ function getJSON(url, callback, errorCallback) {
  * @param {String} text the text to show
  * @param {Function} onClose the callback when popup is closed
  */
-function showAlert(text, onClose) {
+function showAlert(text, onClose, isHtml) {
     var $popup = $('#alert-popup').clone();
-    $popup.find('.popup-form span').text(text);
+    if (isHtml) {
+        $popup.find('.popup-form span').html(text);
+    } else {
+        $popup.find('.popup-form span').text(text);
+    }
     $popup.find('.ok, .tooltip-close').click(function () {
         $popup.remove();
         $("#modal-window-bg").hide();
@@ -343,6 +355,8 @@ function ManageCharacteristicsViewModel() {
             tab: ko.observable().extend({required: true}),
             description: ko.observable().extend({required: true}),
             type: ko.observable().extend({required: true}),
+            blockDelete: ko.observable(false),
+            typeName: ko.observable(""),
             values: ko.observableArray([{val: ""}, {val: ""}, {val: ""}])
         });
         self.newCharacteristic().addValue = function () {
@@ -369,17 +383,16 @@ function ManageCharacteristicsViewModel() {
 
     self.editingItem = ko.observable();
     self.startEdit = function (item) {
-        if (item.blockDelete) {
-            return;
-        }
         initCharToCreateOrEdit();
         self.editingItem(item);
         self.newCharacteristic().name(item.name);
+        self.newCharacteristic().blockDelete(item.blockDelete || false);
         self.newCharacteristic().tab(item.tab);
         self.newCharacteristic().description(item.description);
         self.newCharacteristic().type(item.type_id);
+        self.newCharacteristic().typeName(item.type.name);
         self.newCharacteristic().values(_.map(item.values, function (ele) {
-            return { val: ele.name};
+            return { val: ele.name, id: ele.id};
         }));
         for (var i = self.newCharacteristic().values().length; i < 3; i += 1) {
             self.newCharacteristic().values.push({val: ""});
@@ -395,12 +408,11 @@ function ManageCharacteristicsViewModel() {
             return;
         }
         var values = _.chain(newChar.values())
-            .pluck('val')
             .filter(function (ele) {
-                return ele.trim().length;
+                return ele.val.trim().length;
             })
             .value();
-        if ([chTypes.picklist, chTypes.radio].indexOf(newChar.type()) !== -1) {
+        if ([chTypes.picklist, chTypes.radio, chTypes.checkbox].indexOf(newChar.type()) !== -1) {
             if (!values.length) {
                 alert('At least one non-empty value is required.');
                 return;
@@ -436,7 +448,7 @@ function ManageCharacteristicsViewModel() {
             description: newChar.description(),
             type_id: newChar.type(),
             values: values.length ? _.map(values, function (ele) {
-                return {name: ele}
+                return {name: ele.val, id: ele.id}
             }) : undefined,
             tab: newChar.tab(),
             sort: nextSort
@@ -449,20 +461,53 @@ function ManageCharacteristicsViewModel() {
             if (self.editingItem()) {
                 self.isEditing(true);
                 var item = self.editingItem();
-                $.ajax({
-                    type: "put",
-                    url: API_URL + "/characteristic/" + item.id,
-                    contentType: 'application/json',
-                    data: data,
-                    success: function (ret) {
+                async.waterfall([
+                    function (cb) {
+                        $.ajax({
+                            type: "put",
+                            url: API_URL + "/characteristic/" + item.id + "/check",
+                            contentType: 'application/json',
+                            data: data,
+                            success: function (ret) { cb(null, ret); },
+                            error: onError,
+                            dataType: "json"
+                        });
+                    }, function (ret, cb) {
+                        if (!ret.affect) {
+                            cb();
+                            return;
+                        }
+                        $('#add-popup').hide();
+                        showConfirm("Value(s): " + ret.values.join(', ') +  " are currently being used by some SMGs," +
+                            " removing these value will set the SMG association to the first lookup item." +
+                            " Are you sure you want to proceed?",
+                            cb,
+                            function () {
+                                self.submitting(false);
+                                clearAnimation($('#add-popup .js-add-loader'));
+                                showModal($('#add-popup'));
+                            });
+                    }, function (cb) {
+                        $('#add-popup').show();
+                        $("#modal-window-bg").show();
+                        fakeTimeout(function () {
+                            $.ajax({
+                                type: "put",
+                                url: API_URL + "/characteristic/" + item.id,
+                                contentType: 'application/json',
+                                data: data,
+                                success: function (ret) { cb(null, ret); },
+                                error: onError,
+                                dataType: "json"
+                            });
+                        });
+                    }, function (ret) {
                         self.allItems.remove(item);
                         self.allItems.push(ret);
                         self.closeAddPopup();
                         showAlert('Characteristic Has Been Saved');
-                    },
-                    error: onError,
-                    dataType: "json"
-                });
+                    }
+                ]);
             } else {
                 self.isEditing(false);
                 $.ajax({
@@ -557,8 +602,18 @@ function AddEditSMGViewModel() {
                         if (item.type_id == chTypes.number) {
                             extend.number = true;
                         }
-                        item.value = ko.observable().extend(extend);
+
+                        if (item.type_id == chTypes.checkbox) {
+                            item.multipleValue = ko.observableArray([]).extend(extend);
+                        } else {
+                            item.value = ko.observable().extend(extend);
+                        }
                         item.displayValue = ko.computed(function () {
+                            if (item.multipleValue) {
+                                var values = _.pluck(item.multipleValue(), "name");
+                                values.sort();
+                                return values.join(", ");
+                            }
                             var val = item.value();
                             if (val && val.name) {
                                 return val.name
@@ -612,14 +667,18 @@ function AddEditSMGViewModel() {
                                 return;
                             }
                             var val;
-                            if (ch.type_id == chTypes.picklist || ch.type_id == chTypes.radio) {
+                            if (ch.type_id == chTypes.picklist || ch.type_id == chTypes.radio || ch.type_id == chTypes.checkbox) {
                                 val = _.filter(ch.values, function (v) {
                                     return v.id == currentCh.valuetype_id
                                 })[0];
                             } else {
                                 val = currentCh.value;
                             }
-                            ch.value(val);
+                            if (ch.type_id == chTypes.checkbox) {
+                                ch.multipleValue.push(val);
+                            } else {
+                                ch.value(val);
+                            }
                             if (ch.type_id == chTypes.image) {
                                 ch.file.progress(100);
                                 ch.file.filename(getPictureUrl(val));
@@ -694,6 +753,12 @@ function AddEditSMGViewModel() {
     self.finish = function () {
         var data = {
             characteristics: _.map(self.characteristics(), function (item) {
+                if (item.type_id == chTypes.checkbox) {
+                    return {
+                        characteristic: item.id,
+                        value: _.pluck(item.multipleValue(), "id")
+                    };
+                }
                 var val = item.value();
                 if (item.type_id == chTypes.picklist || item.type_id == chTypes.radio) {
                     val = [val.id];
@@ -977,7 +1042,7 @@ function FormFilterViewModel() {
             }
             field.sort(nextSort);
         }
-        if ([chTypes.radio, chTypes.picklist].indexOf(self.newField.characteristic().type_id) != -1) {
+        if ([chTypes.radio, chTypes.picklist, chTypes.checkbox].indexOf(self.newField.characteristic().type_id) != -1) {
             if (!self.newField.values().length) {
                 alert('Please select at least one value');
                 return
@@ -1126,11 +1191,12 @@ function SMGListingViewModel() {
                         alert('Active search form not found');
                         return;
                     }
-                    var values = window.location.hash.substr(1).split(",");
+                    var values = window.location.hash.substr(1).split("$");
                     var fields = _.map(form.fields, function (field) {
                         var value = values.shift();
-                        if (field.characteristic.type_id == chTypes.picklist ||
-                            field.characteristic.type_id == chTypes.radio) {
+                        var selectedValues;
+
+                        if (field.characteristic.type_id == chTypes.picklist) {
                             value = Number(value) || undefined;
                         }
                         var ret = {
@@ -1151,13 +1217,33 @@ function SMGListingViewModel() {
                                 .compact()
                                 .value(),
                             value: ko.observable(value),
-                            selectedValue: ko.observable()
+                            selectedValue: ko.observable(),
+                            revert: function () {
+                                ret.value(value);
+                                if (ret.selectedValues) {
+                                    selectedValues = _.map(value.split(';'), function (v) {
+                                        return Number(v);
+                                    });
+                                    console.log(selectedValues);
+                                    ret.selectedValues(selectedValues);
+                                }
+                            }
                         };
                         if ([chTypes.number, chTypes.text, chTypes.textarea].indexOf(ret.type_id) != -1) {
                             ret.value.extend({required: false})
                         }
                         if (ret.type_id == chTypes.number) {
                             ret.value.extend({number: false})
+                        }
+                        if (ret.type_id == chTypes.radio || ret.type_id == chTypes.checkbox) {
+                            ret.selectedValues = ko.observableArray();
+                            if (value && value.length) {
+                                selectedValues = _.map(value.split(';'), function (v) {
+                                    return Number(v);
+                                });
+                                ret.selectedValues(selectedValues);
+                                selectedValues = _.clone(selectedValues);
+                            }
                         }
                         return ret;
                     });
@@ -1189,7 +1275,9 @@ function SMGListingViewModel() {
         self.loading(true);
         var criteria = _.chain(self.fields()).map(function (f) {
             var val = f.value();
-            if (_.isNumber(val)) {
+            if (f.selectedValues) {
+                val = f.selectedValues();
+            } else if (_.isNumber(val)) {
                 val = [val];
             } else {
                 val = (val || "").trim();
@@ -1289,31 +1377,32 @@ function SMGModel(data) {
     self.name = "";
     self.picture = "";
     self.id = data.id;
-
-    _.each(data.smgCharacteristics, function (prop) {
-        var val = prop.value;
-        if (prop.valuetype_id != null) {
-            var selectedItem = _.filter(prop.characteristic.values, function (v) {
-                return v.id == prop.valuetype_id
-            })[0];
-            if (!selectedItem) {
-                val = "";
+    data.smgCharacteristics = _.chain(data.smgCharacteristics)
+        .groupBy(function (item) {
+            return item.characteristic.id;
+        })
+        .map(function (group) {
+            var val;
+            var prop = group[0];
+            val = _.map(group, function (item) {
+                if (item.valueType) {
+                    return item.valueType.name
+                }
+                return item.value || "";
+            }).join(", ");
+            self.values[prop.characteristic.name] = val;
+            self.characteristics[prop.characteristic.id] = val;
+            prop.displayValue = val;
+            if (prop.characteristic.id == chIds.name) {
+                self.name = val;
+            } else if (prop.characteristic.id == chIds.image) {
+                self.picture = getPictureUrl(val);
             } else {
-                val = selectedItem.name;
+                self.otherValues[prop.characteristic.name] = val;
             }
-        }
-        self.values[prop.characteristic.name] = val;
-        self.characteristics[prop.characteristic.id] = val;
-        prop.displayValue = val;
-        if (prop.characteristic.id == chIds.name) {
-            self.name = val;
-        } else if (prop.characteristic.id == chIds.image) {
-            self.picture = getPictureUrl(val);
-        } else {
-            self.otherValues[prop.characteristic.name] = val;
-        }
-    });
-
+            return prop;
+        })
+        .value();
     self.smgCharacteristics = ko.observableArray(data.smgCharacteristics);
     self.tab1Items = ko.computed(function () {
         return _.filter(self.smgCharacteristics(), function (item) {
@@ -1361,9 +1450,13 @@ function SMGDetailsViewModel() {
     var id = urlParams.id;
     self.loading = ko.observable(true);
     self.smg = ko.observable();
+    self.activeExample = ko.observable();
+    self.examples = ko.observableArray();
     fakeTimeout(function () {
         getJSON(API_URL + "/smg/" + id, function (ret) {
             self.smg(new SMGModel(ret));
+            self.examples(ret.examples);
+            self.activeExample(ret.examples[0]);
             self.loading(false);
         })
     });
@@ -1464,6 +1557,16 @@ function HelpViewModel() {
     self.topicsLoaded = ko.observable(false);
     self.dashboardLoaded = ko.observable(false);
     self.dashboardText = ko.observable("");
+    self.dashboardCss = ko.observable("");
+	self.characteristics ={};
+    self.characteristicsLoaded = ko.observable(false);
+    self.preview = function () {
+        if (!$('#preview-css').length) {
+            $('head').append("<style type='text/css' id='preview-css'></style>")
+        }
+        $('#preview-css').html(self.dashboardCss());
+        $('#banner-preview').html(self.dashboardText());
+    };
     self.images = ko.observableArray([]);
     self.showDashboard = function () {
         self.tab("dashboard");
@@ -1475,6 +1578,7 @@ function HelpViewModel() {
         fakeTimeout(function () {
             getJSON(API_URL + "/dashboard", function (ret) {
                 self.dashboardText(ret.description);
+                self.dashboardCss(ret.css);
                 self.images(_.map(ret.images || [], function (id) {
                     var fileModel = {
                         filename: ko.observable(""),
@@ -1505,12 +1609,14 @@ function HelpViewModel() {
     self.saveDashboard = function () {
         blockUI();
         fakeTimeout(function () {
-            var data = JSON.stringify({
+            window.dashboard = _.extend(window.dashboard, {
                 description: self.dashboardText(),
+                css: self.dashboardCss(),
                 images: _.map(ko.toJS(self.images), function (image) {
                     return image.fileId;
                 })
             });
+            var data = JSON.stringify(window.dashboard);
             $.ajax({
                 type: "post",
                 url: API_URL + "/dashboard",
@@ -1523,6 +1629,10 @@ function HelpViewModel() {
                 dataType: "json"
             });
         })
+    };
+    self.showConfiguration = function () {
+        self.tab("configuration");
+        window.location.hash = "#configuration";
     };
     self.showTopics = function () {
         self.tab("topics");
@@ -1558,8 +1668,230 @@ function HelpViewModel() {
             });
         });
     };
+    self.configuration = {
+        logoutText: ko.observable(window.dashboard.logoutText || ""),
+        feedbackURL: ko.observable(window.dashboard.feedbackURL || ""),
+        contactUsURL: ko.observable(window.dashboard.contactUsURL || ""),
+        faqURL: ko.observable(window.dashboard.faqURL || "")
+    };
+    self.saveConfiguration = function () {
+        window.dashboard.logoutText = self.configuration.logoutText();
+        window.dashboard.feedbackURL = self.configuration.feedbackURL();
+        window.dashboard.contactUsURL = self.configuration.contactUsURL();
+        window.dashboard.faqURL = self.configuration.faqURL();
+        blockUI();
+        var data = JSON.stringify(window.dashboard);
+        $.ajax({
+            type: "post",
+            url: API_URL + "/dashboard",
+            contentType: 'application/json',
+            data: data,
+            success: function () {
+                unBlockUI();
+            },
+            error: handleError,
+            dataType: "json"
+        });
 
-    if (window.location.hash == "#topics") {
+    }
+	 self.updateAvailableFields = function(){
+        var availableNames =[];
+        var multiValueTypes=["picklist","radio"];
+        for(var i=0;i<self.characteristics.ids.length;i++){
+            var id = self.characteristics.ids[i];
+            var matchCharacteristics = self.characteristics.values[id];
+            var ids = _.map($("#option-field-mapping").val(),function(str){return Number(str);});
+            if(ids.indexOf(id)==-1){
+                if(multiValueTypes.indexOf(matchCharacteristics.type.name)==-1){
+                    availableNames.push(matchCharacteristics.name);
+                }else{
+                    var values =[];
+                    for(var j=0;j<matchCharacteristics.values.length;j++){
+                        values.push('{ "id":'+matchCharacteristics.values[j].id+',"value":"'+matchCharacteristics.values[j].value+'"}')
+                    }
+                    availableNames.push(matchCharacteristics.name+"("+values.join(",")+")");
+                }
+                matchCharacteristics.selected =true;
+            }
+        }
+        if(availableNames.length>0){
+            $(".available-row div.file-field").html(availableNames.join(","));
+        }else{
+            $(".available-row div.file-field").html("");
+        }
+    }
+
+    self.showExportSMG = function () {
+        self.tab("export-smg");
+        window.location.hash = "#export-smg";
+        if (self.characteristicsLoaded()) {
+            return;
+        }
+        blockUI();
+        //add more file
+        $(".browse-list").on("click", ".js-action-add-file", function(){
+            var browseList = $(this).closest(".browse-list");
+            var html = [];
+            html.push('<div class="field-container clearfix">');
+            html.push('<div class="file-field left">');
+            html.push('<input type="text"><input type="file" name="smg">');
+            html.push('</div>');
+            html.push('<a href="javascript:" class="orange-big-btn align left js-action-browse">');
+            html.push('<span class="orange-big-left left"></span>');
+            html.push('<span class="orange-big-middle left orange-shadow">Browse</span>');
+            html.push('<span class="orange-big-right left"></span>');
+            html.push('</a>');
+            html.push('<a href="javascript:" class="orange-big-btn align left btn-delete-file js-action-delete-file hidden">');
+            html.push('<span class="orange-big-left left"></span>');
+            html.push('<span class="orange-big-middle left orange-shadow"><span class="delete-icon left"></span>Delete</span>');
+            html.push('<span class="orange-big-right left"></span>');
+            html.push('</a>');
+            html.push('<a href="javascript:" class="orange-big-btn align left btn-add-more-file js-action-add-file">');
+            html.push('<span class="orange-big-left left"></span>');
+            html.push('<span class="orange-big-middle left orange-shadow">Add more Files</span>');
+            html.push('<span class="orange-big-right left"></span>');
+            html.push('</a>');
+            html.push('</div>	');
+            var $elem = $(html.join(""));
+            browseList.append($elem);
+            browseList.find(".field-container .btn-delete-file").removeClass("hidden");
+            browseList.find(".field-container .btn-add-more-file").addClass("hidden");
+            browseList.find(".field-container:last  .btn-delete-file").addClass("hidden");
+            browseList.find(".field-container:last  .btn-add-more-file").removeClass("hidden");
+            $elem.find(":file").css("opacity", "0.001");
+        });
+        $(".browse-list").on("click", ".js-action-browse", function(){
+            $(this).closest(".field-container").find(":file").trigger("click");
+        });
+        $(".browse-list").on("change", "input:file", function(){
+            var that = $(this);
+            var value = that.val();
+            var fileName = getFileName(value);
+            that.closest(".field-container").find(".file-field :text").val(fileName);
+        });
+        //remove browse file
+        $(".browse-list").on("click", ".js-action-delete-file", function(){
+            var browseRow = $(this).closest(".field-container");
+            browseRow.remove();
+        });
+        self.loading(true);
+        fakeTimeout(function () {
+            getJSON(API_URL + "/characteristics", function (ret) {
+                var characteristicsObj ={};
+                var ids=[];
+                $("#option-field-mapping option").remove();
+                for(var i=0;i<ret.length;i++){
+                    ids.push(ret[i].id);
+                    characteristicsObj[ret[i].id] = ret[i];
+                    $("#option-field-mapping").append($('<option value="'+ret[i].id+'">'+ret[i].name+'</option>'));
+                }
+                self.characteristics ={
+                    ids:ids,
+                    values:characteristicsObj
+                };
+                $("#option-field-mapping").select2();
+                self.updateAvailableFields();
+                self.characteristicsLoaded(true);
+                self.loading(false);
+                unBlockUI();
+            });
+        });
+    };
+    self.getTemplate = function(){
+        window.open(TEMPLATE_URL);
+    };
+    self.getFieldIds= function(){
+        var ids=[];
+        var idArray = $("#option-field-mapping").select2('data');
+        for(var i=0;i<idArray.length;i++){
+            ids.push(idArray[i].element[0].value);
+        }
+        return ids;
+    }
+    self.exportSMG = function(){
+        var ids = self.getFieldIds();
+        if(!ids || ids.length==0){
+            showAlert('Please select at least one field!');
+            return;
+        }
+        var form = $("<form/>").prop({
+            action: API_URL + "/exportSMGs",
+            method: "POST"
+        });
+        $("body").append(form);
+        for (var i = 0; i < ids.length; i = i + 1) {
+            $("<input type='hidden'>").attr({
+                name: "ids[" + i + "]",
+                value: ids[i]
+            }).appendTo(form);
+        }
+        form.submit();
+    };
+
+    self.importSMG = function(){
+        var ids = self.getFieldIds();
+        if(!ids || ids.length==0){
+            showAlert('Please select at least one field!');
+            return;
+        }
+        var valid = true;
+        var fileNameExpression= /(.+).csv/i;
+        var names =[];
+        $('#export-smg input:file').each(function(){
+            var filename= $(this).val();
+            if(names.indexOf(filename)==-1){
+                names.push(filename);
+            }
+            if(!fileNameExpression.test(filename.substring( filename.lastIndexOf('\\')+1))){
+                valid= false;
+                return false;
+            }
+        });
+        if(!valid){
+            showAlert("Please provide valid csv file!");
+            return;
+        }
+        if(names.length!=$('#export-smg input:file').length){
+            showAlert("Please not upload same name csv file more than once!");
+            return;
+        }
+        var form  = $('#importSMGForm');
+        form.find("input:hidden").remove();
+        for (var i = 0; i < ids.length; i = i + 1) {
+            $("<input type='hidden'>").attr({
+                name: "ids[" + i + "]",
+                value: ids[i]
+            }).appendTo(form);
+        }
+        var $elem = $('.process');
+        if (!$elem.length) {
+            $elem = $('<div class="process"><div class="processbg"><div class="processbar"></div><div class="processtext"></div></div></div>');
+            $('body').append($elem);
+        }
+        $elem.show();
+        $elem.find(".processbar").width("0");
+
+        form.ajaxSubmit({
+            dataType: 'json',
+            success: function (ret) {
+                $('.process').hide();
+                alert(ret);
+            },
+            uploadProgress: function (event, position, total, percent) {
+                $elem.find(".processbar").width(percent + "%");
+                $elem.find(".processtext").text(Math.floor(percent)+"%");
+            },
+            error: function (response) {
+                $('.process').hide();
+                handleError(response);
+            }
+        });
+    };
+    if (window.location.hash == "#configuration") {
+        self.showConfiguration();
+    }else if (window.location.hash == "#export-smg") {
+        self.showExportSMG();
+    }else if (window.location.hash == "#topics") {
         self.showTopics();
     } else {
         self.showDashboard();
@@ -1761,6 +2093,7 @@ function HomeViewModel() {
             function (cb) {
                 getJSON(API_URL + "/dashboard", function (ret) {
                     self.widgetHtml(ret.description);
+                    $('<style type="text/css"></style>').html(ret.css).appendTo($('head'));
                     cb();
                 })
             }, function (cb) {
@@ -1809,13 +2142,22 @@ function HomeViewModel() {
                                 .compact()
                                 .value(),
                             value: ko.observable(),
-                            selectedValue: ko.observable()
+                            selectedValue: ko.observable(),
+                            revert: function () {
+                                ret.value('');
+                                if (ret.selectedValues) {
+                                    ret.selectedValues([]);
+                                }
+                            }
                         };
                         if ([chTypes.number, chTypes.text, chTypes.textarea].indexOf(ret.type_id) != -1) {
                             ret.value.extend({required: false})
                         }
                         if (ret.type_id == chTypes.number) {
                             ret.value.extend({number: false})
+                        }
+                        if (ret.type_id == chTypes.radio || ret.type_id == chTypes.checkbox) {
+                            ret.selectedValues = ko.observableArray();
                         }
                         return ret;
                     });
@@ -1841,8 +2183,11 @@ function HomeViewModel() {
 //            return;
 //        }
         var hash = _.map(self.fields(), function (field) {
+            if (field.selectedValues) {
+                return field.selectedValues().join(";");
+            }
             return field.value() || "";
-        }).join(",");
+        }).join("$");
         window.location = "/smg#" + hash;
     }
 }
@@ -1878,9 +2223,12 @@ $(function () {
         }
         $(this).val(val);
     });
+    if (document.referrer.indexOf(window.location.host) !== -1) {
+        $('.js-history-back').attr('href', document.referrer);
+    }
 
     $('#header .logout').click(function () {
-        showAlert('Please close your browser');
+        showAlert(window.dashboard.logoutText, null, true);
     });
     if ($('.js-manage-characteristics').length) {
         ko.applyBindings(new ManageCharacteristicsViewModel());
