@@ -60,6 +60,18 @@
                                 <div data-bind="text: name"></div>
                             </td>
                             <td class="td5">
+                                <a href="javascript:;" class="orange-small-btn left move-up" data-bind="css: { disable: !canMoveUp() }, click: moveUp">
+                                    <span class="orange-small-left left"></span>
+												<span class="orange-small-middle left orange-shadow">
+													<span class="disable-up-icon left"></span>Move Up</span>
+                                    <span class="orange-small-right left"></span>
+                                </a>
+                                <a href="javascript:;" class="orange-small-btn left move-down" data-bind="css: { disable: !canMoveDown() }, click: moveDown">
+                                    <span class="orange-small-left left"></span>
+												<span class="orange-small-middle left orange-shadow">
+													<span class="disable-down-icon left"></span>Move Down</span>
+                                    <span class="orange-small-right left"></span>
+                                </a>
                                 <a href="javascript:" class="orange-small-btn edit-character left" data-bind="click: $root.startEdit.bind($root, $data)">
                                     <span class="orange-small-left left"></span>
                                                 <span class="orange-small-middle edit left orange-shadow">
@@ -144,7 +156,7 @@
                     <span class="help-icon"></span>
                 </a>
                 <div class="level left adjust">
-                    <div class="wrapper">
+                    <div class="wrapper values-wrapper">
                         <p><span data-bind="text: type().name"></span>  Labels</p>
                         <div data-bind="foreach: values">
                             <div class="text-remove clearfix">

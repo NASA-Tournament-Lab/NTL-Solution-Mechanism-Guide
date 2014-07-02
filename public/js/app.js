@@ -319,17 +319,71 @@ function ManageCharacteristicsViewModel() {
     self.items = ko.computed(function () {
         var ret = self.allItems();
         ret.sort(function (a, b) {
-            return a.id - b.id;
+            return a.sort() - b.sort();
         });
         return ret;
     });
     //allowed characteristic types
     self.types = ko.observableArray([]);
     initPagination(self);
+    var fixSorting = function (item) {
+        item.sort = ko.observable(item.sort);
+        item.moveUp = function () {
+            if (!item.canMoveUp()) {
+                return;
+            }
+            blockUI();
+            fakeTimeout(function () {
+                $.ajax({
+                    type: "post",
+                    url: API_URL + "/characteristic/" + item.id + "/moveUp",
+                    success: function () {
+                        var index = self.items().indexOf(item);
+                        var swap = self.items()[index - 1];
+                        var tmp = swap.sort();
+                        swap.sort(item.sort());
+                        item.sort(tmp);
+                        unBlockUI();
+                    },
+                    error: handleError,
+                    dataType: "json"
+                });
+            });
+        };
+        item.moveDown = function () {
+            if (!item.canMoveDown()) {
+                return;
+            }
+            blockUI();
+            fakeTimeout(function () {
+                $.ajax({
+                    type: "post",
+                    url: API_URL + "/characteristic/" + item.id + "/moveDown",
+                    success: function () {
+                        var index = self.items().indexOf(item);
+                        var swap = self.items()[index + 1];
+                        var tmp = swap.sort();
+                        swap.sort(item.sort());
+                        item.sort(tmp);
+                        unBlockUI();
+                    },
+                    error: handleError,
+                    dataType: "json"
+                });
+            });
+        };
+        item.canMoveUp = function () {
+            return self.items().indexOf(item) != 0;
+        };
+        item.canMoveDown = function () {
+            return self.items().length > 1 && self.items().indexOf(item) + 1 != self.items().length;
+        }
+    }
     fakeTimeout(function () {
         async.parallel([
             function (cb) {
                 getJSON(API_URL + "/characteristics", function (ret) {
+                    _.each(ret, fixSorting);
                     self.allItems(ret);
                     cb();
                 });
@@ -424,7 +478,9 @@ function ManageCharacteristicsViewModel() {
             .filter(function (ele) {
                 return ele.tab === newChar.tab()
             })
-            .pluck("sort")
+            .map(function (ele) {
+                return ele.sort();
+            })
             .max(function (ele) {
                 return ele;
             })
@@ -435,7 +491,7 @@ function ManageCharacteristicsViewModel() {
         if (self.editingItem()) {
             //change sort only if tab was changed
             if (newChar.tab() === self.editingItem().tab) {
-                nextSort = self.editingItem().sort;
+                nextSort = self.editingItem().sort();
             }
         }
         if (self.submitting()) {
@@ -503,6 +559,7 @@ function ManageCharacteristicsViewModel() {
                         });
                     }, function (ret) {
                         self.allItems.remove(item);
+                        fixSorting(ret);
                         self.allItems.push(ret);
                         self.closeAddPopup();
                         showAlert('Characteristic Has Been Saved');
@@ -516,6 +573,7 @@ function ManageCharacteristicsViewModel() {
                     contentType: 'application/json',
                     data: data,
                     success: function (ret) {
+                        fixSorting(ret);
                         self.allItems.push(ret);
                         self.closeAddPopup();
                         showAlert('Characteristic Has Been Added');
@@ -590,6 +648,9 @@ function AddEditSMGViewModel() {
         async.series([
             function (cb) {
                 getJSON(API_URL + "/characteristics", function (ret) {
+                    ret.sort(function (a, b) {
+                        return a.sort - b.sort;
+                    })
                     var items = _.map(ret, function (item) {
                         var extend = {
                             required: {
@@ -1672,42 +1733,45 @@ function HelpViewModel() {
         logoutText: ko.observable(window.dashboard.logoutText || ""),
         feedbackURL: ko.observable(window.dashboard.feedbackURL || ""),
         contactUsURL: ko.observable(window.dashboard.contactUsURL || ""),
-        faqURL: ko.observable(window.dashboard.faqURL || "")
+        faqURL: ko.observable(window.dashboard.faqURL || ""),
+        homeFilterText: ko.observable(window.dashboard.homeFilterText || ""),
     };
     self.saveConfiguration = function () {
         window.dashboard.logoutText = self.configuration.logoutText();
         window.dashboard.feedbackURL = self.configuration.feedbackURL();
         window.dashboard.contactUsURL = self.configuration.contactUsURL();
         window.dashboard.faqURL = self.configuration.faqURL();
+        window.dashboard.homeFilterText = self.configuration.homeFilterText();
         blockUI();
         var data = JSON.stringify(window.dashboard);
-        $.ajax({
-            type: "post",
-            url: API_URL + "/dashboard",
-            contentType: 'application/json',
-            data: data,
-            success: function () {
-                unBlockUI();
-            },
-            error: handleError,
-            dataType: "json"
+        fakeTimeout(function () {
+            $.ajax({
+                type: "post",
+                url: API_URL + "/dashboard",
+                contentType: 'application/json',
+                data: data,
+                success: function () {
+                    unBlockUI();
+                },
+                error: handleError,
+                dataType: "json"
+            });
         });
 
     }
 	 self.updateAvailableFields = function(){
         var availableNames =[];
-        var multiValueTypes=["picklist","radio"];
         for(var i=0;i<self.characteristics.ids.length;i++){
             var id = self.characteristics.ids[i];
             var matchCharacteristics = self.characteristics.values[id];
             var ids = _.map($("#option-field-mapping").val(),function(str){return Number(str);});
             if(ids.indexOf(id)==-1){
-                if(multiValueTypes.indexOf(matchCharacteristics.type.name)==-1){
+                if([chTypes.picklist, chTypes.radio, chTypes.checkbox].indexOf(matchCharacteristics.type.id) == -1){
                     availableNames.push(matchCharacteristics.name);
                 }else{
                     var values =[];
                     for(var j=0;j<matchCharacteristics.values.length;j++){
-                        values.push('{ "id":'+matchCharacteristics.values[j].id+',"value":"'+matchCharacteristics.values[j].value+'"}')
+                        values.push('{ "id":'+matchCharacteristics.values[j].id+',"name":"'+matchCharacteristics.values[j].name+'"}')
                     }
                     availableNames.push(matchCharacteristics.name+"("+values.join(",")+")");
                 }
@@ -1807,7 +1871,7 @@ function HelpViewModel() {
             ids.push(idArray[i].element[0].value);
         }
         return ids;
-    }
+    };
     self.exportSMG = function(){
         var ids = self.getFieldIds();
         if(!ids || ids.length==0){
@@ -1889,9 +1953,9 @@ function HelpViewModel() {
     };
     if (window.location.hash == "#configuration") {
         self.showConfiguration();
-    }else if (window.location.hash == "#export-smg") {
+    } else if (window.location.hash == "#export-smg") {
         self.showExportSMG();
-    }else if (window.location.hash == "#topics") {
+    } else if (window.location.hash == "#topics") {
         self.showTopics();
     } else {
         self.showDashboard();

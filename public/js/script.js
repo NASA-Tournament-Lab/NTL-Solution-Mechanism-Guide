@@ -101,10 +101,10 @@ $(document).ready(function() {
 
 	//pupop for help icon
     $(document).on("mouseover", ".help-icon", function() {
-        $(this).next(".tool-tip").css("display", "block");
+        $(this).siblings(".tool-tip").css("display", "block");
     });
     $(document).on("mouseleave", ".help-icon", function() {
-        $(this).next(".tool-tip").css("display", "none");
+        $(this).siblings(".tool-tip").css("display", "none");
     });
 
     //pupop for help icon

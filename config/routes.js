@@ -51,6 +51,8 @@ module.exports = {
     "DELETE /characteristic/:id": "Characteristic#removeSingle",
     "DELETE /characteristics": "Characteristic#removeBatch",
     "PUT /characteristic/:id/check": "Characteristic#checkWillAffectSMG",
+    "POST /characteristic/:id/moveUp": "Characteristic#moveUp",
+    "POST /characteristic/:id/moveDown": "Characteristic#moveDown",
 
     //SearchForm
     "GET /searchForms": "SearchForm#index",

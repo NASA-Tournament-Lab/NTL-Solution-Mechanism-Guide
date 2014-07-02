@@ -5857,3 +5857,11 @@ body.in-print, body.in-print div:not(.iradio):not(.icheckbox){
 
 #dashboard-details .panel-changes-preview{
 }
+
+
+
+#add-popup .values-wrapper {
+    max-height: 250px;
+    overflow: overlay;
+    overflow-x: hidden;
+}

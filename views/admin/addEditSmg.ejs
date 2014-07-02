@@ -34,8 +34,8 @@
             </div>
             <!-- /ko -->
             <!-- ko if: type_id == chTypes.textarea -->
-            <div class="left text-field">
-                <textarea maxlength="32768" rows="4" cols="50" class="left" data-bind="{value: value}">
+            <div class="left text-field" data-bind="hasError: value">
+                <textarea maxlength="32768" rows="4" cols="50" class="left" data-bind="{ckEditor: value}">
                 </textarea>
             </div>
             <!-- /ko -->

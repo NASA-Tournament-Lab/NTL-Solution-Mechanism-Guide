@@ -391,6 +391,78 @@ function removeSingle(req, db, callback) {
         callback);
 }
 
+/**
+ * Swap order between item req.params.id and req.params.id + diff.
+ * Diff should be -1 or 1
+ * @param {Object} req the express request
+ * @param {Object} db the orm2 database instance
+ * @param {Number} diff the difference
+ * @param {Function<err, result>} callback the callback function
+ */
+function swapSort(req, db, diff, callback) {
+    var id, item;
+    async.waterfall([
+        function (cb) {
+            cb(validate(req.params.id, "stringId", "id"));
+        }, function (cb) {
+            id = Number(req.params.id);
+            helper.getSingle(id, db.models.characteristic, cb);
+        }, function (res, cb) {
+            item = res;
+            db.models.characteristic.find({}, 'sort', cb);
+        }, function (items, cb) {
+            var index;
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].id == item.id) {
+                    index = i;
+                    break;
+                }
+            }
+            var toSwap = items[index + diff];
+            if (!toSwap) {
+                cb(new BadRequestError("Cannot change order"));
+                return;
+            }
+            var tmp = toSwap.sort;
+            toSwap.sort = item.sort;
+            item.sort = _.random(1000, 1000000);//can't swap values because of UQ
+            async.series([
+                function (cb) {
+                    item.save(cb);
+                },
+                function (cb) {
+                    toSwap.save(cb);
+                },
+                function (cb) {
+                    item.sort = tmp;
+                    item.save(cb);
+                }
+            ], cb);
+        }
+    ], function (err) {
+        callback(err, {});
+    })
+}
+
+/**
+ * Change sort order by -1
+ * @param {Object} req the express request
+ * @param {Object} db the orm2 database instance
+ * @param {Function<err, result>} callback the callback function
+ */
+function moveUp(req, db, callback) {
+    swapSort(req, db, -1, callback);
+}
+
+/**
+ * Change sort order by +1
+ * @param {Object} req the express request
+ * @param {Object} db the orm2 database instance
+ * @param {Function<err, result>} callback the callback function
+ */
+function moveDown(req, db, callback) {
+    swapSort(req, db, 1, callback);
+}
 
 module.exports = {
     index: wrapExpress("Characteristic#index", index),
@@ -401,5 +473,7 @@ module.exports = {
     updateBatch: wrapExpress("Characteristic#updateBatch", updateBatch),
     removeSingle: wrapExpress("Characteristic#removeSingle", removeSingle),
     removeBatch: wrapExpress("Characteristic#removeBatch", removeBatch),
-    checkWillAffectSMG: wrapExpress("Characteristic#checkWillAffectSMG", checkWillAffectSMG)
+    checkWillAffectSMG: wrapExpress("Characteristic#checkWillAffectSMG", checkWillAffectSMG),
+    moveUp: wrapExpress("Characteristic#moveUp", moveUp),
+    moveDown: wrapExpress("Characteristic#moveDown", moveDown),
 };

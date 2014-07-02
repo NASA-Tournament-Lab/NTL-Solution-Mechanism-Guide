@@ -443,11 +443,11 @@ function exportSMG(req, res,db, callback) {
                                 if(smgCharacteristic.value){
                                     values[smgCharacteristic.characteristic_id]=smgCharacteristic.value;
                                 }else{
-                                    //use valueType.value not valuetype_id
+                                    //use valueType.name not valuetype_id
                                     if(values[smgCharacteristic.characteristic_id]){
-                                        values[smgCharacteristic.characteristic_id].push(smgCharacteristic.valueType.value);
+                                        values[smgCharacteristic.characteristic_id].push(smgCharacteristic.valueType.name);
                                     }else{
-                                        values[smgCharacteristic.characteristic_id]= [smgCharacteristic.valueType.value];
+                                        values[smgCharacteristic.characteristic_id]= [smgCharacteristic.valueType.name];
                                     }
                                 }
                             }
@@ -495,7 +495,7 @@ function exportSMG(req, res,db, callback) {
 function importSMG(req,db, callback) {
     var smgs=[];
     var fileNameExpression= /(.+).csv/i;
-    var multiValueTypes=["picklist","radio"];
+    var multiValueTypes=["checkbox","picklist","radio"];
     var ids = req.body.ids || [];
     ids =  _.map(ids, function(str){ return Number(str); });
     var characteristics;
@@ -571,14 +571,14 @@ function importSMG(req,db, callback) {
                                     break;
                                 }
                                 for (var j = 0; j < matchCharacteristics.values.length; j++) {
-                                    if (characteristicValue[i]==matchCharacteristics.values[j].value) {
+                                    if (characteristicValue[i]==matchCharacteristics.values[j].name) {
                                         valueIds.push(matchCharacteristics.values[i].id);
                                         break;
                                     }
                                 }
                             }
                             if (valueIds.length != characteristicValue.length) {
-                                cbp(new BadRequestError("File '" + item.originalFilename + ".csv' Line " + lineNumber + " contains invalid characteristicTypeValue(characteristicTypeValue with value="
+                                cbp(new BadRequestError("File '" + item.originalFilename + ".csv' Line " + lineNumber + " contains invalid characteristicTypeValue(characteristicTypeValue with name="
                                     + characteristicValue + " not exist for characteristic("+matchCharacteristics.name+"))"));
                                 return;
                             }
