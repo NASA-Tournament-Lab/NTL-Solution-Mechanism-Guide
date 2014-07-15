@@ -161,17 +161,23 @@
                                 <input class="text required" type="text" data-bind="{value: name}">
                             </div>
                         </div>
-                        <div class="field-container clearfix bottom-padding">
+                        <div class="field-container clearfix bottom-padding example-type-field">
                             <label class="left">Type</label>
                             <a class="tooltip-icon" href="javascript:"></a>
 
-                            <select class="left"  data-bind="options: exampleTypes,
+                            <select class="left select-type"  data-bind="options: $root.exampleTypes,
                                              hasError: type,
                                              hasErrorTarget: '.jqTransformSelectWrapper',
                                              jqSelect: type,
                                              value: type,
                                              optionsCaption: 'Choose...'">
                             </select>
+
+                            <a class="orange-big-btn align left js-action-add-type" href="javascript:" data-bind="click: $root.showAddExampleTypePopup">
+                                <span class="orange-big-left left"></span>
+                                <span class="orange-big-middle left orange-shadow">Add Type</span>
+                                <span class="orange-big-right left"></span>
+                            </a>
 
                         </div>
                         <div class="field-container clearfix">
@@ -239,7 +245,12 @@
                         <!-- ko if: type_id != chTypes.image -->
                             <tr>
                                 <td class="first" data-bind="text: name +':'"></td>
+                                <!-- ko if: type_id == chTypes.textarea -->
+                                <td data-bind="html: displayValue"> </td>
+                                <!-- /ko -->
+                                <!-- ko if: type_id != chTypes.textarea -->
                                 <td data-bind="text: displayValue"> </td>
+                                <!-- /ko -->
                             </tr>
                         <!-- /ko -->
                         </tbody>
@@ -338,7 +349,12 @@
                     <tbody data-bind="foreach: step3Items">
                     <tr>
                         <td class="first" data-bind="text: name +':'"></td>
+                        <!-- ko if: type_id == chTypes.textarea -->
+                        <td data-bind="html: displayValue"> </td>
+                        <!-- /ko -->
+                        <!-- ko if: type_id != chTypes.textarea -->
                         <td data-bind="text: displayValue"> </td>
+                        <!-- /ko -->
                     </tr>
                     </tbody>
                 </table>
@@ -382,6 +398,45 @@
 </div>
 </div>
 <!--End Examples-->
+
+<!--Begin AddTypePopup-->
+<div id="add-type-popup" class="modal-window-wrapper hide">
+    <div class="popup-wrapper">
+        <div class="popup-header">
+            <h4 class="left">Add New Type</h4>
+            <a href="javascript:" class="right tooltip-close"></a>
+        </div>
+        <div class="popup-form jqtransform form-required">
+            <div class="field-container left more-margin">
+                <label class="left">Type Name</label>
+                <a class="left" href="javascript:">
+                    <span class="help-icon"></span>
+                </a>
+                <div class="left text-field required-field">
+                    <input class="required required-max" type="text" data-bind="value: newExampleType">
+                </div>
+            </div>
+
+            <div class="form-buttons right">
+                <a href="javascript:" class="orange-big-btn align left cancel" data-bind="click: hideAddExampleTypePopup">
+                    <span class="orange-big-left left"></span>
+                            <span class="orange-big-middle left orange-shadow">
+                                <span class="cancel-icon left"></span>Cancel</span>
+                    <span class="orange-big-right left"></span>
+                </a>
+                <a href="javascript:" class="orange-big-btn align save left hide" data-bind="click: addExampleType">
+                    <span class="orange-big-left left"></span>
+                            <span class="orange-big-middle left orange-shadow ">
+                                <span class="next-icon btn-icon left" data-bind="css: {'next-icon': !addExampleTypeLoading(), loading: addExampleTypeLoading() }, loader: addExampleTypeLoading, loaderHeight: 21"></span>Ok</span>
+                    <span class="orange-big-right left"></span>
+                </a>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<!--End AddTypePopup-->
+
 
 
 <% include ../common/footer.ejs %>

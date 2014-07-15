@@ -70,5 +70,10 @@ module.exports = {
 
     //Dashboard
     "GET /dashboard": "Dashboard#getDashboard",
-    "POST /dashboard": "Dashboard#update"
+    "POST /dashboard": "Dashboard#update",
+
+    //ExampleType
+    "GET /exampleTypes": "ExampleType#index",
+    "POST /exampleType": "ExampleType#createSingle",
+    "PUT /exampleType": "ExampleType#updateBatch"
 };

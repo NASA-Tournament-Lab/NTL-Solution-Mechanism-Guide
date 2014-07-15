@@ -235,7 +235,7 @@
     </div>
 
 
-    <div class="tab" id="dashboard-details"  data-bind="css: {active:  tab() == 'configuration'}">
+    <div class="tab" id="configuration"  data-bind="css: {active:  tab() == 'configuration'}">
         <div class="form-wrapper">
             <div class="field-container clearfix">
                 <label class="left">Logout text</label>
@@ -374,6 +374,42 @@
                 </div>
                 <div class="text-field">
                     <input type="text" data-bind="value: configuration.faqURL"></textarea>
+                </div>
+            </div>
+
+            <div class="field-container clearfix" data-bind="with: $root.exampleTypesViewModel">
+                <label class="left">Example Types</label>
+                <div class="help-wrapper left">
+                    <a class="help-icon left" href="javascript:"></a>
+                    <div class="tool-tip hide">
+                        <span class="tooltip-left left"></span>
+                        <div class="tooltip-middle left">
+                            <div class="tooltip-head">
+                                <div class="tooltip-head-content left">
+                                    <h2 class="left">Helps</h2>
+                                    <a href="javascript:" class="right tooltip-close"></a>
+                                </div>
+                                <div class="clear"></div>
+                                <p>KMLs represent distinct stages of maturity or development of a problem, project, or task.
+                                    <br>Gather : Early stage; immature, undefined
+                                    <br>Synthesize: Analyze; define requirements and ops concept
+                                    <br>Validate: Evaluate and validate; produce deliverable
+                                    <br>Apply: Integrate; augment; standardize deliverable</p>
+                                <a href="javascript:">learn more...</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="level left adjust">
+                    <div class="wrapper">
+                        <!-- ko foreach: items -->
+                        <div class="text-remove clearfix">
+                            <input type="text" data-bind="value: name">
+                            <a href="javascript:;" class="btn-delete" data-bind="click: $parent.items.remove.bind($parent.items, $data)"></a>
+                        </div>
+                        <!-- /ko -->
+                        <a href="javascript:" class="other js-action-add-another" data-bind="click: addType">Add another</a>
+                    </div>
                 </div>
             </div>
 

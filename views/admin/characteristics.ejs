@@ -12,6 +12,17 @@
         <span class="orange-big-right left"></span>
     </a>
     <div class="options right">
+
+        <span class="show left">show</span>
+        <div class="styled-select styled-select-long left">
+            <select class="left" data-bind="jqSelect: true, value: tab">
+                <option selected="selected">Information</option>
+                <option>How to start</option>
+            </select>
+        </div>
+        <span class="left">tab</span>
+        <div class="border-right left"></div>
+
         <span class="show left">show</span>
         <div class="styled-select left">
             <select class="left" data-bind="value: pageSize, foreach: availablePageSizes, jqSelect: true">

@@ -52,7 +52,7 @@
                     <td class="first first-bg" data-bind="text: $data">Details</td>
 
                     <!-- ko foreach: $root.items-->
-                    <td data-bind="text: $data.otherValues[$parent]"></td>
+                    <td data-bind="html: $data.otherValues[$parent]"></td>
                     <!-- /ko -->
                 </tr>
                 <!-- /ko -->

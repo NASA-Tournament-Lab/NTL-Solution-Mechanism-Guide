@@ -71,22 +71,29 @@ You must create only empty database in mysql server. Default database name is na
     * Install all the services (you can leave out CGI).
     * Click: "Security"
     * Install the URL Authorization feature.
+* Install rewrite module http://www.iis.net/downloads/microsoft/url-rewrite
 * Now we have to enable the override of the configuration sections.
   * Open the applicationHost.config file, located here: %windir%\system32\inetsrv\config\applicationHost.config
   * Edit the "handlers" section.
   * Change this line:
-       <section name="handlers" overrideModeDefault="Deny" />
+       ``<section name="handlers" overrideModeDefault="Deny" />``
+
     To:
-       <section name="handlers" overrideModeDefault="Allow" />
+       ``<section name="handlers" overrideModeDefault="Allow" />``
+
   * Edit the "authentication" section group
   * Change this line:
-       <section name="anonymousAuthentication" overrideModeDefault="Deny" />
+       ``<section name="anonymousAuthentication" overrideModeDefault="Deny" />``
+
        To:
-       <section name="anonymousAuthentication" overrideModeDefault="Allow" />
+       ``<section name="anonymousAuthentication" overrideModeDefault="Allow" />``
+       
   * Change this line:
-       <section name="windowsAuthentication" overrideModeDefault="Deny" />
+       ``<section name="windowsAuthentication" overrideModeDefault="Deny" />``
+
        To:
-       <section name="windowsAuthentication" overrideModeDefault="Allow" />
+       ``<section name="windowsAuthentication" overrideModeDefault="Allow" />``
+       
   * Save the file
   * Restart IIS from the IIS manager
 * Finally, we need to install the SMG application on IIS.

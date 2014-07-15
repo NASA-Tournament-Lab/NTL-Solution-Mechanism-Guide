@@ -14,7 +14,7 @@ var config = require('./config/configuration');
 var orm = require('orm');
 var transaction = require("orm-transaction");
 var modelNames = ["Dashboard", "SMG", "Example", "FileUpload", "HelpTopic", "CharacteristicType", "Characteristic", "CharacteristicTypeValue",
-    "SMGCharacteristic", "SearchForm", "SearchFormField", "SearchFormFieldValue"];
+    "SMGCharacteristic", "SearchForm", "SearchFormField", "SearchFormFieldValue", "ExampleType"];
 var models;
 var db;
 var fs = require('fs');

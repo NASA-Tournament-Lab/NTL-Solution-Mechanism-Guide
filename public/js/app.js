@@ -15,7 +15,7 @@ var API_URL = "/api";
 /**
  * Template Zip file URL
  */
-var TEMPLATE_URL="/sample.zip"
+var TEMPLATE_URL="/sample.zip";
 
 /**
  * Characteristic types, number represent ID
@@ -30,7 +30,6 @@ var chTypes = {
     image: 7
 };
 
-var exampleTypes = ["type1", "type2", "type3", "type4"];
 
 /**
  * Allowed tabs for characteristics
@@ -218,7 +217,7 @@ var animateObject = function (obj, height) {
     var counter = 0;
     preloaderTimer = setInterval(function(){
         if(counter >= fps) counter = 0;
-        obj.css({backgroundPositionY: eval(-counter*height)+"px"});
+        obj.css({'background-position': "0 " + eval(-counter*height)+"px"});
         counter++;
     }, fpsTimer);
     obj.data('timer', preloaderTimer);
@@ -311,13 +310,21 @@ ko.validation.registerExtenders();
  */
 function ManageCharacteristicsViewModel() {
     var self = this;
+    self.tab = ko.observable("Information");
     //true if loading data
     self.loading = ko.observable(true);
     //list of all characteristc items
     self.allItems = ko.observableArray([]);
     //used in paginator
     self.items = ko.computed(function () {
-        var ret = self.allItems();
+        var ret = [];
+        console.log(self.tab());
+        self.allItems().forEach(function (ele) {
+            console.log(ele.tab);
+            if (ele.tab == self.tab()) {
+                ret.push(ele);
+            }
+        });
         ret.sort(function (a, b) {
             return a.sort() - b.sort();
         });
@@ -378,7 +385,7 @@ function ManageCharacteristicsViewModel() {
         item.canMoveDown = function () {
             return self.items().length > 1 && self.items().indexOf(item) + 1 != self.items().length;
         }
-    }
+    };
     fakeTimeout(function () {
         async.parallel([
             function (cb) {
@@ -647,6 +654,11 @@ function AddEditSMGViewModel() {
     fakeTimeout(function () {
         async.series([
             function (cb) {
+                getJSON(API_URL + "/exampleTypes", function (ret) {
+                    self.exampleTypes(_.pluck(ret, "name"));
+                    cb();
+                });
+            }, function (cb) {
                 getJSON(API_URL + "/characteristics", function (ret) {
                     ret.sort(function (a, b) {
                         return a.sort - b.sort;
@@ -866,6 +878,42 @@ function AddEditSMGViewModel() {
             }
         });
     };
+
+    self.exampleTypes = ko.observableArray([]);
+    self.newExampleType = ko.observable("").extend({required: true});
+    var newExampleTypeErrors = ko.validation.group({name: self.newExampleType}, true);
+    self.hideAddExampleTypePopup = function () {
+        hideModal($('#add-type-popup'));
+    };
+    self.showAddExampleTypePopup = function () {
+        self.newExampleType("");
+        newExampleTypeErrors.showAllMessages(false);
+        showModal($('#add-type-popup'));
+    };
+    self.addExampleType = function () {
+        newExampleTypeErrors.showAllMessages();
+        if (newExampleTypeErrors.length) {
+            return;
+        }
+        self.addExampleTypeLoading(true);
+        fakeTimeout(function () {
+            $.ajax({
+                type: "post",
+                url: API_URL + "/exampleType",
+                contentType: 'application/json',
+                data: JSON.stringify({name: self.newExampleType()}),
+                success: function () {
+                    self.addExampleTypeLoading(false);
+                    self.exampleTypes.push(self.newExampleType());
+                    self.hideAddExampleTypePopup();
+                    showAlert('Type Has Been Added!');
+                },
+                error: handleError,
+                dataType: "json"
+            });
+        })
+    };
+    self.addExampleTypeLoading = ko.observable(false);
 }
 
 /**
@@ -1285,7 +1333,6 @@ function SMGListingViewModel() {
                                     selectedValues = _.map(value.split(';'), function (v) {
                                         return Number(v);
                                     });
-                                    console.log(selectedValues);
                                     ret.selectedValues(selectedValues);
                                 }
                             }
@@ -1691,9 +1738,21 @@ function HelpViewModel() {
             });
         })
     };
+    self.configurationLoaded = false;
     self.showConfiguration = function () {
         self.tab("configuration");
         window.location.hash = "#configuration";
+        if (self.configurationLoaded) {
+            return;
+        }
+        self.loading(true);
+        blockUI();
+        fakeTimeout(function () {
+            self.exampleTypesViewModel.load(function () {
+                self.loading(false);
+                unBlockUI();
+            });
+        });
     };
     self.showTopics = function () {
         self.tab("topics");
@@ -1734,7 +1793,7 @@ function HelpViewModel() {
         feedbackURL: ko.observable(window.dashboard.feedbackURL || ""),
         contactUsURL: ko.observable(window.dashboard.contactUsURL || ""),
         faqURL: ko.observable(window.dashboard.faqURL || ""),
-        homeFilterText: ko.observable(window.dashboard.homeFilterText || ""),
+        homeFilterText: ko.observable(window.dashboard.homeFilterText || "")
     };
     self.saveConfiguration = function () {
         window.dashboard.logoutText = self.configuration.logoutText();
@@ -1751,14 +1810,14 @@ function HelpViewModel() {
                 contentType: 'application/json',
                 data: data,
                 success: function () {
-                    unBlockUI();
+                    self.exampleTypesViewModel.save(unBlockUI);
                 },
                 error: handleError,
                 dataType: "json"
             });
         });
 
-    }
+    };
 	 self.updateAvailableFields = function(){
         var availableNames =[];
         for(var i=0;i<self.characteristics.ids.length;i++){
@@ -1783,7 +1842,7 @@ function HelpViewModel() {
         }else{
             $(".available-row div.file-field").html("");
         }
-    }
+    };
 
     self.showExportSMG = function () {
         self.tab("export-smg");
@@ -1959,6 +2018,51 @@ function HelpViewModel() {
         self.showTopics();
     } else {
         self.showDashboard();
+    }
+
+    var createNewExampleType = function () {
+        return {
+            name: ko.observable("")
+        }
+    };
+    self.exampleTypesViewModel = {
+        items: ko.observableArray([createNewExampleType(), createNewExampleType(), createNewExampleType()]),
+        addType: function () {
+            self.exampleTypesViewModel.items.push(createNewExampleType())
+        },
+        save: function (callback) {
+            var data = [];
+            self.exampleTypesViewModel.items().forEach(function (item) {
+                if (item.name().length) {
+                    data.push({
+                        name: item.name(),
+                        id: item.id
+                    })
+                }
+            });
+            $.ajax({
+                type: "put",
+                url: API_URL + "/exampleType",
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function () {
+                    callback();
+                },
+                error: handleError,
+                dataType: "json"
+            });
+        },
+        load: function (callback) {
+            getJSON(API_URL + "/exampleTypes", function (ret) {
+                self.exampleTypesViewModel.items(_.map(ret, function (item) {
+                    return {
+                        name: ko.observable(item.name),
+                        id: item.id
+                    }
+                }));
+                callback();
+            });
+        }
     }
 }
 

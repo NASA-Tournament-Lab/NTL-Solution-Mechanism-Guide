@@ -57,7 +57,9 @@ a{
 td {
     line-height: 18px;
 }
-.clearfix:after{
+.clearfix:after,
+#body #left-panel .questions li:after,
+#body #right-panel #list-view .row3-wrapper ul li:after{
 	display:block;
 	width:0;
 	height:0;
@@ -682,6 +684,7 @@ select{
     width: 570px;
     padding-top: 15px;
     padding-bottom: 15px;
+    min-height: 235px;
 }
 #identify-search-wrapper .identify-right {
     width: 390px;
@@ -1455,7 +1458,6 @@ table a:hover{
 #body #left-panel .questions li {
     border-bottom: 1px dotted #333333;
     margin: 20px 4px 20px 10px;
-    padding-bottom: 15px;
 }
 #body #left-panel .questions li.less-margin{
 	margin-top:14px;
@@ -1483,7 +1485,7 @@ table a:hover{
 #body #left-panel .questions ul li .questions-wrapper .nquestion-root {
 	width:240px;
     max-width: 260px;
-    margin: -20px 0 5px 20px;
+    margin: -22px 0 5px 20px;
 }
 #body #left-panel .questions ul li .questions-wrapper .nquestion-root .nquestion {
     color: #363636;
@@ -1491,8 +1493,7 @@ table a:hover{
 }
 #body #left-panel .questions ul li .questions-wrapper .nquestion-root .options-root .wrapper-options {
     font-size: 12px;
-    width: 120px;
-    margin: 10px 0;
+    min-width: 120px;
 }
 #body #left-panel .questions ul li .questions-wrapper .nquestion-root .options-root .wrapper-options .options-ans {
     position: relative;
@@ -1500,8 +1501,8 @@ table a:hover{
     top: 2px;
 }
 #body #left-panel .questions ul li .questions-wrapper .nquestion-root .options-root .wrapper-options .wdh {
-    width: 110px;
-    margin: 0 0 10px 0;
+    min-width: 110px;
+    margin: 10px 0 0;
 }
 #body #left-panel .questions ul li .white-questions-wrapper {
     width: 290px;
@@ -1704,7 +1705,7 @@ table a:hover{
 }
 #body #right-panel #list-view .row3-wrapper ul li {
     display: block;
-    height: 86px;
+    min-height: 86px;
     border-bottom: 1px dotted #363636;
 	padding-top:10px;
 	cursor:pointer;
@@ -1738,11 +1739,11 @@ table a:hover{
     line-height: 20px;
 }
 #body #right-panel #list-view .row3-wrapper ul li .status {
-    width:110px;
-    margin: 0 0 0 50px;
+    width:130px;
+    margin: 0 0 0 30px;
 }
 #body #right-panel #list-view .row3-wrapper ul li .status .wdh {
-    width:110px;
+    width:130px;
 }
 #body #right-panel #list-view .row3-wrapper ul li .status .l {
     width:30px;
@@ -1765,7 +1766,7 @@ table a:hover{
 }
 #body #right-panel #list-view .row3-wrapper ul li .status .k {
     display: block;
-    margin: 10px 20px 0 10px;
+    margin: 10px 0 0 10px;
     color: #363636;
     font-size: 12px;
 }
@@ -1776,7 +1777,7 @@ table a:hover{
     font-size: 12px;
 }
 #body #right-panel #list-view .row3-wrapper ul li .status .wdh .level{
-    width: 53px;
+    width: 73px;
 }
 #body #right-panel #list-view .row3-wrapper ul li .status .color-round {
     width:24px;
@@ -1806,11 +1807,13 @@ table a:hover{
     min-height: 600px;
 }
 #grid-view .white-box {
-    width: 310px;
-    height: 170px;
+    width: 315px;
     background: #ffffff;
     margin:0 0 20px 0;
-	cursor:pointer;
+    cursor:pointer;
+    display: inline-block;
+    float: none !important;
+    vertical-align: top;
 }
 #grid-view .white-box .box-wrapper {
     margin: 10px;
@@ -1864,12 +1867,13 @@ table a:hover{
     margin: 6px 0 0 5px;
     color: #363636;
     font-size: 12px;
+    width: 90px;
 }
 #grid-view .white-box .box-wrapper .dolar {
     width:30px;
     height:30px;
     display: block;
-    margin: 0px 0 0 50px;
+    margin: 0px 0 0 10px;
     background: url("../img/ldollar.png") 0px -30px;
 }
 #grid-view .white-box .box-wrapper .status .k {
@@ -1896,7 +1900,6 @@ table a:hover{
 #grid-view .white-box .box-wrapper .status .color-round {
     width:24px;
     height:24px;
-    margin: 0 0 0 20px;
     display: block;
     background: url("../img/minlow.png") 0px 0px;
 }
@@ -2175,6 +2178,10 @@ table.compare-tbl th span {
 #table-container .table-show-options .options .styled-select select {
     width: 30px;
 	font-size:12px;
+}
+
+#table-container .table-show-options .options .styled-select-long select {
+    width: 70px;
 }
 
  #table-container .table-show-options .options .border-right {
@@ -2501,6 +2508,17 @@ table.compare-tbl th span {
 #edit-search-popup .popup-wrapper .field-container select{
 	width:370px;
 }
+
+#add-popup .popup-wrapper .field-container .text-field {
+
+    margin-left: 20px;
+}
+#add-popup .popup-wrapper .field-container .text-field input[type="text"],
+#add-type-popup .popup-wrapper .field-container .text-field input[type="text"]{
+     margin: 0px;
+}
+
+
 #add-popup .popup-wrapper .field-container select,#add-popup .popup-wrapper .field-container textarea,#add-popup .popup-wrapper .field-container input{
     margin-left: 20px;
 }
@@ -2568,7 +2586,7 @@ table.compare-tbl th span {
     border:1px solid #b7b7b7;
 }
 #table-container table.characterstics-form th {
-    background:#ebebeb;
+    background-color:#ebebeb;
     border:1px solid #b7b7b7;
     padding: 0;
     color: #000;
@@ -2576,7 +2594,7 @@ table.compare-tbl th span {
     vertical-align:middle;
 }
 #table-container table.characterstics-form th.th1 {
-    width: 170px;
+    width: 130px;
 }
 td.td1,td.td2,td.td3,td.td4{
     padding-left: 10px;
@@ -2594,16 +2612,16 @@ td.td1,td.td2,td.td3,td.td4{
 	vertical-align:top;
 }
 #table-container table.characterstics-form td.td1 {
-    width: 100px;
+    width: 130px;
 }
 #table-container table.characterstics-form td.td2 {
-    width: 400px;
+    width: 240px;
 }
 #table-container table.characterstics-form td.td3 {
-    width: 100px;
+    width: 80px;
 }
 #table-container table.characterstics-form td.td4 {
-    width: 200px;
+    width: 180px;
 }
 #table-container table.characterstics-form td.td5 {
     width: 230px;
@@ -2624,14 +2642,24 @@ td.td1,td.td2,td.td3,td.td4{
     margin: 5px 10px 0 0;
     background: url("../img/step-icons.png") 0 -224px;
 }
-#add-popup{
+#add-popup {
+    top: 60px !important;
+    position: fixed;
+}
+#add-popup,
+#add-type-popup{
     margin: auto;
     clear: both;
     width: 636px;
     background: #ffffff;
     padding: 0 0 20px 0;
 }
-#add-popup .popup-wrapper .field-container input[type="text"]{
+#add-popup .type-values {
+    overflow-y: auto;
+    max-height: 161px;
+}
+#add-popup .popup-wrapper .field-container input[type="text"],
+#add-type-popup .popup-wrapper .field-container input[type="text"]{
     width: 408px;
 }
 #add-popup .popup-wrapper .field-container select{
@@ -2687,6 +2715,7 @@ td.td1,td.td2,td.td3,td.td4{
 }
 .modal-window-wrapper .popup-form{
 	padding-left:10px;
+    padding-bottom: 10px;
 }
 
 #edit-popup{
@@ -2892,7 +2921,6 @@ td.td1,td.td2,td.td3,td.td4{
     top: -2px;
 }
 .popup-wrapper .field-container div.level .wrapper{
-    width: 394px;
     margin: 10px 0 0 10px;
 }
 .popup-wrapper .field-container div.level .wrapper p{
@@ -2914,7 +2942,9 @@ td.td1,td.td2,td.td3,td.td4{
 #add-popup .popup-wrapper .field-container div.level .text-remove input[type="text"]{
 	float:left;
 }
-#add-popup .popup-wrapper .field-container div.level .text-remove a.btn-delete{
+
+#add-popup .popup-wrapper .field-container div.level .text-remove a.btn-delete,
+#configuration .field-container div.level .text-remove a.btn-delete {
 	float:left;
 	width:28px;
 	height:28px;
@@ -2948,7 +2978,9 @@ td.td1,td.td2,td.td3,td.td4{
 .text-align{
     text-align: left;
 }
-.popup-wrapper .field-container div.level .wrapper .other{
+
+.popup-wrapper .field-container div.level .wrapper .other,
+#configuration .field-container div.level .wrapper .other {
     color: #00456e;
     text-decoration: none;
     font-size: 12px;
@@ -3984,18 +4016,20 @@ body{
 	.page-help-dashboard .bar-title{
 		padding-top:41px;
 	}
-	
-	
-	#dashboard-details .form-wrapper{
-		min-height:10px;
+
+
+    #dashboard-details .form-wrapper,
+    #configuration .form-wrapper{
+        min-height:10px;
 		background-color:#fff;
 		border:12px solid #b7b7b7;
 		padding:26px 18px 26px 31px;
 		margin-bottom:26px;
 	}
-		
-		#dashboard-details .form-wrapper .field-container input[type="text"] {
-			background: #f7f7f7;
+
+        #dashboard-details .form-wrapper .field-container input[type="text"],
+        #configuration .form-wrapper .field-container input[type="text"] {
+            background: #f7f7f7;
 			height: 20px;
 			line-height:20px;
 			padding:8px 0;
@@ -4016,45 +4050,64 @@ body{
 			left:0;
 			top:0;
 		}
-		
-		#dashboard-details .form-wrapper .field-container label {
-			width: 140px;
-			color: #363636;
-			font-size: 14px;
-			line-height:36px;
-		}
-		#dashboard-details .form-wrapper .field-container .help-wrapper {
-			padding-top:6px;
-		}
-		#dashboard-details .form-wrapper .field-container .orange-big-btn{
-			padding-top:1px;
-		}
-			#dashboard-details .form-wrapper .field-container .orange-big-btn .orange-big-middle{
-				padding:0 6px;
-			}
-		#dashboard-details .form-wrapper .field-container .help-icon {
-			background: url("../img/help_search_icon.png") no-repeat 0 0;
-			width: 20px;
-			height: 20px;
-			display: block;
-			margin: 3px 38px 0 0;
-		}
-		#dashboard-details .form-wrapper .field-container .help-icon:hover {
-			background-position: 0 -21px;
-		}
+
+        #dashboard-details .form-wrapper .field-container label,
+        #configuration .form-wrapper .field-container label {
+            width: 140px;
+            color: #363636;
+            font-size: 14px;
+            line-height:36px;
+        }
+        #dashboard-details .form-wrapper .field-container .help-wrapper,
+        #configuration .form-wrapper .field-container .help-wrapper {
+            padding-top:6px;
+        }
+        #dashboard-details .form-wrapper .field-container .orange-big-btn,
+        #configuration .form-wrapper .field-container .orange-big-btn{
+            padding-top:1px;
+        }
+        #dashboard-details .form-wrapper .field-container .orange-big-btn .orange-big-middle,
+        #configuration .form-wrapper .field-container .orange-big-btn .orange-big-middle{
+            padding:0 6px;
+        }
+        #dashboard-details .form-wrapper .field-container .help-icon,
+        #configuration .form-wrapper .field-container .help-icon {
+            background: url("../img/help_search_icon.png") no-repeat 0 0;
+            width: 20px;
+            height: 20px;
+            display: block;
+            margin: 3px 38px 0 0;
+        }
+        #dashboard-details .form-wrapper .field-container .help-icon:hover,
+        #configuration .form-wrapper .field-container .help-icon:hover {
+            background-position: 0 -21px;
+        }
 		
 		#dashboard-details #cke_redactor{
 			width:auto;
 			margin:0;
 		}
 
-		#dashboard-details .tab-command{
-			padding-top:32px;
-			padding-bottom:32px;
-		}
-			#dashboard-details .tab-command .orange-big-btn{
-				margin-left:10px;
-			}
+        #dashboard-details .tab-command,
+        #configuration .tab-command{
+            padding-top:32px;
+            padding-bottom:32px;
+        }
+        #configuration .tab-command {
+            padding-top: 0;
+        }
+        #dashboard-details .tab-command .orange-big-btn,
+        #configuration .tab-command .orange-big-btn{
+            margin-left:10px;
+        }
+        #configuration .field-container div.level {
+            width: 685px;
+        }
+        #configuration .field-container div.level input[type="text"] {
+            margin-right: 10px;
+            float: left;
+            width: 90%;
+        }
 	
 /* .tabs */
 .tabs{
@@ -4792,6 +4845,10 @@ line-height: 16px;
     right: 37px;
 }
 
+#step-two .example-type-field .error-icon {
+    right: 200px;
+    z-index: 100;
+}
 
 #step-one .file-field .error-icon,
 #step-three .file-field .error-icon {
@@ -4845,20 +4902,12 @@ line-height: 16px;
 }
 
 
-#add-forms #step-two .form-wrapper .jqTransformSelectWrapper,
-#add-forms #step-two .form-wrapper .jqTransformSelectWrapper ul {
-    width: 748px !important;
-}
-
 #add-forms #step-one .form-wrapper .jqTransformSelectWrapper span,
 #add-forms #step-three .form-wrapper .jqTransformSelectWrapper span {
     width: 690px !important;
 }
 
 
-#add-forms #step-two .form-wrapper .jqTransformSelectWrapper span {
-    width: 712px !important;
-}
 .radio-wrapper.is-error,
 .radio-wrapper.is-error span{
     border: none !important;
@@ -4924,7 +4973,7 @@ line-height: 16px;
     padding-bottom:10px !important;
 }
 #add-forms .form-container #step-two .form-wrapper .field-container select{
-    width:712px;
+    width:580px;
 }
 #add-forms .form-container #step-two .form-wrapper .field-container input[type=text]{
     width:748px;
@@ -4932,7 +4981,22 @@ line-height: 16px;
 }
 #add-forms .form-container #step-two .form-wrapper .field-container .jqTransformSelectWrapper{
     margin-left:11px;
+    margin-right: 12px;
 }
+#step-two .form-list .form-wrapper .js-action-add-type {
+    margin: 0;
+    margin-top: -5px;
+}
+
+#step-two .jqTransformSelectWrapper,
+#step-two .jqTransformSelectWrapper ul {
+    width: 616px;
+}
+
+#step-two .jqTransformSelectWrapper span {
+    width: 580px;
+}
+
 .table-example tbody td{
     padding:0;
     vertical-align:top;
@@ -5122,7 +5186,6 @@ label.form-label .icheckbox {
 #identify-search-wrapper  .identify-left .identify-questions li.text {
     vertical-align: top;
 
-    text-align:center;
     vertical-align:middle;
 
 
@@ -5134,6 +5197,13 @@ label.form-label .icheckbox {
     padding-left:22px;
 }
 
+#identify-search-wrapper .question .label {
+    width: 25%;
+}
+#identify-search-wrapper .question .text-field,
+#identify-search-wrapper .question .select-field {
+    width: 75%;
+}
 
 
 #identify-search-wrapper .question .text-field input[type="text"] {
@@ -5142,11 +5212,10 @@ label.form-label .icheckbox {
     height: 20px;
     line-height: 20px;
     padding:5px;
-    width: 100%;
+    width: calc(100% - 80px);
     top:-8px;
     position:relative;
     margin-left:10px;
-    width:343px;
     margin-right:60px;
 }
 
@@ -5160,11 +5229,13 @@ label.form-label .icheckbox {
 
 
 #identify-search-wrapper .identify-left .identify-questions .html_reset {
+    width: 91%;
     float:left;
     position:relative;
 }
 
 #identify-search-wrapper  .identify-left .identify-questions  .html_reset .question {
+    width: 30%;
     left:5px;
     float:left;
     top:-15px;
@@ -5221,7 +5292,7 @@ label.form-label .icheckbox {
 }
 
 #identify-search-wrapper .identify-left .identify-questions .html_reset .jqtransformNew select {
-    width:318px;
+    width:294px;
     max-height:30px;
 
 }
@@ -5240,7 +5311,7 @@ label.form-label .icheckbox {
 }
 
 #body #left-panel .questions ul li .questions-wrapper .nquestion-root .nquestion {
-    margin-top:3px;
+    margin: 3px 5px 0 0;
 }
 
 #body #left-panel .questions ul li .questions-wrapper .nquestion-root .options-root.check .wrapper-options .icheckbox {
@@ -5252,12 +5323,10 @@ label.form-label .icheckbox {
     border: 1px solid #C0C0C0;
     height: 20px;
     line-height: 20px;
-    margin-left: 10px;
-    margin-top: -5px;
+    margin-top: 8px;
+    display: inline-block;
     padding: 3px;
-
-
-    width: 120px;
+    width: 122px;
 }
 
 #body #left-panel .questions ul li.not-inline  {
@@ -5267,9 +5336,8 @@ label.form-label .icheckbox {
 
 
 #body #left-panel .questions ul li.not-inline .questions-wrapper .nquestion-root .options-root  input[type="text"] {
-
     margin-top: 12px;
-    width: 232px;
+    width: 230px;
     margin-left:0;
 }
 
@@ -5720,14 +5788,17 @@ body.in-print, body.in-print div:not(.iradio):not(.icheckbox){
     float:right;
 }
 
-#dashboard-details .form-wrapper .field-container{
+#dashboard-details .form-wrapper .field-container,
+#configuration .form-wrapper .field-container{
     padding-top:0;
     padding-bottom:18px;
 }
-#dashboard-details .form-wrapper .last-field-container{
+#dashboard-details .form-wrapper .last-field-container,
+#configuration .form-wrapper .last-field-container{
     padding-bottom:0;
 }
-#dashboard-details .form-wrapper .field-container textarea{
+#dashboard-details .form-wrapper .field-container textarea,
+#configuration .form-wrapper .field-container textarea {
     background: #f7f7f7;
     line-height: 20px;
     padding: 8px 0;
@@ -5738,7 +5809,8 @@ body.in-print, body.in-print div:not(.iradio):not(.icheckbox){
     width: 100%;
     min-height:150px;
 }
-#dashboard-details .form-wrapper .field-container .text-field{
+#dashboard-details .form-wrapper .field-container .text-field,
+#configuration .form-wrapper .field-container .text-field {
     width:654px;
     float:left;
 }

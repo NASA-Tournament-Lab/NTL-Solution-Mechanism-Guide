@@ -42,8 +42,12 @@
                     <table class="table1 clear left" data-bind="foreach: tab1Items">
                         <tr>
                             <td class="first" data-bind="text: characteristic.name"></td>
-                            <td data-bind="text: displayValue">
-                            </td>
+                            <!-- ko if: characteristic.type_id == chTypes.textarea -->
+                                <td data-bind="html: displayValue"> </td>
+                            <!-- /ko -->
+                            <!-- ko if: characteristic.type_id != chTypes.textarea -->
+                                <td data-bind="text: displayValue"> </td>
+                            <!-- /ko -->
                         </tr>
                     </table>
                     <div class="graphics right">

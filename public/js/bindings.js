@@ -219,17 +219,23 @@ ko.bindingHandlers.ckEditor = {
         $(element).html(value);
         $(element).ckeditor(allBindingsAccessor().ckEditorOptions || {});
         var editor = $(element).ckeditorGet();
-        editor.on('key', function (e) {
+        var update = function (e) {
             setTimeout(function () {
                 valueAccessor()($(e.listenerData).val());
             }, 0);
-        }, this, element);
+        };
+        editor.on('key', update, this, element);
+        editor.on('change', update, this, element);
     },
     update: function (element, valueAccessor) {
         var value = ko.utils.unwrapObservable(valueAccessor());
         var editor = $(element).ckeditorGet();
         if (editor.getData() != value) {
+            //double setData because there is a weird bug in edit smg
             editor.setData(value);
+            setTimeout(function () {
+                editor.setData(value);
+            });
         }
     }
 };
@@ -278,21 +284,21 @@ ko.bindingHandlers.jqSelect = {
 
 //ajax loader animation
 ko.bindingHandlers.loader = {
-    init: function(element, valueAccessor) {
+    init: function(element, valueAccessor, allBindings) {
         var value = ko.unwrap(valueAccessor());
         if (value) {
             var $ele = $(element);
             $ele.show();
-            animateObject($ele, 36);
+            animateObject($ele, allBindings().loaderHeight || 36);
         }
 
     },
-    update: function(element, valueAccessor) {
+    update: function(element, valueAccessor, allBindings) {
         var value = ko.unwrap(valueAccessor());
         var $ele = $(element);
         if (value) {
             $ele.show();
-            animateObject($ele, 36);
+            animateObject($ele, allBindings().loaderHeight || 36);
         } else {
             $ele.hide();
             var timer = $ele.data('timer');

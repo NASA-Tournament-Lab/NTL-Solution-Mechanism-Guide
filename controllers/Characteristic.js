@@ -409,7 +409,7 @@ function swapSort(req, db, diff, callback) {
             helper.getSingle(id, db.models.characteristic, cb);
         }, function (res, cb) {
             item = res;
-            db.models.characteristic.find({}, 'sort', cb);
+            db.models.characteristic.find({tab: item.tab}, 'sort', cb);
         }, function (items, cb) {
             var index;
             for (var i = 0; i < items.length; i++) {

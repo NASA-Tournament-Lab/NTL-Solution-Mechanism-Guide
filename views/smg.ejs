@@ -208,7 +208,7 @@
                                     <label class="form-label"><input type="checkbox" data-bind="iCheck: compare"> <span>Add to compare</span></label>
                                     <br>
                                     <a class="title" data-bind="text: name, attr:{href: '/smg/' + id}"></a>
-                                    <p data-bind="truncate: desc, truncateOptions: {height: 50}"></p>
+                                    <p data-bind="truncate: desc, truncateOptions: {height: 50, extractText: true}"></p>
                                 </div>
                                 <div class="status right">
 											<span class="wdh left">
@@ -241,7 +241,7 @@
                             <div class="content left">
                                 <label class="form-label"><input type="checkbox" data-bind="iCheck: compare"> <span>Add to compare</span></label>
                                 <br>
-                                <p class="left" data-bind="truncate: desc, truncateOptions: {height: 80}"></p>
+                                <p class="left" data-bind="truncate: desc, truncateOptions: {height: 80, extractText: true}"></p>
                             </div>
                             <div class="border-bottom left"></div>
                             <div class="status left">
@@ -356,8 +356,13 @@
                         <tbody data-bind="foreach: tab1Items">
                         <tr>
                             <td class="first" data-bind="text: characteristic.name"></td>
-                            <td data-bind="text: displayValue">
-                            </td>
+
+                            <!-- ko if: characteristic.type_id == chTypes.textarea -->
+                            <td data-bind="html: displayValue"> </td>
+                            <!-- /ko -->
+                            <!-- ko if: characteristic.type_id != chTypes.textarea -->
+                            <td data-bind="text: displayValue"> </td>
+                            <!-- /ko -->
                         </tr>
                         </tbody>
                     </table>
@@ -405,8 +410,13 @@
                         <tbody data-bind="foreach: tab3Items">
                         <tr>
                             <td class="first" data-bind="text: characteristic.name"></td>
-                            <td data-bind="text: displayValue">
-                            </td>
+
+                            <!-- ko if: characteristic.type_id == chTypes.textarea -->
+                            <td data-bind="html: displayValue"> </td>
+                            <!-- /ko -->
+                            <!-- ko if: characteristic.type_id != chTypes.textarea -->
+                            <td data-bind="text: displayValue"> </td>
+                            <!-- /ko -->
                         </tr>
                         </tbody>
                     </table>
