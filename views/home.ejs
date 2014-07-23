@@ -132,10 +132,9 @@
     <div class="carousel-content" data-bind="foreach: examples">
         <div class="imgcontent left">
             <a class="carouse-item" data-bind="attr: {href: '/example/' + smg_id + '/'+id}">
-                <img class="border" src="/img/place_holder1.jpg" alt="Placeholder">
+                <img class="border" data-bind="attr: {src: getPictureUrl(imageId), alt: name}"  width="130" height="95">
                 <div class="content">
                     <p data-bind="text: name">
-                        Visual Impairment due to Intracranial Presure (VIIP)
                     </p>
                 </div>
             </a>

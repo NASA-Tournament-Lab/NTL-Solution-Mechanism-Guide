@@ -156,14 +156,47 @@
                     <div class="form-wrapper form-entity">
                         <div class="field-container clearfix bottom-padding">
                             <label class="left">Name</label>
-                            <a class="tooltip-icon" href="javascript:"></a>
+
+                            <div class="help-wrapper left">
+                                <a class="help-icon left" href="javascript:"></a>
+                                <div class="tool-tip left hide">
+                                    <span class="tooltip-left left"></span>
+                                    <div class="tooltip-middle left">
+                                        <div class="tooltip-head">
+                                            <div class="tooltip-head-content left">
+                                                <h2 class="left">Help</h2>
+                                                <a href="javascript:" class="right tooltip-close"></a>
+                                            </div>
+                                            <div class="clear"></div>
+                                            <p>Name of example.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="left text-field required-field">
                                 <input class="text required" type="text" data-bind="{value: name}">
                             </div>
                         </div>
                         <div class="field-container clearfix bottom-padding example-type-field">
                             <label class="left">Type</label>
-                            <a class="tooltip-icon" href="javascript:"></a>
+
+                            <div class="help-wrapper left">
+                                <a class="help-icon left" href="javascript:"></a>
+                                <div class="tool-tip left hide">
+                                    <span class="tooltip-left left"></span>
+                                    <div class="tooltip-middle left">
+                                        <div class="tooltip-head">
+                                            <div class="tooltip-head-content left">
+                                                <h2 class="left">Help</h2>
+                                                <a href="javascript:" class="right tooltip-close"></a>
+                                            </div>
+                                            <div class="clear"></div>
+                                            <p>Select appropriate type according to the available categories.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <select class="left select-type"  data-bind="options: $root.exampleTypes,
                                              hasError: type,
@@ -180,9 +213,66 @@
                             </a>
 
                         </div>
+
+
+                        <div class="field-container clearfix example-graphic" data-bind="attr: {id: file.randomId}">
+                            <label class="left">Graphic</label>
+                            <div class="help-wrapper left">
+                                <a class="help-icon left" href="javascript:"></a>
+                                <div class="tool-tip left hide">
+                                    <span class="tooltip-left left"></span>
+                                    <div class="tooltip-middle left">
+                                        <div class="tooltip-head">
+                                            <div class="tooltip-head-content left">
+                                                <h2 class="left">Help</h2>
+                                                <a href="javascript:" class="right tooltip-close"></a>
+                                            </div>
+                                            <div class="clear"></div>
+                                            <p>Images or visuals that are relevant to the Example.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="file-field left" data-bind="fileUploadRoot: '#' + file.randomId, fileUpload: file">
+                                <form enctype="multipart/form-data" method="post" action="/api/helpTopic/upload">
+                                    <input type="text" readonly="readonly" data-bind="value: file.filename">
+                                    <input type="file" name="file" class="inline" style="opacity: 0.001;">
+                                </form>
+                            </div>
+                            <a href="javascript:" class="orange-big-btn align left js-action-browse">
+                                <span class="orange-big-left left"></span>
+                                <span class="orange-big-middle left orange-shadow">Browse</span>
+                                <span class="orange-big-right left"></span>
+                            </a>
+                        </div>
+
+                        <div class="field-container clearfix uploading-field-container" data-bind="visible: file.uploading() || file.uploaded()">
+                            <div class="uploading-field left" data-bind="template: {name: 'fileUpload', data: file}">
+
+                            </div>
+                        </div>
+
                         <div class="field-container clearfix">
                             <label class="left">Example Details</label>
-                            <a class="tooltip-icon" href="javascript:"></a>
+
+                            <div class="help-wrapper left">
+                                <a class="help-icon left" href="javascript:"></a>
+                                <div class="tool-tip left hide">
+                                    <span class="tooltip-left left"></span>
+                                    <div class="tooltip-middle left">
+                                        <div class="tooltip-head">
+                                            <div class="tooltip-head-content left">
+                                                <h2 class="left">Help</h2>
+                                                <a href="javascript:" class="right tooltip-close"></a>
+                                            </div>
+                                            <div class="clear"></div>
+                                            <p>Description of solution mechanism example. Please be as descriptive as possible.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="ckeditor-fields">
                                 <div class='textarea-section'>
                                     <div class="cke-wrapper" data-bind="css: {'is-error': !description.isValid() && description.isModified() }">
@@ -246,7 +336,7 @@
                             <tr>
                                 <td class="first" data-bind="text: name +':'"></td>
                                 <!-- ko if: type_id == chTypes.textarea -->
-                                <td data-bind="html: displayValue"> </td>
+                                <td data-bind="html: displayValue" class="default-css"> </td>
                                 <!-- /ko -->
                                 <!-- ko if: type_id != chTypes.textarea -->
                                 <td data-bind="text: displayValue"> </td>
@@ -350,7 +440,7 @@
                     <tr>
                         <td class="first" data-bind="text: name +':'"></td>
                         <!-- ko if: type_id == chTypes.textarea -->
-                        <td data-bind="html: displayValue"> </td>
+                        <td data-bind="html: displayValue" class="default-css"> </td>
                         <!-- /ko -->
                         <!-- ko if: type_id != chTypes.textarea -->
                         <td data-bind="text: displayValue"> </td>

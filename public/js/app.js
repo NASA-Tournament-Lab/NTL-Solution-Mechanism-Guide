@@ -662,7 +662,7 @@ function AddEditSMGViewModel() {
                 getJSON(API_URL + "/characteristics", function (ret) {
                     ret.sort(function (a, b) {
                         return a.sort - b.sort;
-                    })
+                    });
                     var items = _.map(ret, function (item) {
                         var extend = {
                             required: {
@@ -761,11 +761,12 @@ function AddEditSMGViewModel() {
                         });
                     });
                     self.examples(_.map(ret.examples, function (item) {
-                        return {
+                        return createExample({
                             description: ko.observable(item.description).extend({required: true}),
                             type: ko.observable(item.type).extend({required: true}),
+                            imageId: ko.observable(item.imageId).extend({required: true}),
                             name: ko.observable(item.name).extend({required: true})
-                        };
+                        });
                     }));
                     cb();
                 });
@@ -805,12 +806,43 @@ function AddEditSMGViewModel() {
         self.step(self.step() - 1);
     };
 
+    var createExample = function (item) {
+        item.file = {
+            progress: ko.observable(item.imageId() ? 100 : 0),
+            filename: ko.observable(item.imageId() ? getPictureUrl(item.imageId()) : "").extend({required: true}),
+            fileId: ko.observable(item.imageId() || ""),
+            uploading: ko.observable(false),
+            uploaded: ko.observable(!!item.imageId()),
+            randomId: "file-" + Math.floor(Math.random() * 100000)
+        };
+        item.file.fileUrl = ko.computed(function () {
+            if (!item.file.fileId()) {
+                return "";
+            }
+            return getPictureUrl(item.file.fileId());
+        });
+        item.file.fileId.subscribe(function (val) {
+            item.imageId(val);
+        });
+        item.file.remove = function () {
+            item.file.progress(0);
+            item.file.filename("");
+            item.file.fileId("");
+            item.file.uploading(false);
+            item.file.uploaded(false);
+        }
+        return item;
+    };
+
     self.addExample = function () {
-        self.examples.push({
+        var item = {
             description: ko.observable().extend({required: true}),
             name: ko.observable().extend({required: true}),
-            type: ko.observable().extend({required: true})
-        });
+            type: ko.observable().extend({required: true}),
+            imageId: ko.observable().extend({required: true})
+        };
+        createExample(item);
+        self.examples.push(item);
     };
     self.addExample();
     self.goToStep = function (step) {
@@ -841,7 +873,10 @@ function AddEditSMGViewModel() {
                     value: val
                 };
             }),
-            examples: ko.toJS(self.examples())
+            examples: _.map(ko.toJS(self.examples()), function (item) {
+                delete item.file;
+                return item;
+            })
         };
         blockUI();
         fakeTimeout(function () {
@@ -1793,7 +1828,8 @@ function HelpViewModel() {
         feedbackURL: ko.observable(window.dashboard.feedbackURL || ""),
         contactUsURL: ko.observable(window.dashboard.contactUsURL || ""),
         faqURL: ko.observable(window.dashboard.faqURL || ""),
-        homeFilterText: ko.observable(window.dashboard.homeFilterText || "")
+        homeFilterText: ko.observable(window.dashboard.homeFilterText || ""),
+        homeBannerHtml: ko.observable(window.dashboard.homeBannerHtml || "")
     };
     self.saveConfiguration = function () {
         window.dashboard.logoutText = self.configuration.logoutText();
@@ -1801,6 +1837,7 @@ function HelpViewModel() {
         window.dashboard.contactUsURL = self.configuration.contactUsURL();
         window.dashboard.faqURL = self.configuration.faqURL();
         window.dashboard.homeFilterText = self.configuration.homeFilterText();
+        window.dashboard.homeBannerHtml = self.configuration.homeBannerHtml();
         blockUI();
         var data = JSON.stringify(window.dashboard);
         fakeTimeout(function () {

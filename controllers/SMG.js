@@ -26,20 +26,20 @@ var SMGDefinition_create = {
     name: "string?",
     description: "string?",
     characteristics: [ {characteristic: "id", value: "value"}],
-    examples: [{name: "string", description: "string", type: "string", __obj: true}]
+    examples: [{name: "string", description: "string", type: "string", imageId: "id",  __obj: true}]
 };
 var SMGDefinition_updateSingle = {
     name: "string?",
     description: "string?",
     characteristics: [ {characteristic: "id", value: "value"}],
-    examples: [{name: "string", description: "string", type: "string", __obj: true}]
+    examples: [{name: "string", description: "string", type: "string", imageId: "id", __obj: true}]
 };
 var SMGDefinition_updateBatch = [{
     id: "id",
     name: "string?",
     description: "string?",
     characteristics: [ {characteristic: "id", value: "value"}],
-    examples: [{name: "string", description: "string", type: "string", __obj: true}]
+    examples: [{name: "string", description: "string", type: "string", imageId: "id", __obj: true}]
 }];
 var SMGDefinition_search = {name: "string?", description: "string?"};
 var SearchDefinition = [{characteristic: "id", value: "value"}];

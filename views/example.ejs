@@ -47,7 +47,7 @@
                         <div class="box-body clearfix" data-bind="foreach: examples">
                             <div class="box-ceil">
                                 <div class="img-wrapper">
-                                    <img src="/img/img-placeholder-3.png" alt="">
+                                    <img data-bind="attr: {src: getPictureUrl(imageId), alt: name}"  width="106" height="72">
                                 </div>
                                 <p><a href="example_details.html" data-bind="attr: { href: '/example/' + smg_id + '/' + id}, text: name"> </a></p>
                             </div>

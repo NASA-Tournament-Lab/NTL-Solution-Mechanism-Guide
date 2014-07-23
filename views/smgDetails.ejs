@@ -35,7 +35,7 @@
                             <td class="first" data-bind="text: characteristic.name"></td>
 
                             <!-- ko if: characteristic.type_id == chTypes.textarea -->
-                            <td data-bind="html: displayValue"> </td>
+                            <td data-bind="html: displayValue" class="default-css"> </td>
                             <!-- /ko -->
                             <!-- ko if: characteristic.type_id != chTypes.textarea -->
                             <td data-bind="text: displayValue"> </td>
@@ -114,7 +114,7 @@
                         <td class="first" data-bind="text: characteristic.name"></td>
 
                         <!-- ko if: characteristic.type_id == chTypes.textarea -->
-                        <td data-bind="html: displayValue"> </td>
+                        <td data-bind="html: displayValue" class="default-css"> </td>
                         <!-- /ko -->
                         <!-- ko if: characteristic.type_id != chTypes.textarea -->
                         <td data-bind="text: displayValue"> </td>
