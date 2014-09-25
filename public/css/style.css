@@ -1954,6 +1954,7 @@ table a:hover{
 }
 table.compare-tbl {
     width: 100%;
+    table-layout: fixed;
 }
 table.compare-tbl td {
     background: #fff;
