@@ -186,7 +186,8 @@ Object.keys(urlMapping).forEach(function (url) {
                 urlParams: urlParams,
                 menu: params.menu,
                 admin: params.admin,
-                dashboard: ret ? ret.data : {}
+                dashboard: ret ? ret.data : {},
+                filesVersion: process.env.FILES_VERSION || "1.0.0"
             });
         });
     });

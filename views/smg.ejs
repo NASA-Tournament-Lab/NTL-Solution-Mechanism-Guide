@@ -62,20 +62,10 @@
         <div class="nquestion left" data-bind="text: name"></div>
         <div class="options-root left">
             <span class="wrapper-options left" data-bind="foreach: values">
-                <!-- ko if: $index() % 2 == 0 -->
                  <label class="wdh left form-label">
                      <input type="checkbox" data-bind="value: valuetype_id, iCheck: $parent.selectedValues, attr: {name: 'group_' +$parent.characteristic_id}"/>
                      <span data-bind="text: name"></span>
                  </label>
-                <!-- /ko -->
-            </span>
-            <span class="wrapper-options left"  data-bind="foreach: values">
-                <!-- ko if: $index() % 2 == 1 -->
-                    <label class="wdh left form-label">
-                        <input type="checkbox" data-bind="value: valuetype_id, iCheck: $parent.selectedValues, attr: {name: 'group_' +$parent.characteristic_id}" />
-                        <span data-bind="text: name"></span>
-                    </label>
-                <!-- /ko -->
             </span>
         </div>
     <!-- /ko -->

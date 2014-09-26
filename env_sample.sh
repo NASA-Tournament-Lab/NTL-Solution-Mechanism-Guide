@@ -5,3 +5,4 @@ export DB_USER=root
 export DB_PASSWORD=
 export RESET_TABLES=false
 export DOWNLOADS_DIR=
+export FILES_VERSION=1.0.1

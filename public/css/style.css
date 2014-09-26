@@ -2692,7 +2692,7 @@ td.td1,td.td2,td.td3,td.td4{
     width: 636px;
     background: #ffffff;
     padding: 0 0 20px 0;
-    max-height: 460px;
+    max-height: 560px;
 }
 #add-popup .type-values {
     overflow-x: hidden;
@@ -5974,7 +5974,7 @@ body.in-print, body.in-print div:not(.iradio):not(.icheckbox){
 }
 
 #add-popup .values-wrapper {
-    max-height: 250px;
+    max-height: 200px;
     overflow: overlay;
     overflow-x: hidden;
 }
