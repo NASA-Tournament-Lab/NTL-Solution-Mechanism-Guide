@@ -292,18 +292,19 @@ select{
     width: auto;
     height: 117px;
     position: absolute;
-    z-index: 100;
+    z-index: 1000;
 }
 .white-questions-wrapper .tool-tip {
     position: absolute;
     margin-left: 15px;
     margin-top: -5px;
+    z-index: 1000;
 }
 .questions-wrapper .tool-tip {
     position: absolute;
     margin-left: 32px;
     margin-top: -8px;
-    z-index: 1000;
+    z-index: 10000;
 }
 .tooltip-head{
     float: left;
@@ -722,7 +723,7 @@ select{
     min-height: 235px;
 }
 #identify-search-wrapper .identify-right {
-    width: 390px;
+    width: 370px;
     background: #ebebeb;
 }
 #identify-search-wrapper .identify-right .left-arrow{
@@ -1791,6 +1792,8 @@ table a:hover{
     margin: 9px 0 0 5px;
     color: #363636;
     font-size: 12px;
+    width: 95px;
+    display: inline-block;
 }
 #body #right-panel #list-view .row3-wrapper ul li .status .dolar {
     width:30px;
@@ -2689,7 +2692,7 @@ td.td1,td.td2,td.td3,td.td4{
     width: 636px;
     background: #ffffff;
     padding: 0 0 20px 0;
-    max-height: 460px;
+    max-height: 560px;
 }
 #add-popup .type-values {
     overflow-x: hidden;
@@ -4854,6 +4857,7 @@ line-height: 16px;
 #tooltip{
 	position:absolute;
 	display:none;
+    z-index: 1000;
 }
 
 .characterstics-form.ajax-content {
@@ -5316,7 +5320,7 @@ label.form-label .icheckbox {
 
 #identify-search-wrapper .identify-left  .html_reset .jqTransformSelectWrapper,
 #identify-search-wrapper .identify-left  .html_reset .jqTransformSelectWrapper ul {
-    width: 354px !important;
+    width: 332px !important;
 }
 
 
@@ -5559,10 +5563,12 @@ label.form-label .icheckbox {
 }
 
 
+.white-questions-wrapper .options-root,
 .questions-wrapper .options-root {
     position: relative;
 }
 
+.white-questions-wrapper .options-root .error-icon,
 .questions-wrapper .options-root .error-icon {
     top: -1px;
     right: 5px;
@@ -5574,12 +5580,10 @@ label.form-label .icheckbox {
     border: 1px solid #C0C0C0;
     height: 20px;
     line-height: 20px;
-    margin-left: 10px;
-    margin-top: -5px;
+    margin-top: 8px;
+    display: inline-block;
     padding: 3px;
-
-
-    width: 120px;
+    width: 122px;
 }
 
 #body #left-panel .white-questions-wrapper .nquestion-root .options-root .jqtransformNew {
@@ -5970,7 +5974,7 @@ body.in-print, body.in-print div:not(.iradio):not(.icheckbox){
 }
 
 #add-popup .values-wrapper {
-    max-height: 250px;
+    max-height: 200px;
     overflow: overlay;
     overflow-x: hidden;
 }
@@ -5993,4 +5997,8 @@ body.in-print, body.in-print div:not(.iradio):not(.icheckbox){
 
 .no-help-icon {
     margin-left: 58px;
+}
+
+#body #left-panel .questions ul li .questions-wrapper .nquestion-root .nquestion {
+
 }

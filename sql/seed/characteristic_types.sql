@@ -1,7 +1,8 @@
-INSERT INTO `characteristictype`
-VALUES ('Checkbox','true/false checkbox',1),
-('Number','textbox with number',2),
-('Picklist','Dropdown select',3),
-('Radio button','Values are radio buttons',4),
-('Text','singleline text',5),
-('Textarea','multiline text',6);
+INSERT INTO `characteristictype` (`name`, `description`, `group`, `id`) VALUES
+('checkbox', 'description', 3, 1),
+('number', 'description', 4, 2),
+('picklist', 'description', 2, 3),
+('radio', 'description', 2, 4),
+('text', 'description', 1, 5),
+('textarea', 'description', 1, 6),
+('image', 'description', -1, 7);
