@@ -316,12 +316,14 @@ function search(req, db, callback) {
             }, cb);
         }, function (results, cb) {
             //results is something like [[{smg_id:1}, {smg_id:2}], [{smg_id:3}, {smg_id:3}, {smg_id:1}]]
-            var ids = _.chain(results).flatten().pluck("smg_id").value();
+            var ids = _.chain(results).map(function (result) {
+                //single query may return duplicates
+                return _.chain(result).pluck("smg_id").uniq().value();
+            }).flatten().value();
             //ids is [ 1, 2, 3, 1 ]
             groups = _.countBy(ids, function (ele) {
                 return ele;
             });
-
             db.models.smg.find({id: _.unique(ids)}, cb);
         }, function (smgs, cb) {
             async.map(smgs, helper.populateSMG, cb);
