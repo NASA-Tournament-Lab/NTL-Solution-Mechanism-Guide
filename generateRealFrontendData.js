@@ -134,7 +134,7 @@ testData.searchFormField =  [
     //Duration of Solution Mechanism
     { id: 5, sort: i++, form_id: 1, characteristic_id: 5 },
     //Solution Mechanism Metrics
-    { id: 6, sort: i++, form_id: 1, characteristic_id: 13 }
+    { id: 6, sort: i++, form_id: 1, characteristic_id: 14 }
 ];
 
 
@@ -222,6 +222,7 @@ initDb(function (err, db) {
                     }, function (cb) {
                         async.forEach(_.range(1, examplesPerSmg + 1), function (nr, cb) {
                             db.models.example.create({
+                                imageId: 1,
                                 smg_id: smgId,
                                 name: moniker.choose(),
                                 type: _.sample(["type1", "type2", "type3", "type4"]),
