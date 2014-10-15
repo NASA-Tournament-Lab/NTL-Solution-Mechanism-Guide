@@ -1438,6 +1438,9 @@ function SMGListingViewModel() {
         }
         fakeTimeout(function () {
             getJSON(url, function (ret) {
+                ret.sort(function (a, b) {
+                    return b.accuracy - a.accuracy;
+                });
                 var items = _.map(ret, function (item) {
                     var getChar = function (id) {
                         var foundChar = _.filter(item.smgCharacteristics, function (ch) {
@@ -2303,6 +2306,7 @@ function HomeViewModel() {
                 })
             }, function (cb) {
                 getJSON(API_URL + "/smgs", function (ret) {
+                    ret = _.shuffle(ret);
                     var examples = _.chain(ret)
                         .pluck("examples")
                         .flatten()

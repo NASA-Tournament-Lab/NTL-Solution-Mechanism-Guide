@@ -411,3 +411,20 @@ ko.bindingHandlers.fileUpload = {
     update: function(element, valueAccessor) {
     }
 };
+
+
+//align box height in smg listing
+ko.bindingHandlers.alignBox = {
+    init: function (element, valueAccessor, allBindingsAccessor) {
+        var ele = $(element);
+        if (ele.hasClass("left")) {
+            return;
+        }
+        setTimeout(function () {
+            var left = ele.prev();
+            var height = Math.max(left.find('.title').height(), ele.find('.title').height());
+            left.find('.title').height(height)
+            ele.find('.title').height(height)
+        });
+    }
+};
