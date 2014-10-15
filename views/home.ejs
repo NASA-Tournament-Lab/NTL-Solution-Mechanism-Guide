@@ -43,7 +43,7 @@
 
                     <!-- ko if: type_id == chTypes.radio -->
                         <p class="question" data-bind="text: name"></p>
-                        <div class="answer" data-bind="">
+                        <div class="answer left" data-bind="">
                             <!-- ko foreach: values -->
                             <label class="option">
                                 <input class="left" type="radio" data-bind="value: valuetype_id, iCheck: $parent.selectedValues, attr: {name: 'group' + $parent.id}" >
@@ -54,7 +54,7 @@
                     <!-- /ko -->
                     <!-- ko if: type_id == chTypes.checkbox -->
                         <p class="question" data-bind="text: name"></p>
-                        <div class="answer" data-bind="">
+                        <div class="answer left" data-bind="">
                             <!-- ko foreach: values -->
                             <label class="option">
                                 <input class="left" type="checkbox" data-bind="value: valuetype_id, iCheck: $parent.selectedValues" >
@@ -101,7 +101,7 @@
 <!--Begin Placeholder-->
 <div id="placeholder">
     <div class="wrapper clearfix">
-        <h2>Learn about What's in the guide</h2>
+        <h2>Learn About What's in the Guide</h2>
 
         <!-- ko foreach: topics -->
 
@@ -128,7 +128,7 @@
 
 <!--Begin Examples-->
 <div id="examples">
-    <h2>Hands on Examples</h2>
+    <h2>Hands On Examples</h2>
     <div class="carousel-content" data-bind="foreach: examples">
         <div class="imgcontent left">
             <a class="carouse-item" data-bind="attr: {href: '/example/' + smg_id + '/'+id}">

@@ -840,7 +840,7 @@ select{
     width: 133px;
     color:#ffffff;
     font-size: 12px;
-    text-align: justify;
+    text-align: left;
     line-height: 20px;
     font-weight: normal;
 }
@@ -1101,7 +1101,7 @@ select{
     display: block;
 }
 #agreement-popup .modal-subhead .duration-details .level {
-    width: 80px;
+    width: 120px;
 }
 #agreement-popup .modal-subhead .duration-details .lvl-icon {
     background: url(../img/l$.png)no-repeat 0 -30px;
@@ -1558,11 +1558,12 @@ table a:hover{
 #body #left-panel .questions ul li .white-questions-wrapper .nquestion-root .nquestion {
     font-weight: normal;
     color: #fff;
-    font-size: 13px;
+    font-size: 14px;
+    display: block;
 }
 #body #left-panel .questions ul li .white-questions-wrapper .nquestion-root .options-root .wrapper-options {
     font-size: 12px;
-    width: 130px;
+    min-width: 120px;
     margin: 10px 0;
 }
 #body #left-panel .questions ul li .white-questions-wrapper .nquestion-root .options-root .wrapper-options .wdh {
@@ -2732,7 +2733,6 @@ td.td1,td.td2,td.td3,td.td4{
 }
 .confirmpopup .popup-form{
     margin: 75px auto 0 auto;
-    width: 100%;
 }
 .form-buttons a{
     margin: 0 20px 0 0;
@@ -4231,9 +4231,10 @@ body{
 		float:left;
 	}
 		#help-topics .help-topics-list .topic-box h3{
-			font-size:14px;
-			line-height:46px;
-			color:#363636;
+            font-size: 14px;
+            color: #363636;
+            margin-top: 15px;
+            height: 32px;
 		}
 		#help-topics .help-topics-list .topic-box .img-wrapper{
 			width:259px;
@@ -6002,3 +6003,26 @@ body.in-print, body.in-print div:not(.iradio):not(.icheckbox){
 #body #left-panel .questions ul li .questions-wrapper .nquestion-root .nquestion {
 
 }
+
+
+#identify-search-wrapper .answer {
+    margin-top: -10px;
+    width: 500px;
+    margin-left: -12px;
+}
+
+#grid-view .white-box .box-wrapper a.title {
+    display: block;
+}
+
+#body #left-panel .nquestion-root .nquestion {
+    margin: 3px 5px 0 0;
+    font-size: 14px;
+}
+
+#agreement-popup .modal-subhead .duration-details .lvl-ball.yellow {
+     background-position: 0 -25px;
+ }
+#agreement-popup .modal-subhead .duration-details .lvl-ball.red {
+     background-position: 0 -50px;
+ }

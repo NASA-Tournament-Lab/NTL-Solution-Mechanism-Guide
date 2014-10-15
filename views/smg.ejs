@@ -80,7 +80,9 @@
             <div id="compare" class="left">
                 <div class="wrapper left solution1 hide" data-bind="css: {hide: selectedItems().length == 0}">
                     <p>
-                        This page shows a list of solutions based on the user selection. The user will be able to modify his/her selection.<br>The user will be able to compare two or more solutions. Please check the "Add to compare" checkbox on atleast two soutions to see how this works.
+                        This page shows a list of solutions based on your selections but you may change your results to modify the solution mechanisms that are listed.
+                        <br>
+                        You may compare up to four solution mechanisms at one time. Please check the "Add to Compare" checkbox next to each Solution Mechanism to enable this feature.
                     </p>
                     <div class="border-bottom left"></div>
                     <div class="list-compare" data-bind="foreach: selectedItems">
@@ -131,7 +133,8 @@
                     <ul class="solution1"  data-bind="foreach: fields, css: { hide: !alternative()}">
                         <li data-bind="css: {select: type_id == chTypes.picklist}">
                             <div class="white-questions-wrapper">
-                                <a class="left tooltip-icon" href="javascript:"></a>
+                                <a class="left tooltip-icon" href="javascript:" data-bind="attr: { 'data-val' : help }"></a>
+                                <!--<a class="reset-icon left" href="javascript:" data-bind="click: revert"></a>-->
 
                                 <div class="nquestion-root left" data-bind="template: {name: 'filter-template'}">
                                 </div>
@@ -222,7 +225,7 @@
 
                 <!-- ko if: view() == 'grid' -->
                 <div id="grid-view" class="row3 left "  data-bind="css :{'ajax-content' : loading()}, foreach: items">
-                    <div class="white-box" data-bind="css: {left: $index() % 2 == 0, right: $index() % 2 == 1}">
+                    <div class="white-box" data-bind="css: {left: $index() % 2 == 0, right: $index() % 2 == 1}, alignBox: 1">
                         <div class="box-wrapper left">
                             <a class="title" data-bind="text: name, attr:{href: '/smg/' + id}"></a>
                             <div class="square left">
@@ -265,11 +268,11 @@
 <div class="confirmpopup modal-window-wrapper hide popup-element" id="cannot-add-compare">
     <div class="popup-wrapper">
         <div class="popup-header">
-            <h4 class="left">Error</h4>
+            <h4 class="left"></h4>
             <a href="javascript:" class="right tooltip-close close-popup"></a>
         </div>
         <div class="popup-form">
-            <span>You already have two solutions selected, please remove existing solution to add different one</span>
+            <span>Up to four Solution Mechanisms may be selected for the Compare feature. Please remove one of the selected Solution Mechanisms in order at add a different one.</span>
         </div>
         <div class="form-buttons">
             <a href="javascript:" class="btn-orange-big close-popup">
@@ -309,7 +312,7 @@
 									<span class="green">low</span>
 								</span>
 							</span>
-                    <span class="lvl-ball left"></span>
+                    <span class="lvl-ball left" data-bind="css: {yellow:  $root.popupSmg().org.accuracy >= 0.5 && $root.popupSmg().org.accuracy < 1, red: $root.popupSmg().org.accuracy < 0.5}"></span>
                 </div>
                 <div class="right">
                     <a class="details orange-big-btn align left" data-bind="attr : {href: '/smg/' + id}">
@@ -391,12 +394,6 @@
                         <span>Your first step will be to contact the POC listed; other pertinent information is provided below</span>
                     </div>
                     <table class="table3 clear">
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th class="special">SAA Non-Reimbursable</th>
-                        </tr>
-                        </thead>
                         <tbody data-bind="foreach: tab3Items">
                         <tr>
                             <td class="first" data-bind="text: characteristic.name"></td>
