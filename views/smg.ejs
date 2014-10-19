@@ -195,7 +195,7 @@
 
                             <li  data-bind="css: {'last': $index() + 1 == $parent.items().length}">
                                 <div class="square left">
-                                    <img data-bind="attr: {src: picture}" width="76" height="76" />
+                                    <img data-bind="attr: {src: picture+ '?width=76&height=76'}" width="76" height="76" />
                                 </div>
                                 <div class="content left">
                                     <label class="form-label"><input type="checkbox" data-bind="iCheck: compare" value="1"> <span>Add to compare</span></label>
@@ -229,7 +229,7 @@
                         <div class="box-wrapper left">
                             <a class="title" data-bind="text: name, attr:{href: '/smg/' + id}"></a>
                             <div class="square left">
-                                <img data-bind="attr: {src: picture}" width="76" height="76" />
+                                <img data-bind="attr: {src: picture + '?width=76&height=76'}" width="76" height="76" />
                             </div>
                             <div class="content left">
                                 <label class="form-label"><input type="checkbox" data-bind="iCheck: compare" value="1"> <span>Add to compare</span></label>
