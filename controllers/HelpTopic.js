@@ -67,6 +67,47 @@ function _getPopulateDelegate(callback) {
     };
 }
 
+
+/**
+ * Get File and resize it
+ * @param {String} filePath the file path
+ * @param {String} width the width
+ * @param {String} height the height
+ * @param callback{Function<err, stream>} the callback function
+ */
+function _resizeFile(filePath, width, height, callback) {
+    var fs = require('fs'), gm = require('gm');
+    async.waterfall([
+        function (cb) {
+            fs.readFile(filePath, cb);
+        }, function (data, cb) {
+            var gmImg = gm(data);
+            width = Number(width);
+            height = Number(height);
+            gmImg.size(function (err, value) {
+                if (err) {
+                    cb(err);
+                    return;
+                }
+                var sourceWidth = value.width,
+                    sourceHeight = value.height,
+                    p = Math.min(sourceWidth / width, sourceHeight / height),
+                    destWidth = Math.round(width * p),
+                    destHeight = Math.round(height * p),
+                    centerX = Math.round((sourceWidth - destWidth) / 2),
+                    centerY = Math.round((sourceHeight - destHeight) / 2);
+
+                gmImg.crop(destWidth, destHeight, centerX, centerY)
+                    .resize(width, height)
+                    .stream(cb);
+            });
+        }
+    ], function (err, stream) {
+        callback(err, stream);
+    });
+}
+
+
 /**
  * Retrieve the HelperTopics. Search criteria is optional.
  * @param {Object} req the express request
@@ -148,8 +189,17 @@ function download(req, res, db, callback) {
                 return;
             }
             res.type(topic.mime);
-            res.download(topic.path, topic.filename, cb);
-            cb();
+            if (req.query.width && req.query.height) {
+                res.setHeader('Cache-Control', 'public, max-age=' + 31557600000);
+                _resizeFile(topic.path, req.query.width, req.query.height, function (err, stream) {
+                    if (err) {
+                        return cb(err);
+                    }
+                    stream.pipe(res);
+                });
+            } else {
+                res.download(topic.path, topic.filename, cb);
+            }
         }
     ], function (err) {
         callback(err, null);

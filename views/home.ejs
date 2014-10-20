@@ -106,7 +106,7 @@
         <!-- ko foreach: topics -->
 
             <div class="imgcontent left last" data-bind="css: {last: $index() == 2}">
-            <img class="border left" data-bind="attr: {src: '/api/helpTopic/' + image_id + '/download' }" alt="Placeholder" width="130" height="95">
+            <img class="border left" data-bind="attr: {src: '/api/helpTopic/' + image_id + '/download' + '?width=130&height=95' }" alt="Placeholder" width="130" height="95">
             <div class="content left">
                 <h3 data-bind="text: name"></h3>
                 <p  data-bind="truncate: description, truncateOptions: { height: 60, extractText: true }">
@@ -132,7 +132,7 @@
     <div class="carousel-content" data-bind="foreach: examples">
         <div class="imgcontent left">
             <a class="carouse-item" data-bind="attr: {href: '/example/' + smg_id + '/'+id}">
-                <img class="border" data-bind="attr: {src: getPictureUrl(imageId), alt: name}"  width="130" height="95">
+                <img class="border" data-bind="attr: {src: getPictureUrl(imageId) + '?width=130&height=95', alt: name}"  width="130" height="95">
                 <div class="content">
                     <p data-bind="text: name">
                     </p>
