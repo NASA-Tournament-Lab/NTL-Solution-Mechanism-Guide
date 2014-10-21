@@ -428,3 +428,76 @@ ko.bindingHandlers.alignBox = {
         });
     }
 };
+
+
+ko.bindingHandlers.dollarSign = {
+    init: function (element, valueAccessor) {
+        var smg = valueAccessor();
+        var value = _.findWhere(smg.smgCharacteristics, {characteristic_id: 6});
+        var klass = "dollar1";
+        if (value) {
+            var v = value.valueType.name;
+            var dollar1 = ['$0', '< $5,000', '< $20,000'];
+            var dollar2 = ['< $50,000', '< $100,000', '> $100,000'];
+            var dollar3 = ['> $500,000', '> $1,000,000'];
+            if (_.contains(dollar2, v)) {
+                klass = "dollar2"
+            }
+            if (_.contains(dollar3, v)) {
+                klass = "dollar3"
+            }
+            $(element).attr('title', v);
+        }
+        $(element).addClass(klass);
+    }
+};
+
+
+ko.bindingHandlers.clockText = {
+    init: function (element, valueAccessor) {
+        var smg = valueAccessor();
+        var value = _.findWhere(smg.smgCharacteristics, {characteristic_id: 5});
+        var text = "Low";
+        if (value) {
+            var v = value.valueType.name;
+            var low = ['< 3 months', '< 6 months'];
+            var med = ['< 1 year'];
+            var high = ['> 1 year', '> 2 years'];
+            if (_.contains(med, v)) {
+                text = "Med"
+            }
+            if (_.contains(high, v)) {
+                text = "High"
+            }
+            $(element).attr('title', v);
+        }
+        $(element).next().text(text);
+    }
+};
+
+
+ko.bindingHandlers.radial = {
+    init: function (element, valueAccessor) {
+        var smg = valueAccessor();
+        var value = _.find(smg.smgCharacteristics, function (val) {
+            return val.characteristic.name === "Deliverables" ||
+                val.characteristic.name === "Deliverable Type";
+        });
+        var klass = "blue-radial";
+        if (value) {
+            var v = value.valueType.name;
+            if (v === "Countermeasures and Controls") {
+                klass = "green-radial";
+            }
+            if (v === "Technology") {
+                klass = "yellow-radial";
+            }
+            if (v === "Standards and Requirements" ||
+                v === "Standards/Requirements") {
+                klass = "gray-radial";
+            }
+            $(element).attr('title', v);
+        }
+        $(element).addClass(klass);
+    }
+};

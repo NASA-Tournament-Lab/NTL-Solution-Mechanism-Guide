@@ -1004,6 +1004,7 @@ select{
     background: #fff;
     text-align: left;
 	box-shadow:0 0 18px #000;
+    position: absolute;
 }
  #modal-window-bg {
     position: fixed;
@@ -1095,9 +1096,9 @@ select{
     width: 138px;
 }
 #agreement-popup .modal-subhead .duration-details .dur-icon {
-    background: url(../img/l$.png)no-repeat 0 0;
-    width: 30px;
-    height: 30px;
+    background: url(../img/n/01-clock-icon.png)no-repeat 0 0;
+    width: 34px;
+    height: 34px;
     display: block;
 }
 #agreement-popup .modal-subhead .duration-details .level {
@@ -1105,8 +1106,8 @@ select{
 }
 #agreement-popup .modal-subhead .duration-details .lvl-icon {
     background: url(../img/l$.png)no-repeat 0 -30px;
-    width: 30px;
-    height: 30px;
+    width: 34px;
+    height: 34px;
     display: block;
 }
 #agreement-popup .modal-subhead .duration-details .lvl-content .green {
@@ -1122,11 +1123,11 @@ select{
     color: #363636;
 }
 #agreement-popup .modal-subhead .duration-details .lvl-ball {
-    width: 25px;
-    height: 25px;
+    width: 24px;
+    height: 24px;
     display: block;
-    background: url("../img/minlow.png") no-repeat 0 0;
     margin-left: 4px;
+    margin-top: 5px;
 }
 .compare-icon {
     background: url("../img/modal-btn-icon.png") no-repeat 0 0;
@@ -1783,25 +1784,23 @@ table a:hover{
     width:130px;
 }
 #body #right-panel #list-view .row3-wrapper ul li .status .l {
-    width:30px;
-    height:30px;
+    width:34px;
+    height:34px;
     display: block;
-    background: url("../img/ldollar.png") 0px 0px;
+    background: url("../img/n/01-clock-icon.png") 0px 0px;
 }
 #body #right-panel #list-view .row3-wrapper ul li .status .months {
     display: block;
     margin: 9px 0 0 5px;
     color: #363636;
     font-size: 12px;
-    width: 95px;
     display: inline-block;
 }
 #body #right-panel #list-view .row3-wrapper ul li .status .dolar {
-    width:30px;
-    height:30px;
+    width:34px;
+    height:34px;
     display: block;
     margin: 10px 0 0 0;
-    background: url("../img/ldollar.png") 0px -30px;
 }
 #body #right-panel #list-view .row3-wrapper ul li .status .k {
     display: block;
@@ -1815,15 +1814,13 @@ table a:hover{
     color: #387c2c;
     font-size: 12px;
 }
-#body #right-panel #list-view .row3-wrapper ul li .status .wdh .level{
-    width: 73px;
-}
 #body #right-panel #list-view .row3-wrapper ul li .status .color-round {
     width:24px;
     height:24px;
     display: block;
-    margin: 12px 0 0 0;
     background: url("../img/minlow.png") 0px 0px;
+    margin-left: 40px;
+    margin-top: 18px;
 }
 #body #right-panel #list-view .row3-wrapper ul li .status .color-round.red{
     background-position: 0 -50px;
@@ -1896,10 +1893,10 @@ table a:hover{
     margin: 6px 0 0 0;
 }
 #grid-view .white-box .box-wrapper .status .l {
-    width:30px;
-    height:30px;
+    width:34px;
+    height:34px;
     display: block;
-    background: url("../img/ldollar.png") 0px 0px;
+    background: url("../img/n/01-clock-icon.png") 0px 0px;
 }
 #grid-view .white-box .box-wrapper .status .months {
     display: block;
@@ -1909,8 +1906,8 @@ table a:hover{
     width: 90px;
 }
 #grid-view .white-box .box-wrapper .dolar {
-    width:30px;
-    height:30px;
+    width:34px;
+    height:34px;
     display: block;
     margin: 0px 0 0 10px;
     background: url("../img/ldollar.png") 0px -30px;
@@ -1941,6 +1938,7 @@ table a:hover{
     height:24px;
     display: block;
     background: url("../img/minlow.png") 0px 0px;
+    margin-top: 5px;
 }
 #grid-view .white-box .box-wrapper .status .color-round.red {
     background-position: 0 -50px;
@@ -6026,3 +6024,31 @@ body.in-print, body.in-print div:not(.iradio):not(.icheckbox){
 #agreement-popup .modal-subhead .duration-details .lvl-ball.red {
      background-position: 0 -50px;
  }
+
+.dollar1 {
+    background: url("../img/n/02-1-dolar1.png") !important;
+}
+
+.dollar2 {
+    background: url("../img/n/02-2-dolar2.png") !important;
+}
+
+.dollar3 {
+    background: url("../img/n/02-3-dolar3.png") !important;
+}
+
+.blue-radial {
+    background: url("../img/n/03-1-blue-color-indicator.png") !important;
+}
+
+.yellow-radial {
+    background: url("../img/n/03-2-yellow-color-indicator.png") !important;
+}
+
+.gray-radial {
+    background: url("../img/n/03-3-gray-color-indicator.png") !important;
+}
+
+.green-radial {
+    background: url("../img/n/03-4-green-color-indicator.png") !important;
+}
