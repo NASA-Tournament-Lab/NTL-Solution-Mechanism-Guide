@@ -20,6 +20,11 @@ Install latest version of iisnode from https://github.com/tjanczuk/iisnode. Foll
 
 Install MySQL from http://dev.mysql.com/downloads/ 
 
+Install Graphic Magic from http://www.graphicsmagick.org/download.html  
+Add it to your system PATH (you can check this option during installation)  
+Run ``gm`` in command line and verify it works  
+Restart IIS run ``iisreset``
+
 ## Configurations
 
 Configuration is done at the web.config file. If you open it, there will be a section called “appSettings”. In that section you can find the following options:
