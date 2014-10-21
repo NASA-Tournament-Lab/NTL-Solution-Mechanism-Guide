@@ -23,6 +23,7 @@ Install MySQL from http://dev.mysql.com/downloads/
 Install Graphic Magic from http://www.graphicsmagick.org/download.html  
 Add it to your system PATH (you can check this option during installation)  
 Run ``gm`` in command line and verify it works  
+Run ``npm install`` to download latest/added dependencies
 Restart IIS run ``iisreset``
 
 ## Configurations
