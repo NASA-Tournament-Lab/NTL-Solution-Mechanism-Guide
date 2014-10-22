@@ -115,7 +115,7 @@ var urlMapping = {
         menu: "home",
         template: "smgDetails.ejs"
     },
-    "/compare/:left/:right": {
+    "/compare/:smg1/:smg2/:smg3?/:smg4?": {
         name: "smgCompare",
         menu: "home",
         template: "smgCompare.ejs"

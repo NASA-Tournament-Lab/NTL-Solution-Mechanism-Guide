@@ -1406,8 +1406,8 @@ function SMGListingViewModel() {
     });
     self.compareUrl = ko.computed(function () {
         var items = self.selectedItems();
-        if (items.length == 2) {
-            return "/compare/" + items[0].id + "/" + items[1].id;
+        if (items.length > 1) {
+            return "/compare/" + _.pluck(items, "id").join("/");
         }
         return "javascript:;";
     });
@@ -1469,7 +1469,7 @@ function SMGListingViewModel() {
                             return;
                         }
                         self.popupSmg(null);
-                        if (val && self.selectedItems().length == 2) {
+                        if (val && self.selectedItems().length == 4) {
                             showModal($("#cannot-add-compare"));
                             setTimeout(function () {
                                 model.compare(false);
@@ -1493,7 +1493,7 @@ function SMGListingViewModel() {
     self.comparePopup = function () {
         hideModal($("#agreement-popup"));
         if (!self.popupSmg().compare()) {
-            if (self.selectedItems().length == 2) {
+            if (self.selectedItems().length == 4) {
                 showModal($("#cannot-add-compare"));
             } else {
                 self.popupSmg().compare(true);
@@ -1570,7 +1570,7 @@ function SMGModel(data) {
 function CompareViewModel() {
     var self = this;
     self.loading = ko.observable(true);
-    var ids = [urlParams.left, urlParams.right];
+    var ids = _.values(urlParams);
     self.items = ko.observableArray([]);
     fakeTimeout(function () {
         var items = [];

@@ -28,12 +28,35 @@
         <div class="clear"></div>
         <div class="ajax-pre-loader-wrapper ajax-pre-loader-new init-load">
             <table class="table1 compare-tbl clear" data-bind="css :{'ajax-content': loading()}">
+
+                <!-- ko if: items().length == 2  -->
                 <colgroup>
                     <col >
-                    <col width="200px"  >
-                    <col width="200px" >
+                    <col width="200px">
+                    <col width="200px">
                 </colgroup>
-                <tbody data-bind="if: items().length == 2 ">
+                <!-- /ko -->
+
+                <!-- ko if: items().length == 3  -->
+                <colgroup>
+                    <col >
+                    <col width="133px">
+                    <col width="133px">
+                    <col width="133px">
+                </colgroup>
+                <!-- /ko -->
+
+                <!-- ko if: items().length == 4  -->
+                <colgroup>
+                    <col >
+                    <col width="100px">
+                    <col width="100px">
+                    <col width="100px" >
+                    <col width="100px" >
+                </colgroup>
+                <!-- /ko -->
+
+                <tbody data-bind="if: items().length > 0 ">
                 <tr>
                     <th class="compare-head"></th>
 
