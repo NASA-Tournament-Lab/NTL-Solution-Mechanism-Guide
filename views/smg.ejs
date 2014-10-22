@@ -204,18 +204,17 @@
                                     <p data-bind="truncate: desc, truncateOptions: {height: 50, extractText: true}"></p>
                                 </div>
                                 <div class="status right">
-											<span class="wdh left">
-												<span class="l left"></span>
-												<span class="months left" data-bind="truncate: duration, truncateOptions: {height: 20}, attr: {title: duration}"></span>
-											</span>
-											<span class="wdh left">
-												<span class="dolar left"></span>
-												<span class="left level">
-													<span class="k" data-bind="text: cost"></span>
-													<span class="size">Low</span>
-												</span>
-												<span class="color-round left" data-bind="css: {yellow:  org.accuracy >= 0.5 && org.accuracy < 1, red: org.accuracy < 0.5}"></span>
-											</span>
+                                    <span class="wdh left">
+                                        <span class="l left" data-bind="clockText: org"></span>
+                                        <span class="months left"></span>
+                                    </span>
+                                    <span class="wdh left">
+                                        <span class="dolar left" data-bind="dollarSign: org"></span>
+                                        <span class="left level">
+                                            <span class="k"></span>
+                                        </span>
+                                        <span class="color-round left" data-bind="radial: org"></span>
+                                    </span>
                                 </div>
                             </li>
                         </ul>
@@ -238,12 +237,11 @@
                             </div>
                             <div class="border-bottom left"></div>
                             <div class="status left">
-                                <span class="l left"></span>
-                                <span class="months left" data-bind="text: duration"></span>
-                                <span class="dolar left"></span>
-                                <span class="k left"  data-bind="text: cost"></span>
-                                <span class="size left">- <span class="yellow">Mid</span></span>
-                                <span class="color-round right" data-bind="css: {yellow:  org.accuracy >= 0.5 && org.accuracy < 1, red: org.accuracy < 0.5}"></span>
+                                <span class="l left" data-bind="clockText: org"></span>
+                                <span class="months left"></span>
+                                <span class="dolar left" data-bind="dollarSign: org"></span>
+                                <span class="k left"></span>
+                                <span class="color-round right" data-bind="radial: org"></span>
                             </div>
                         </div>
                     </div>
@@ -260,14 +258,20 @@
             <div class="row2 left">
                 <p class="left">
                     Time to Execute:<br>
-                    Picture of Clock/Low= Little Picture of Clock/Med= Medium Picture of Clock/High= Long<br><br>
+                    Picture of Clock/Low= Little<br>
+                    Picture of Clock/Med= Medium<br>
+                    Picture of Clock/High= Long<br><br>
 
                     Cost to Execute:<br>
-                    Picture of $ = Low Picture of $$ = Medium Picture of $$$ = High<br><br>
+                    Picture of $ = Low<br>
+                    Picture of $$ = Medium<br>
+                    Picture of $$$ = High<br><br>
 
                     Deliverable Type:<br>
-                    Picture of Blue Radial = Knowledge Picture of Green Radial = Countermeasures/Controls<br>
-                    Picture of Yellow Radial = Technology Picture of GrayRadial = Standards/Requirements
+                    Picture of Blue Radial = Knowledge<br>
+                    Picture of Green Radial = Countermeasures/Controls<br>
+                    Picture of Yellow Radial = Technology<br>
+                    Picture of GrayRadial = Standards/Requirements
                 </p>
             </div>
         </div>
@@ -313,19 +317,15 @@
                 <div class="left ball-details">
 							<span class="duration left">
 								<span class="dur-icon left"></span>
-								<span class="dur-content left">Duration
-									<br>
-									<span data-bind="text: $root.popupSmg().duration"></span>
+								<span class="dur-content left" data-bind="clockText: $root.popupSmg().org">
 								</span>
 							</span>
 							<span class="level left">
-								<span class="lvl-icon left"></span>
-								<span class="lvl-content left"> <span data-bind="text: $root.popupSmg().cost"></span>
-									<br>
-									<span class="green">low</span>
+								<span class="lvl-icon left"  data-bind="dollarSign: $root.popupSmg().org"></span>
+								<span class="lvl-content left">
 								</span>
 							</span>
-                    <span class="lvl-ball left" data-bind="css: {yellow:  $root.popupSmg().org.accuracy >= 0.5 && $root.popupSmg().org.accuracy < 1, red: $root.popupSmg().org.accuracy < 0.5}"></span>
+                    <span class="lvl-ball left"  data-bind="radial: $root.popupSmg().org"></span>
                 </div>
                 <div class="right">
                     <a class="details orange-big-btn align left" data-bind="attr : {href: '/smg/' + id}">
