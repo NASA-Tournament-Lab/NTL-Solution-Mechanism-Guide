@@ -479,11 +479,16 @@ ko.bindingHandlers.clockText = {
 ko.bindingHandlers.radial = {
     init: function (element, valueAccessor) {
         var smg = valueAccessor();
-        var value = _.find(smg.smgCharacteristics, function (val) {
+        var values = _.filter(smg.smgCharacteristics, function (val) {
             return val.characteristic.name === "Deliverables" ||
                 val.characteristic.name === "Deliverable Type";
         });
-        var klass = "blue-radial";
+        var klass = "blue-radial", value;
+        if (values.length > 1) {
+            klass = "brown-radial";
+        } else {
+            value = values[0];
+        }
         if (value) {
             var v = value.valueType.name;
             if (v === "Countermeasures and Controls") {
