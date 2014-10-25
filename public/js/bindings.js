@@ -432,8 +432,11 @@ ko.bindingHandlers.alignBox = {
 
 ko.bindingHandlers.dollarSign = {
     init: function (element, valueAccessor) {
+    },
+    update: function(element, valueAccessor) {
         var smg = valueAccessor();
         var value = _.findWhere(smg.smgCharacteristics, {characteristic_id: 6});
+        $(element).removeClass("dollar1 dollar2 dollar3");
         var klass = "dollar1";
         if (value) {
             var v = value.valueType.name;
@@ -454,7 +457,7 @@ ko.bindingHandlers.dollarSign = {
 
 
 ko.bindingHandlers.clockText = {
-    init: function (element, valueAccessor) {
+    update: function (element, valueAccessor) {
         var smg = valueAccessor();
         var value = _.findWhere(smg.smgCharacteristics, {characteristic_id: 5});
         var text = "Low";
@@ -477,19 +480,23 @@ ko.bindingHandlers.clockText = {
 
 
 ko.bindingHandlers.radial = {
-    init: function (element, valueAccessor) {
+    update: function (element, valueAccessor) {
         var smg = valueAccessor();
         var values = _.filter(smg.smgCharacteristics, function (val) {
             return val.characteristic.name === "Deliverables" ||
                 val.characteristic.name === "Deliverable Type";
         });
-        var klass = "blue-radial", value;
+        $(element).removeClass("gray-radial brown-radial yellow-radial blue-radial green-radial");
+        var klass = "gray-radial", value;
         if (values.length > 1) {
             klass = "brown-radial";
         } else {
             value = values[0];
         }
-        if (value) {
+        if (value && value.displayValue && value.displayValue.split(",").length > 1) {
+            klass = "brown-radial";
+        }
+        else if (value) {
             var v = value.valueType.name;
             if (v === "Countermeasures and Controls") {
                 klass = "green-radial";
@@ -497,9 +504,8 @@ ko.bindingHandlers.radial = {
             if (v === "Technology") {
                 klass = "yellow-radial";
             }
-            if (v === "Standards and Requirements" ||
-                v === "Standards/Requirements") {
-                klass = "gray-radial";
+            if (v === "Knowledge") {
+                klass = "blue-radial";
             }
             $(element).attr('title', v);
         }
