@@ -495,10 +495,11 @@ ko.bindingHandlers.radial = {
         }
         if (value && value.displayValue && value.displayValue.split(",").length > 1) {
             klass = "brown-radial";
+            $(element).addClass(klass);
         }
         else if (value) {
             var v = value.valueType.name;
-            if (v === "Countermeasures and Controls") {
+            if (v === "Countermeasures and Controls" || v === "Countermeasures/Controls") {
                 klass = "green-radial";
             }
             if (v === "Technology") {
@@ -508,7 +509,7 @@ ko.bindingHandlers.radial = {
                 klass = "blue-radial";
             }
             $(element).attr('title', v);
+            $(element).addClass(klass);
         }
-        $(element).addClass(klass);
     }
 };
