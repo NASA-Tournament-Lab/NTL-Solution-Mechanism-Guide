@@ -1882,7 +1882,7 @@ table a:hover{
     color: #363636;
     font-size: 12px;
     line-height: 18px;
-    min-height: 65px;
+    min-height: 72px;
 }
 #grid-view .white-box .box-wrapper .border-bottom {
     width:300px;
@@ -6051,4 +6051,37 @@ body.in-print, body.in-print div:not(.iradio):not(.icheckbox){
 
 .green-radial {
     background: url("../img/n/03-4-green-color-indicator.png") !important;
+}
+.brown-radial {
+    background: url("../img/n/03-5-brown-color-indicator.png") !important;
+}
+
+.smg-legend {
+    padding: 12px 10px 12px 16px;
+    background-color: #fff;
+    margin-top: 10px;
+}
+
+.smg-legend h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.smg-legend strong {
+    display: block;
+}
+
+.smg-legend .legend-box {
+    width: 160px;
+}
+
+.smg-legend .legend-box--type {
+    width: 250px;
+}
+
+.smg-legend ul li img {
+    vertical-align:middle
+}
+.smg-legend ul li {
+    margin-top: 6px;
 }
