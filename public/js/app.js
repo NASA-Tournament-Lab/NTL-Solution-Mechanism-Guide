@@ -1464,6 +1464,38 @@ function SMGListingViewModel() {
                         compare: ko.observable(false),
                         org: item
                     };
+
+                    // compute radial color
+                    var values = _.filter(item.smgCharacteristics, function (val) {
+                        return val.characteristic.name === "Deliverables" ||
+                            val.characteristic.name === "Deliverable Type";
+                    });
+                    var radialClass, radialTitle, value;
+                    if (values.length > 1) {
+                        radialClass = "brown-radial";
+                        radialTitle = _.map(values, function (v) {
+                            return v.valueType.name;
+                        }).join(', ');
+                    } else {
+                        value = values[0];
+                        var v = value.valueType.name;
+                        radialTitle = v;
+                        if (v === "Standards and Requirements" || v === "Standards/Requirements") {
+                            radialClass = "gray-radial";
+                        }
+                        if (v === "Countermeasures and Controls" || v === "Countermeasures/Controls") {
+                            radialClass = "green-radial";
+                        }
+                        if (v === "Technology") {
+                            radialClass = "yellow-radial";
+                        }
+                        if (v === "Knowledge") {
+                            radialClass = "blue-radial";
+                        }
+                    }
+                    model.radialClass = radialClass;
+                    model.radialTitle = radialTitle;
+
                     model.compare.subscribe(function (val) {
                         if (self.popupSmg() == model) {
                             return;
@@ -1477,6 +1509,16 @@ function SMGListingViewModel() {
                         }
                     });
                     return model;
+                });
+                var radialsOrder = {
+                    "gray-radial": 0,
+                    "green-radial": 1,
+                    "yellow-radial": 2,
+                    "blue-radial": 3,
+                    "brown-radial": 4
+                };
+                items.sort(function(a, b) {
+                    return radialsOrder[a.radialClass] - radialsOrder[b.radialClass];
                 });
                 self.items(items);
                 self.loading(false);
