@@ -245,7 +245,7 @@
                                         <span class="left level">
                                             <span class="k"></span>
                                         </span>
-                                        <span class="color-round left" data-bind="radial: org"></span>
+                                        <span class="color-round left" data-bind="radial: $data"></span>
                                     </span>
                                 </div>
                             </li>
@@ -273,7 +273,7 @@
                                 <span class="months left"></span>
                                 <span class="dolar left" data-bind="dollarSign: org"></span>
                                 <span class="k left"></span>
-                                <span class="color-round right" data-bind="radial: org"></span>
+                                <span class="color-round right" data-bind="radial: $data"></span>
                             </div>
                         </div>
                     </div>
@@ -338,7 +338,7 @@
 								<span class="lvl-content left">
 								</span>
 							</span>
-                    <span class="lvl-ball left"  data-bind="radial: $root.popupSmg().org"></span>
+                    <span class="lvl-ball left"  data-bind="radial: $root.popupSmg()"></span>
                 </div>
                 <div class="right">
                     <a class="details orange-big-btn align left" data-bind="attr : {href: '/smg/' + id}">

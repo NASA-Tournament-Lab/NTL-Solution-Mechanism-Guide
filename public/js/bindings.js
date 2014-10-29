@@ -482,35 +482,9 @@ ko.bindingHandlers.clockText = {
 ko.bindingHandlers.radial = {
     update: function (element, valueAccessor) {
         var smg = valueAccessor();
-        var values = _.filter(smg.smgCharacteristics, function (val) {
-            return val.characteristic.name === "Deliverables" ||
-                val.characteristic.name === "Deliverable Type";
-        });
+
         $(element).removeClass("gray-radial brown-radial yellow-radial blue-radial green-radial");
-        var klass = "gray-radial", value;
-        if (values.length > 1) {
-            klass = "brown-radial";
-            $(element).addClass(klass);
-        } else {
-            value = values[0];
-        }
-        if (value && value.displayValue && value.displayValue.indexOf(",") !== -1) {
-            klass = "brown-radial";
-            $(element).addClass(klass);
-        }
-        else if (value) {
-            var v = value.valueType.name;
-            if (v === "Countermeasures and Controls" || v === "Countermeasures/Controls") {
-                klass = "green-radial";
-            }
-            if (v === "Technology") {
-                klass = "yellow-radial";
-            }
-            if (v === "Knowledge") {
-                klass = "blue-radial";
-            }
-            $(element).attr('title', v);
-            $(element).addClass(klass);
-        }
+        $(element).attr('title', smg.radialTitle);
+        $(element).addClass(smg.radialClass);
     }
 };
