@@ -490,10 +490,11 @@ ko.bindingHandlers.radial = {
         var klass = "gray-radial", value;
         if (values.length > 1) {
             klass = "brown-radial";
+            $(element).addClass(klass);
         } else {
             value = values[0];
         }
-        if (value && value.displayValue && value.displayValue.split(",").length > 1) {
+        if (value && value.displayValue && value.displayValue.indexOf(",") !== -1) {
             klass = "brown-radial";
             $(element).addClass(klass);
         }

@@ -1495,6 +1495,7 @@ function SMGListingViewModel() {
         if (!self.popupSmg().compare()) {
             if (self.selectedItems().length == 4) {
                 showModal($("#cannot-add-compare"));
+                self.popupSmg(null);
             } else {
                 self.popupSmg().compare(true);
             }
@@ -1516,6 +1517,7 @@ function SMGListingViewModel() {
  */
 function SMGModel(data) {
     var self = this;
+    data = JSON.parse(JSON.stringify(data));
     self.values = {};
     self.characteristics = {};
     //without name

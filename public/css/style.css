@@ -6059,12 +6059,12 @@ body.in-print, body.in-print div:not(.iradio):not(.icheckbox){
 .smg-legend {
     padding: 12px 10px 12px 16px;
     background-color: #fff;
-    margin-top: 10px;
+    font-size: 11px;
 }
 
 .smg-legend h3 {
-    font-size: 20px;
-    margin-bottom: 15px;
+    font-size: 18px;
+    margin-bottom: 10px;
 }
 
 .smg-legend strong {
