@@ -1495,6 +1495,7 @@ function SMGListingViewModel() {
         if (!self.popupSmg().compare()) {
             if (self.selectedItems().length == 4) {
                 showModal($("#cannot-add-compare"));
+                self.popupSmg(null);
             } else {
                 self.popupSmg().compare(true);
             }
