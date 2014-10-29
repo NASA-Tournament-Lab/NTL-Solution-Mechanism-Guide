@@ -1516,6 +1516,7 @@ function SMGListingViewModel() {
  */
 function SMGModel(data) {
     var self = this;
+    data = JSON.parse(JSON.stringify(data));
     self.values = {};
     self.characteristics = {};
     //without name
