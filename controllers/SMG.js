@@ -286,7 +286,6 @@ function removeSingle(req, db, callback) {
  * @param {Function<err, result>} callback the callback function
  */
 function search(req, db, callback) {
-    var conditionCount, groups;
     async.waterfall([
         function (cb) {
             var error = validate(req.body, SearchDefinition);
@@ -308,7 +307,7 @@ function search(req, db, callback) {
                     value: orm.like("%" + field.value + "%")
                 };
             });
-            conditionCount = conditions.length;
+
             //we must exec query: conditions[0] AND conditions[1] AND ...
             //we exec for each item SMGCharacteristic.find(conditions[i]) and find intersection
             async.map(conditions, function (condition, cbx) {
@@ -316,22 +315,17 @@ function search(req, db, callback) {
             }, cb);
         }, function (results, cb) {
             //results is something like [[{smg_id:1}, {smg_id:2}], [{smg_id:3}, {smg_id:3}, {smg_id:1}]]
-            var ids = _.chain(results).map(function (result) {
-                //single query may return duplicates
-                return _.chain(result).pluck("smg_id").uniq().value();
-            }).flatten().value();
-            //ids is [ 1, 2, 3, 1 ]
-            groups = _.countBy(ids, function (ele) {
-                return ele;
+            var arrayOfIds, ids;
+            arrayOfIds = _.map(results, function (item) {
+                return _.chain(item).pluck("smg_id").unique().value();
             });
-            db.models.smg.find({id: _.unique(ids)}, cb);
+            //arrayOfIds is [ [1,2], [3, 1] ]
+            ids = _.intersection.apply(_, arrayOfIds);
+            //ids is [1]
+
+            db.models.smg.find({id: ids}, cb);
         }, function (smgs, cb) {
             async.map(smgs, helper.populateSMG, cb);
-        }, function (smgs, cb) {
-            _.each(smgs, function (smg) {
-                smg.accuracy = groups[smg.id] / conditionCount;
-            });
-            cb(null, smgs);
         }
     ], callback);
 }
