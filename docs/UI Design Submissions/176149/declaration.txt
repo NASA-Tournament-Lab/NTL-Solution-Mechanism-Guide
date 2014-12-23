@@ -1,0 +1,26 @@
+Note:
+This is my final submission. I add percentage progress bar when add/edit solution workflow, when solutions checked  i add lists of solution name in below of the page transparantly. Thanks for read this.
+
+Fonts:
+
+1. Font Name....:Arial (Studio Standard Fonts list)
+   Font URL.....:community.topcoder.com/studio/the-process/font-policy/
+
+2. Font Name....:Times New Roman (Studio Standard Fonts list)
+   Font URL.....:community.topcoder.com/studio/the-process/font-policy/
+
+3. Font Name....:Helvetica (Studio Standard Fonts list)
+   Font URL.....:community.topcoder.com/studio/the-process/font-policy/
+
+4. Font Name....:Myriad Pro (Studio Standard Fonts list)
+   Font URL.....:community.topcoder.com/studio/the-process/font-policy/
+
+5. Font Name....:Tahoma (Studio Standard Fonts list)
+   Font URL.....:community.topcoder.com/studio/the-process/font-policy/
+
+6. Font Name....:Verdana (Studio Standard Fonts list)
+   Font URL.....:community.topcoder.com/studio/the-process/font-policy/
+
+
+Stock Arts:
+

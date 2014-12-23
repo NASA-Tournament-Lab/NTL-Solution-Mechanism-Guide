@@ -1,0 +1,11 @@
+Note:
+The icons element is same with the first submission.The difference are header layout, progress bar concept, Login layout, table and  white background theme.
+
+Fonts:
+
+1. Font Name....:Arial Font (Studio Standard Fonts list)
+   Font URL.....:community.topcoder.com/studio/the-process/font-policy/
+
+
+Stock Arts:
+

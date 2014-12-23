@@ -1,0 +1,17 @@
+Note:
+Except for buttons, please use standard browser elements.
+
+Fonts:
+
+1. Font Name....:Arial (Studio Standard Fonts list)
+   Font URL.....:community.topcoder.com/studio/the-process/font-policy/
+
+2. Font Name....:Avenir (Studio Standard Fonts list)
+   Font URL.....:community.topcoder.com/studio/the-process/font-policy/
+
+3. Font Name....:Times New Roman (Studio Standard Fonts list)
+   Font URL.....:community.topcoder.com/studio/the-process/font-policy/
+
+
+Stock Arts:
+

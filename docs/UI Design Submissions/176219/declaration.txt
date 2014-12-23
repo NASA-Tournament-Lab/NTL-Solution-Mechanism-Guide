@@ -1,0 +1,14 @@
+Note:
+No declarations made
+
+Fonts:
+
+1. Font Name....:Source Sans Pro (Font Squirrel)
+   Font URL.....:http://www.fontsquirrel.com/fonts/source-sans-pro
+
+2. Font Name....:Arial (Studio Standard Fonts list)
+   Font URL.....:community.topcoder.com/studio/the-process/font-policy/
+
+
+Stock Arts:
+

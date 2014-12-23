@@ -1,0 +1,11 @@
+Note:
+I'm using arial font in all screen included in icons (help, SMG book, etc). Please see animation to see move up and move down button work correctly.
+
+Fonts:
+
+1. Font Name....:Arial (Studio Standard Fonts list)
+   Font URL.....:community.topcoder.com/studio/the-process/font-policy/
+
+
+Stock Arts:
+
