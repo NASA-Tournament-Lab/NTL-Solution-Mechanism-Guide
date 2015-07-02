@@ -1957,6 +1957,7 @@ table a:hover{
 table.compare-tbl {
     width: 100%;
     table-layout: fixed;
+    word-break: break-word;
 }
 table.compare-tbl td {
     background: #fff;
@@ -1972,6 +1973,7 @@ table.compare-tbl th {
     font-size: 14px;
     text-align: left;
     line-height: 18px;
+    padding-bottom: 9px;
 }
 table.compare-tbl th a{
     position: relative;
@@ -5045,13 +5047,11 @@ line-height: 16px;
     font-size:12px;
 }
 .table-example .examples-list li{
-    height:36px;
-    line-height:36px;
     border-bottom:1px solid #b7b7b7;
     cursor:pointer;
     position:relative;
-    letter-spacing:-0.2px;
-    word-spacing:-1px;
+    padding: 8px 18px;
+    
 }
 .table-example .examples-list li.active:after{
     content:"";
@@ -6084,4 +6084,8 @@ body.in-print, body.in-print div:not(.iradio):not(.icheckbox){
 }
 .smg-legend ul li {
     margin-top: 6px;
+}
+
+.default-css li {
+    margin-left: 10px;
 }
