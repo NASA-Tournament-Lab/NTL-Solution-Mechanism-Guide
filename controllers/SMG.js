@@ -188,7 +188,15 @@ function index(req, db, callback) {
  * @param {Function<err, result>} callback the callback function
  */
 function show(req, db, callback) {
-    crudHelper.getSingle(req.params.id, db.models.smg, _getPopulateDelegate(callback));
+    crudHelper.getSingle(req.params.id, db.models.smg, _getPopulateDelegate(function (err, result) {
+        if (err) {
+            return callback(err);
+        }
+        result.smgCharacteristics.sort(function (a, b) {
+            return a.characteristic.sort - b.characteristic.sort;
+        });
+        callback(null, result);
+    }));
 }
 
 /**

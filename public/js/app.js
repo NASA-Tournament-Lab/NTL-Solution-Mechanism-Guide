@@ -1416,14 +1416,18 @@ function SMGListingViewModel() {
     });
     self.search = function () {
         self.loading(true);
+        var values = [];
         var criteria = _.chain(self.fields()).map(function (f) {
             var val = f.value();
             if (f.selectedValues) {
                 val = f.selectedValues();
+                values.push(val.join(";"));
             } else if (_.isNumber(val)) {
+                values.push(val);
                 val = [val];
             } else {
                 val = (val || "").trim();
+                values.push(val);
             }
             return {
                 characteristic: f.characteristic_id,
@@ -1432,6 +1436,7 @@ function SMGListingViewModel() {
         }).filter(function (f) {
             return f.value.length;
         }).value();
+        window.location.hash = "#" + values.join("$");
         var url = API_URL + "/search2?criteria=" + encodeURIComponent(JSON.stringify(criteria));
         if (!criteria.length) {
             url = API_URL + "/smgs";
@@ -1595,14 +1600,22 @@ function SMGModel(data) {
         .value();
     self.smgCharacteristics = ko.observableArray(data.smgCharacteristics);
     self.tab1Items = ko.computed(function () {
-        return _.filter(self.smgCharacteristics(), function (item) {
+        var ret = _.filter(self.smgCharacteristics(), function (item) {
             return item.characteristic.tab === chTabs[0] && item.characteristic.id != chIds.image;
-        })
+        });
+        ret.sort(function (a, b) {
+            return a.characteristic.sort - b.characteristic.sort;
+        });
+        return ret;
     });
     self.tab3Items = ko.computed(function () {
-        return _.filter(self.smgCharacteristics(), function (item) {
+        var ret =  _.filter(self.smgCharacteristics(), function (item) {
             return item.characteristic.tab === chTabs[1]
         })
+        ret.sort(function (a, b) {
+            return a.characteristic.sort - b.characteristic.sort;
+        });
+        return ret;
     });
     self.examples = _.pluck(data.examples, "description");
 }
