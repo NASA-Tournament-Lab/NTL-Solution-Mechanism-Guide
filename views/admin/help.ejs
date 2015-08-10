@@ -406,6 +406,11 @@
                         <span class="orange-big-middle left orange-shadow">Export</span>
                         <span class="orange-big-right left"></span>
                     </a>
+                    <a href="/api/exportDB" class="orange-big-btn js-action-preview left">
+                        <span class="orange-big-left left"></span>
+                        <span class="orange-big-middle left orange-shadow">Export DB</span>
+                        <span class="orange-big-right left"></span>
+                    </a>
                 </div>
             </div>
 
@@ -438,6 +443,7 @@
                     </select>
                 </div>
             </div>
+
            <form enctype="multipart/form-data" method="post" action="/api/importSMGs" id="importSMGForm">
                 <div class="browse-list clearfix">
                     <div class="field-container clearfix">
@@ -471,6 +477,16 @@
                 <a href="javascript:" class="orange-big-btn align left" data-bind="click: $root.importSMG.bind($root)">
                     <span class="orange-big-left left"></span>
                     <span class="orange-big-middle left orange-shadow">Import</span>
+                    <span class="orange-big-right left"></span>
+                </a>
+                <a href="javascript:" class="import-db-btn orange-big-btn align left" data-bind="click: $root.importDB.bind($root)">
+                    <span class="orange-big-left left"></span>
+                    <span class="orange-big-middle left orange-shadow">Import DB</span>
+                    <span class="orange-big-right left"></span>
+                </a>
+                <a href="/api/exportDB" class="import-command-btn orange-big-btn align right">
+                    <span class="orange-big-left left"></span>
+                    <span class="orange-big-middle left orange-shadow">Export DB</span>
                     <span class="orange-big-right left"></span>
                 </a>
                 <a href="javascript:" class="import-command-btn orange-big-btn align right" data-bind="click: $root.exportSMG.bind($root)">
