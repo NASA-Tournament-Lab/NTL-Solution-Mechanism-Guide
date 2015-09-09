@@ -21,6 +21,8 @@ module.exports = {
     "DELETE /smgs": "SMG#removeBatch",
     "POST /exportSMGs": "SMG#export",
     "POST /importSMGs": "SMG#import",
+    "GET /exportDB": "SMG#exportDB",
+    "POST /importDB": "SMG#importDB",
     //Helper topic
     "GET /helpTopic": "HelpTopic#index",
     "GET /helpTopic/:id": "HelpTopic#show",

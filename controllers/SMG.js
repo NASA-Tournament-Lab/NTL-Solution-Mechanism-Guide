@@ -635,6 +635,70 @@ function importSMG(req,db, callback) {
 
 }
 
+
+/**
+ * Export all database tables
+ * @param {Object} req the express request
+ * @param {Object} db the orm2 database instance
+ * @param {Function<err,result>} callback the callback function
+ */
+function exportDB(req, res, db, callback) {
+    var names = _.keys(db.models);
+    var result = {};
+    async.forEach(names, function (name, cb) {
+      db.models[name].find({}, function (err, items) {
+          result[name] = items;
+          cb(err);
+      });
+    }, function (err) {
+        if (err) {
+            return callback(err);
+        }
+        res.setHeader('Content-disposition', 'attachment; filename="export.json"');
+        res.setHeader('Content-type', 'application/json');
+        res.send(JSON.stringify(result, null, 4));
+    });
+}
+/**
+ * Import database data
+ * @param {Object} req the express request
+ * @param {Object} db the orm2 database instance
+ * @param {Function<err,result>} callback the callback function
+ */
+function importDB(req, db, callback) {
+    var names = _.keys(db.models);
+    if(!req.files.smg){
+        return callback(new BadRequestError("file required"));
+    }
+    var data;
+    async.waterfall([
+        function (cb) {
+            fs.readFile(req.files.smg.path, 'utf8', cb);
+        }, function (content, cb) {
+            try {
+                data = JSON.parse(content);
+            } catch (e) {
+                return cb(new BadRequestError("Invalid json file"));
+            }
+            names.reverse();
+            async.forEachSeries(names, function (name, cb) {
+                var model = db.models[name];
+                model.find({}).remove(cb);
+            }, cb);
+        }, function (cb) {
+            names.reverse();
+            async.forEachSeries(names, function (name, cb) {
+                var model = db.models[name];
+                async.forEach(data[name], function (item, cb) {
+                    model.create(item, cb);
+                }, cb);
+            }, cb);
+        }
+    ], function (err) {
+        callback(err, {ok: true});
+    });
+}
+
 module.exports = {
     index: wrapExpress("SMG#index", index),
     show: wrapExpress("SMG#show", show),
@@ -647,5 +711,7 @@ module.exports = {
     search: wrapExpress("SMG#search", search),
     search2: wrapExpress("SMG#search2", search2),
     export: wrapExpress("SMG#export", exportSMG,true),
-    import:wrapExpress("SMG#import", importSMG)
+    import:wrapExpress("SMG#import", importSMG),
+    exportDB:wrapExpress("SMG#exportDB", exportDB, true),
+    importDB:wrapExpress("SMG#importDB", importDB)
 };

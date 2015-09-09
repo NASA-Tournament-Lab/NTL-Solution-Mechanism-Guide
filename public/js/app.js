@@ -2048,6 +2048,43 @@ function HelpViewModel() {
         form.submit();
     };
 
+    self.importDB = function(){
+        if ($('#export-smg input:file').length > 1) {
+            showAlert('Only one file input is required. Plase delete other inputs.');
+            return;
+        }
+        var name = $('#export-smg input:file').val();
+        if (!name) {
+            showAlert("Please select a file!");
+            return;
+        }
+
+        var form  = $('#importSMGForm');
+        form.attr('action', '/api/importDB');
+        var $elem = $('.process');
+        if (!$elem.length) {
+            $elem = $('<div class="process"><div class="processbg"><div class="processbar"></div><div class="processtext"></div></div></div>');
+            $('body').append($elem);
+        }
+        $elem.show();
+        $elem.find(".processbar").width("0");
+
+        form.ajaxSubmit({
+            dataType: 'json',
+            success: function (ret) {
+                $('.process').hide();
+                alert("Database imported. Please refresh the page");
+            },
+            uploadProgress: function (event, position, total, percent) {
+                $elem.find(".processbar").width(percent + "%");
+                $elem.find(".processtext").text(Math.floor(percent)+"%");
+            },
+            error: function (response) {
+                $('.process').hide();
+                handleError(response);
+            }
+        });
+    };
     self.importSMG = function(){
         var ids = self.getFieldIds();
         if(!ids || ids.length==0){
@@ -2076,6 +2113,7 @@ function HelpViewModel() {
             return;
         }
         var form  = $('#importSMGForm');
+        form.attr('action', '/api/importSMGs')
         form.find("input:hidden").remove();
         for (var i = 0; i < ids.length; i = i + 1) {
             $("<input type='hidden'>").attr({
