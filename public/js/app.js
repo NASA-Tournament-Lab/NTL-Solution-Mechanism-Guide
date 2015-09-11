@@ -1365,9 +1365,9 @@ function SMGListingViewModel() {
                             revert: function () {
                                 ret.value(value);
                                 if (ret.selectedValues) {
-                                    selectedValues = _.map(value.split(';'), function (v) {
+                                    selectedValues = _.chain(value.split(';')).compact().map(function (v) {
                                         return Number(v);
-                                    });
+                                    }).value();
                                     ret.selectedValues(selectedValues);
                                 }
                             }

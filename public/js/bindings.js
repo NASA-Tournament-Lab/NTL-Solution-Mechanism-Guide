@@ -222,7 +222,7 @@ ko.bindingHandlers.ckEditor = {
         var update = function (e) {
             setTimeout(function () {
                 valueAccessor()($(e.listenerData).val());
-            }, 0);
+            }, 100);
         };
         editor.on('key', update, this, element);
         editor.on('change', update, this, element);
@@ -235,7 +235,7 @@ ko.bindingHandlers.ckEditor = {
             editor.setData(value);
             setTimeout(function () {
                 editor.setData(value);
-            });
+            }, 100);
         }
     }
 };
