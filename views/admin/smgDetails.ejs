@@ -113,8 +113,12 @@
                     <tbody data-bind="foreach: tab3Items">
                     <tr>
                         <td class="first" data-bind="text: characteristic.name"></td>
-                        <td data-bind="text: displayValue">
-                        </td>
+                        <!-- ko if: characteristic.type_id == chTypes.textarea -->
+                        <td data-bind="html: displayValue" class="default-css"> </td>
+                        <!-- /ko -->
+                        <!-- ko if: characteristic.type_id != chTypes.textarea -->
+                        <td data-bind="text: displayValue"> </td>
+                        <!-- /ko -->
                     </tr>
                     </tbody>
                 </table>

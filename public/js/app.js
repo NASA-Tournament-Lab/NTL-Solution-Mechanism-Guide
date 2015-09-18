@@ -1843,7 +1843,32 @@ function HelpViewModel() {
         self.loading(true);
         blockUI();
         fakeTimeout(function () {
-            self.exampleTypesViewModel.load(function () {
+            async.parallel([
+                function (cb) {
+                    self.exampleTypesViewModel.load(function () {
+                        cb();
+                    });
+                },
+                function (cb) {
+                    getJSON(API_URL + "/characteristic/6", function (ret) {
+                        var mapping = window.dashboard.dollarMapping || {};
+                        _.each(ret.values, function (value) {
+                            if (!mapping[value.id]) {
+                                mapping[value.id] = "$"
+                            }
+                        });
+                        var index = _.indexBy(ret.values, "id");
+                        _.each(mapping, function (value, id) {
+                            self.dollarMapping.push({
+                                id: id,
+                                value: ko.observable(value),
+                                label: index[id].name
+                            });
+                        });
+                        cb();
+                    });
+                }
+            ], function () {
                 self.loading(false);
                 unBlockUI();
             });
@@ -1883,6 +1908,7 @@ function HelpViewModel() {
             });
         });
     };
+    self.dollarMapping = ko.observableArray([]);
     self.configuration = {
         logoutText: ko.observable(window.dashboard.logoutText || ""),
         feedbackURL: ko.observable(window.dashboard.feedbackURL || ""),
@@ -1898,6 +1924,10 @@ function HelpViewModel() {
         window.dashboard.faqURL = self.configuration.faqURL();
         window.dashboard.homeFilterText = self.configuration.homeFilterText();
         window.dashboard.homeBannerHtml = self.configuration.homeBannerHtml();
+        window.dashboard.dollarMapping = {};
+        _.each(self.dollarMapping(), function (value) {
+            window.dashboard.dollarMapping[value.id] = value.value();
+        });
         blockUI();
         var data = JSON.stringify(window.dashboard);
         fakeTimeout(function () {

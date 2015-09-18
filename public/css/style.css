@@ -6094,3 +6094,12 @@ body.in-print, body.in-print div:not(.iradio):not(.icheckbox){
 .import-db-btn {
     margin-left: 15px;
 }
+
+.dollar-mapping {
+    margin-bottom: 5px;
+}
+.dollar-mapping-label {
+    display: block;
+    width: 150px;
+    line-height: 35px;
+}
