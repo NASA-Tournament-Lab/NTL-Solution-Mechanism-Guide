@@ -438,18 +438,16 @@ ko.bindingHandlers.dollarSign = {
         var value = _.findWhere(smg.smgCharacteristics, {characteristic_id: 6});
         $(element).removeClass("dollar1 dollar2 dollar3");
         var klass = "dollar1";
+        var mapping = window.dashboard.dollarMapping || {};
         if (value && value.valueType) {
-            var v = value.valueType.name;
-            var dollar1 = ['$0', '>$0; < $5K', '>$5K; < $20K'];
-            var dollar2 = ['>$20K; < $50K', '>$50K; < $100K', '> $100K; <$500K'];
-            var dollar3 = ['> $500K; <$1M', '> $1M'];
-            if (_.contains(dollar2, v)) {
+            var sign = mapping[value.valueType.id];
+            if (sign == "$$") {
                 klass = "dollar2"
             }
-            if (_.contains(dollar3, v)) {
+            if (sign == "$$$") {
                 klass = "dollar3"
             }
-            $(element).attr('title', v);
+            $(element).attr('title', value.valueType.name);
         }
         $(element).addClass(klass);
     }

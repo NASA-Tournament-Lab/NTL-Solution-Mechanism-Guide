@@ -370,6 +370,40 @@
                 </div>
             </div>
 
+            <div class="field-container clearfix" data-bind="if: $root.dollarMapping">
+                <label class="left">Dollar mapping</label>
+                <div class="help-wrapper left">
+                    <a class="help-icon left" href="javascript:"></a>
+                    <div class="tool-tip hide">
+                        <span class="tooltip-left left"></span>
+                        <div class="tooltip-middle left">
+                            <div class="tooltip-head">
+                                <div class="tooltip-head-content left">
+                                    <h2 class="left">Helps</h2>
+                                    <a href="javascript:" class="right tooltip-close"></a>
+                                </div>
+                                <div class="clear"></div>
+                                <p>Represents the dollar mapping.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="level left adjust">
+                    <div class="wrapper">
+                        <!-- ko foreach: dollarMapping -->
+                        <div class="text-remove clearfix dollar-mapping">
+                            <span class="left dollar-mapping-label" data-bind="text: label"></span>
+                            <select data-bind="value: value,  jqSelect: value ">
+                                <option>$</option>
+                                <option>$$</option>
+                                <option>$$$</option>
+                            </select>
+                        </div>
+                        <!-- /ko -->
+                    </div>
+                </div>
+            </div>
+
         </div>
 
 
