@@ -276,6 +276,16 @@ ko.bindingHandlers.jqSelect = {
             } else {
                 $(element).closest('.jqTransformSelectWrapper').find('span').removeClass('jqTransformPlaceholder');
             }
+            
+            $(element).closest('.jqTransformSelectWrapper').find('.jqTransformSelectOpen').bind('click', function(e){
+               if ($(e.target).closest('.jqTransformSelectWrapper').length) {
+                  $('.jqTransformSelectWrapper').css('zIndex', 99);
+                  $(e.target).closest('.jqTransformSelectWrapper').css('zIndex', 100);
+                  return;
+               }
+               $('.jqTransformSelectWrapper ul').hide();
+            });
+            
         }, 50);
     }
 };
