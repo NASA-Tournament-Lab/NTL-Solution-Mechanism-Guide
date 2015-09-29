@@ -338,11 +338,11 @@
 			;
 			
 			/* Now add the html for the select */
-			$wrapper.prepend('<div><span></span><a href="#" class="jqTransformSelectOpen"></a></div><ul></ul>');
+			$wrapper.prepend('<div><span></span><a href="javascript:" class="jqTransformSelectOpen"></a></div><ul></ul>');
 			var $ul = $('ul', $wrapper).css('width',$select.width()).hide();
 			/* Now we add the options */
 			$('option', this).each(function(i){
-				var oLi = $('<li><a href="#" index="'+ i +'">'+ $(this).html() +'</a></li>');
+				var oLi = $('<li><a href="javascript:" index="'+ i +'">'+ $(this).html() +'</a></li>');
 				$ul.append(oLi);
 			});
 			
@@ -378,7 +378,6 @@
 						var offSet = ($('a.selected', $ul).offset().top - $ul.offset().top);
 						if(offSet >= $('li:first',$ul).height()) $ul.animate({scrollTop: offSet});
 					});
-					return false;
 				})
 			;
 
