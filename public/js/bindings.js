@@ -435,21 +435,23 @@ ko.bindingHandlers.dollarSign = {
     },
     update: function(element, valueAccessor) {
         var smg = valueAccessor();
-        var value = _.findWhere(smg.smgCharacteristics, {characteristic_id: 6});
-        $(element).removeClass("dollar1 dollar2 dollar3");
-        var klass = "dollar1";
+        var values = _.where(smg.smgCharacteristics, {characteristic_id: 6});
         var mapping = window.dashboard.dollarMapping || {};
-        if (value && value.valueType) {
+        $(element).removeClass("dollar1 dollar2 dollar3");
+        var max = 1;
+        var title = "";
+        _.each(values, function (value) {
             var sign = mapping[value.valueType.id];
-            if (sign == "$$") {
-                klass = "dollar2"
+            if (sign) {
+                var dollarValue = sign.length;
+                if (dollarValue >= max) {
+                    max = dollarValue;
+                    title = value.valueType.name;
+                }
             }
-            if (sign == "$$$") {
-                klass = "dollar3"
-            }
-            $(element).attr('title', value.valueType.name);
-        }
-        $(element).addClass(klass);
+        });
+        $(element).addClass("dollar" + max);
+        $(element).attr('title', title);
     }
 };
 
@@ -457,21 +459,29 @@ ko.bindingHandlers.dollarSign = {
 ko.bindingHandlers.clockText = {
     update: function (element, valueAccessor) {
         var smg = valueAccessor();
-        var value = _.findWhere(smg.smgCharacteristics, {characteristic_id: 5});
+        var values = _.where(smg.smgCharacteristics, {characteristic_id: 5});
         var text = "Low";
-        if (value) {
-            var v = value.valueType.name;
-            var low = ['< 3 months', '< 6 months'];
-            var med = ['< 1 year'];
-            var high = ['> 1 year', '> 2 years'];
-            if (_.contains(med, v)) {
-                text = "Med"
+        var max = 1;
+        var title = "";
+        var mapping = window.dashboard.timeMapping || {};
+        _.each(values, function (value) {
+            var time = mapping[value.valueType.id];
+            if (time) {
+                var timeValue = 1;
+                if (time === "Med") {
+                    timeValue = 2;
+                }
+                if (time === "High") {
+                    timeValue = 3;
+                }
+                if (timeValue >= max) {
+                    text = time;
+                    max = timeValue;
+                    title = value.valueType.name;
+                }
             }
-            if (_.contains(high, v)) {
-                text = "High"
-            }
-            $(element).attr('title', v);
-        }
+        });
+        $(element).attr('title', title);
         $(element).next().text(text);
     }
 };

@@ -6100,6 +6100,6 @@ body.in-print, body.in-print div:not(.iradio):not(.icheckbox){
 }
 .dollar-mapping-label {
     display: block;
-    width: 150px;
+    width: 230px;
     line-height: 35px;
 }

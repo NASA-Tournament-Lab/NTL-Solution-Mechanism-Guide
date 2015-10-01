@@ -1867,6 +1867,25 @@ function HelpViewModel() {
                         });
                         cb();
                     });
+                },
+                function (cb) {
+                    getJSON(API_URL + "/characteristic/5", function (ret) {
+                        var mapping = window.dashboard.timeMapping || {};
+                        _.each(ret.values, function (value) {
+                            if (!mapping[value.id]) {
+                                mapping[value.id] = "Low"
+                            }
+                        });
+                        var index = _.indexBy(ret.values, "id");
+                        _.each(mapping, function (value, id) {
+                            self.timeMapping.push({
+                                id: id,
+                                value: ko.observable(value),
+                                label: index[id].name
+                            });
+                        });
+                        cb();
+                    });
                 }
             ], function () {
                 self.loading(false);
@@ -1909,6 +1928,7 @@ function HelpViewModel() {
         });
     };
     self.dollarMapping = ko.observableArray([]);
+    self.timeMapping = ko.observableArray([]);
     self.configuration = {
         logoutText: ko.observable(window.dashboard.logoutText || ""),
         feedbackURL: ko.observable(window.dashboard.feedbackURL || ""),
@@ -1925,8 +1945,12 @@ function HelpViewModel() {
         window.dashboard.homeFilterText = self.configuration.homeFilterText();
         window.dashboard.homeBannerHtml = self.configuration.homeBannerHtml();
         window.dashboard.dollarMapping = {};
+        window.dashboard.timeMapping = {};
         _.each(self.dollarMapping(), function (value) {
             window.dashboard.dollarMapping[value.id] = value.value();
+        });
+        _.each(self.timeMapping(), function (value) {
+            window.dashboard.timeMapping[value.id] = value.value();
         });
         blockUI();
         var data = JSON.stringify(window.dashboard);
