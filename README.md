@@ -120,3 +120,8 @@ You must create only empty database in mysql server. Default database name is na
 
 Follow this documentation
 http://technet.microsoft.com/en-us/library/cc731411.aspx
+
+## Mapping between $ legend and SMG cost characterstics values
+
+Since cost characterstics values might change in database, we added a new configuration section under Admin portal (Configuration tab) i.e. http://<url>:<port>/admin/help#configuration . The section will list current cost characterstics values, and next to each value there is a drop down that contains three values $, $$ and $$$. By default all values are mapped to single dollar sign legend. When you are done with mapping, make sure to save changes.
+
